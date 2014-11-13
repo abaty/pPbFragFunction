@@ -13,6 +13,7 @@
 #include "TStyle.h"
 #include "rawHistograms.h"
 #include "smear.h"
+#include "makeComparisonPlot.h"
 
 void makeHistos()
 {
@@ -36,6 +37,39 @@ void makeHistos()
    Double_t yAxis[40] = {0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 3.2, 4, 4.8, 5.6, 6.4, 7.2, 9.6, 12, 14.4, 19.2, 24, 28.8, 35.2, 41.6, 48, 60.8, 73.6, 86.4, 103.6, 120.8, 138, 155.2, 172.4, 189.6, 206.8}; 
 
    baseHistos();
+
+// additions here
+   TH1D * tev5_mbjets_smeared = (TH1D*)root_histogram_data5tevmb_jet->Clone("tev5_mbjets_smeared");
+   tev5_mbjets_smeared->Scale(34.990*33.514);
+   TH1D * tev5_40jets_smeared = (TH1D*)root_histogram_data5tev40_jet->Clone("tev5_40jets_smeared");
+   tev5_40jets_smeared->Scale(34.99);
+   TH1D * tev5_80jets_smeared = (TH1D*)root_histogram_data5tev80_jet->Clone("tev5_80jets_smeared");
+
+   TH1D *combined_5tev_jets = new TH1D("combined_5tev_jets","combined_5tev_jets", 120,0,300);
+   for(int n=1; n<121; n++)
+   {
+     int bin = combined_5tev_jets->GetXaxis()->GetBinLowEdge(n);
+     if(bin < 80)
+     {
+       combined_5tev_jets->SetBinContent(n,tev5_mbjets_smeared->GetBinContent(n));
+       combined_5tev_jets->SetBinError(n,tev5_mbjets_smeared->GetBinError(n));
+     }
+     else if(bin < 140)
+     {
+       combined_5tev_jets->SetBinContent(n,tev5_40jets_smeared->GetBinContent(n));
+       combined_5tev_jets->SetBinError(n,tev5_40jets_smeared->GetBinError(n));
+     }
+     else
+     {
+       combined_5tev_jets->SetBinContent(n,tev5_80jets_smeared->GetBinContent(n));
+       combined_5tev_jets->SetBinError(n,tev5_80jets_smeared->GetBinError(n));
+     }
+   }
+   
+   TH1D *combined_5tev_jets_smeared = (TH1D*)combined_5tev_jets->Clone("combined_5tev_jets_smeared");   
+   smear(combined_5tev_jets_smeared);   
+
+   makeComparisonPlot(combined_5tev_jets, combined_5tev_jets_smeared);
 
    TH1D *root_histogram_data_5tev_temp_2[15];
 
