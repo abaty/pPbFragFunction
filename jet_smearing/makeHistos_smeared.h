@@ -68,8 +68,22 @@ void makeHistos()
    
    TH1D *combined_5tev_jets_smeared = (TH1D*)combined_5tev_jets->Clone("combined_5tev_jets_smeared");   
    smear(combined_5tev_jets_smeared);   
-
    makeComparisonPlot(combined_5tev_jets, combined_5tev_jets_smeared);
+
+   for(int n=1; n<121; n++)
+   {
+     int bin = combined_5tev_jets_smeared->GetXaxis()->GetBinLowEdge(n);
+     if(bin < 80)
+     {
+       combined_5tev_jets_smeared->SetBinContent(n,combined_5tev_jets_smeared->GetBinContent(n)/(34.990*33.514));
+       combined_5tev_jets_smeared->SetBinError(n,combined_5tev_jets_smeared->GetBinError(n)/(34.990*33.514));
+     }
+     else if(bin < 140)
+     {
+       combined_5tev_jets_smeared->SetBinContent(n,combined_5tev_jets_smeared->GetBinContent(n)/34.990);
+       combined_5tev_jets_smeared->SetBinError(n,combined_5tev_jets_smeared->GetBinError(n)/34.990);
+     }
+   }
 
    TH1D *root_histogram_data_5tev_temp_2[15];
 
@@ -123,12 +137,17 @@ void makeHistos()
 		   hjr = root_histogram_data5tev80_jet;
 	   }
 
+           hj = combined_5tev_jets_smeared;
+           hjr= combined_5tev_jets_smeared;
+
 	   for (size_t j = 0; j < 39; j++) {
 		   double sum_content = 0;
 		   double sum_error = 0;
 		   double sum_denominator = 0;
 
-		   for (size_t k = 0; k < (j == 7 ? 24 : 8); k++) {
+
+//testing here
+		   for (size_t k = 0; k < (i == 7 ? 24 : 8); k++) {
 
 			   if (hj->GetBinContent(i * 8 + k + 1) > 0 && hjr->GetBinContent(i * 8 + k + 1) > 0) {
 				   const double weight = hjr->GetBinContent(i * 8 + k + 1) / hj->GetBinContent(i * 8 + k + 1);
@@ -204,12 +223,17 @@ void makeHistos()
 		   hjr = root_histogram_data5tev80_jet;
 	   }
 
+           hj = combined_5tev_jets_smeared;
+           hjr = combined_5tev_jets_smeared;
+
 	   for (size_t j = 0; j < 39; j++) {
 		   double sum_content = 0;
 		   double sum_error = 0;
 		   double sum_denominator = 0;
 
-		   for (size_t k = 0; k < (j == 7 ? 24 : 8); k++) {
+
+//testing here
+		   for (size_t k = 0; k < (i == 7 ? 24 : 8); k++) {
 
 			   if (hj->GetBinContent(i * 8 + k + 1) > 0 && hjr->GetBinContent(i * 8 + k + 1) > 0) {
 				   const double weight = hjr->GetBinContent(i * 8 + k + 1) / hj->GetBinContent(i * 8 + k + 1);
@@ -289,12 +313,15 @@ void makeHistos()
 		   hjr = root_histogram_data5tev80_jet;
 	   }
 
+           hjr = combined_5tev_jets_smeared;
+
 	   for (size_t j = 0; j < 39; j++) {
 		   double sum_content = 0;
 		   double sum_error = 0;
 		   double sum_denominator = 0;
 
-		   for (size_t k = 0; k < (j == 7 ? 24 : 8); k++) {
+//testing here
+		   for (size_t k = 0; k < (i == 7 ? 24 : 8); k++) {
 			   if (hj->GetBinContent(i * 8 + k + 1) > 0 && hjr->GetBinContent(i * 8 + k + 1) > 0) {
 				   const double weight = hjr->GetBinContent(i * 8 + k + 1) / hj->GetBinContent(i * 8 + k + 1);
 				   const int root_bin = ht->GetBin(i * 8 + k + 1, j + 1);
@@ -374,12 +401,15 @@ void makeHistos()
 		   hjr = root_histogram_data5tev80_jet;
 	   }
 
+           hjr = combined_5tev_jets_smeared;
+
 	   for (size_t j = 0; j < 39; j++) {
 		   double sum_content = 0;
 		   double sum_error = 0;
 		   double sum_denominator = 0;
 
-		   for (size_t k = 0; k < (j == 7 ? 24 : 8); k++) {
+//testing
+		   for (size_t k = 0; k < (i == 7 ? 24 : 8); k++) {
 			   if (hj->GetBinContent(i * 8 + k + 1) > 0 && hjr->GetBinContent(i * 8 + k + 1) > 0) {
 				   const double weight = hjr->GetBinContent(i * 8 + k + 1) / hj->GetBinContent(i * 8 + k + 1);
 				   const int root_bin = ht->GetBin(i * 8 + k + 1, j + 1);
@@ -432,7 +462,6 @@ void makeHistos()
 	   TH1D *hj = NULL;
 	   TH2D *ht = NULL;
 	   TH2D *hts = NULL;
-
 	   TH1D *hjr = NULL;
 
 	   if (perp_jet < 80) {
@@ -460,12 +489,15 @@ void makeHistos()
 		   hjr = root_histogram_data5tev80_jet;
 	   }
 
+           hjr = combined_5tev_jets_smeared;
+
 	   for (size_t j = 0; j < 39; j++) {
 		   double sum_content = 0;
 		   double sum_error = 0;
 		   double sum_denominator = 0;
 
-		   for (size_t k = 0; k < (j == 7 ? 24 : 8); k++) {
+//testing
+		   for (size_t k = 0; k < (i == 7 ? 24 : 8); k++) {
 
 			   if (hj->GetBinContent(i * 8 + k + 1) > 0 && hjr->GetBinContent(i * 8 + k + 1) > 0) {
 				   const double weight = hjr->GetBinContent(i * 8 + k + 1) / hj->GetBinContent(i * 8 + k + 1);
@@ -645,8 +677,8 @@ void makeHistos()
 		   double sum_content = 0;
 		   double sum_error = 0;
 		   double sum_denominator = 0;
-
-		   for (size_t k = 0; k < (j == 7 ? 24 : 8); k++) {
+//testing
+		   for (size_t k = 0; k < (i == 7 ? 24 : 8); k++) {
 
 			   if (hj->GetBinContent(i * 8 + k + 1) > 0 && hjr->GetBinContent(i * 8 + k + 1) > 0) {
 				   const double weight = hjr->GetBinContent(i * 8 + k + 1) / hj->GetBinContent(i * 8 + k + 1);
@@ -802,13 +834,15 @@ void makeHistos()
 		   hjr = root_histogram_data5tev80_jet;
 	   }
 
+           hjr = combined_5tev_jets_smeared;
+
 	   double sum_2tev = 0;
 	   double sum_5tev = 0;
 	   double sum_7tev = 0;
 
 
 //here Austin here!
-	   for (size_t k = 0; k < (7 == 7 ? 24 : 8); k++) {
+	   for (size_t k = 0; k < (i == 7 ? 24 : 8); k++) {
 		   const double weight = hjr->GetBinContent(i * 8 + k + 1);
 
 		   sum_2tev += root_histogram_gluon_2tev->GetBinContent(i * 8 + k + 1) * weight;
@@ -1266,6 +1300,7 @@ void makeHistos()
    canvas->Modified();
    canvas->cd();
    canvas->SetSelected(canvas);
+   canvas->SaveAs("plots/FFs_vs_trackpt_smeared.png");
 
    return;
 }

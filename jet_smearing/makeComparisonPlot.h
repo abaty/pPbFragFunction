@@ -8,8 +8,11 @@
 #include "TAttText.h"
 #include "TLine.h"
 
-void makeComparisonPlot(TH1D* h1, TH1D* h2)
+void makeComparisonPlot(TH1D* h1in, TH1D* h2in)
 {
+  TH1D *h1 = (TH1D*)h1in->Clone("h1");
+  TH1D *h2 = (TH1D*)h2in->Clone("h2");
+
   TCanvas * c10 = new TCanvas("c10","c10",1200,800);
   c10->SetLogy();
 //plotting spectra  
