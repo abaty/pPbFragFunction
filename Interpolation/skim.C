@@ -14,7 +14,7 @@ void skim(int mode = 0)
   TH2D::SetDefaultSumw2();
 
   const int nbins = 8;
-  const int nbinsFine = 120;
+  const int nbinsFine = 28;
   float bins[nbins+1] = {15,30,50,80,120,170,220,280,10000};
 
   //pp cross sections for 2.76 tev
@@ -38,8 +38,8 @@ void skim(int mode = 0)
   for(int file = 0; file < nbins; file++)
   {
     if(mode == 0)
-    {
-      h[file] = new HiForest(Form("/mnt/hadoop/cms/store/user/dgulhan/pPb/HP04/prod16/Signal_Pythia_pt%d/HiForest_v77_v2_merged01/pt%d_HP04_hiforest77_hiSignal.root",(int)bins[file],(int)bins[file]),"forest",cPP,1);
+    { 
+      h[file] = new HiForest(Form("/mnt/hadoop/cms/store/user/dgulhan/pp2013/P01/prod22/Signal_Pythia_pt%d/HiForest_v81_merged01/pt%d_pp2013_P01_prod22_v81_merged_forest_0.root",(int)bins[file], (int)bins[file]),"forest",cPP,1);
     }
     else
     {
@@ -50,9 +50,9 @@ void skim(int mode = 0)
     h[file]->hasSkimTree = true;
   }
 
-  TH1D * g2tev = new TH1D("g2tev","g2tev",nbinsFine,0,300);
-  TH1D * t2tev = new TH1D("t2tev","t2tev",nbinsFine,0,300);
-  TH1D * pthatDistFine = new TH1D("pthatDistFine","pthatDistFine",nbinsFine,0,300);
+  TH1D * g2tev = new TH1D("g2tev","g2tev",nbinsFine,60,200);
+  TH1D * t2tev = new TH1D("t2tev","t2tev",nbinsFine,60,200);
+  TH1D * pthatDistFine = new TH1D("pthatDistFine","pthatDistFine",nbinsFine,60,200);
 
   for(int file = 0; file<nbins; file++)
   {
