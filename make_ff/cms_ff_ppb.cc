@@ -14,21 +14,13 @@
 #include "factorizedPtCorr.h"
 #include "lorentz.h"
 
+//need to enable this here and below at the JEC flag to run on 7tev
+//#include "JEC7tev/get7tevPt.h"
+
 void cms_ff_ppb(const char *filename_list, const char *trigger_name, const int is_mc = 0, const int perp_track = 1, const double pseudorapidity_min = 0, const double pseudorapidity_max = 1, const double boost_ppb = 1, const long select_index_jet = -1, const unsigned long reflect_type = 0, const unsigned long parallel_offset = 0, const unsigned long parallel_stride = 1)
 {
 	char *filename = strdup(filename_list);
 	fprintf(stderr, "%s:%d:\n", __FILE__, __LINE__);
-
-	gROOT->Reset();
-	gStyle->SetCanvasColor(kWhite);
-    gStyle->SetCanvasBorderMode(0);
-    gStyle->SetPadBorderMode(0);
-    gStyle->SetOptStat(0);
-    gStyle->SetPadTopMargin(0.0234375);
-    gStyle->SetPadLeftMargin(0.125);
-    gStyle->SetPadBottomMargin(0.140625);
-    gStyle->SetPadRightMargin(0.0234375);
-
 
 	const sampleType sType = kPPDATA;
 
@@ -39,26 +31,11 @@ void cms_ff_ppb(const char *filename_list, const char *trigger_name, const int i
 	TCanvas canvas("canvas", "", 720 + 4, 720 + 28);
 
 	TH1D root_histogram_jet("root_histogram_jet", "", 15 * 8, 0, 300);
-
 	root_histogram_jet.Sumw2();
-	root_histogram_jet.SetMarkerStyle(24);
-	root_histogram_jet.SetMarkerColor(kBlack);
-	root_histogram_jet.SetLineColor(kBlack);
-	root_histogram_jet.GetXaxis()->SetLabelSize(0.0625);
-	root_histogram_jet.GetXaxis()->SetTitleSize(0.0625);
-	root_histogram_jet.GetYaxis()->SetLabelSize(0.0625);
-	root_histogram_jet.GetYaxis()->SetTitleSize(0.0625);
 
 	TH1D root_histogram_jet_reflected("root_histogram_jet_reflected", "", 15 * 8, 0, 300);
-
 	root_histogram_jet_reflected.Sumw2();
-	root_histogram_jet_reflected.SetMarkerStyle(24);
-	root_histogram_jet_reflected.SetMarkerColor(kBlack);
-	root_histogram_jet_reflected.SetLineColor(kBlack);
-	root_histogram_jet_reflected.GetXaxis()->SetLabelSize(0.0625);
-	root_histogram_jet_reflected.GetXaxis()->SetTitleSize(0.0625);
-	root_histogram_jet_reflected.GetYaxis()->SetLabelSize(0.0625);
-	root_histogram_jet_reflected.GetYaxis()->SetTitleSize(0.0625);
+	
 
 	TH2D root_histogram_track("root_histogram_track", "", 15 * 8, 0, 300, perp_track ? 39 : 28, -1.5, 5.5);
 	TH2D root_histogram_track_reflected("root_histogram_track_reflected", "", 15 * 8, 0, 300, perp_track ? 39 : 28, -1.5, 5.5);
@@ -74,24 +51,8 @@ void cms_ff_ppb(const char *filename_list, const char *trigger_name, const int i
 		root_histogram_track.GetYaxis()->Set(39, axis);
 		root_histogram_track_reflected.GetYaxis()->Set(39, axis);
 	}
-
 	root_histogram_track.Sumw2();
-	root_histogram_track.SetMarkerStyle(24);
-	root_histogram_track.SetMarkerColor(kBlack);
-	root_histogram_track.SetLineColor(kBlack);
-	root_histogram_track.GetXaxis()->SetLabelSize(0.0625);
-	root_histogram_track.GetXaxis()->SetTitleSize(0.0625);
-	root_histogram_track.GetYaxis()->SetLabelSize(0.0625);
-	root_histogram_track.GetYaxis()->SetTitleSize(0.0625);
-
 	root_histogram_track_reflected.Sumw2();
-	root_histogram_track_reflected.SetMarkerStyle(24);
-	root_histogram_track_reflected.SetMarkerColor(kBlack);
-	root_histogram_track_reflected.SetLineColor(kBlack);
-	root_histogram_track_reflected.GetXaxis()->SetLabelSize(0.0625);
-	root_histogram_track_reflected.GetXaxis()->SetTitleSize(0.0625);
-	root_histogram_track_reflected.GetYaxis()->SetLabelSize(0.0625);
-	root_histogram_track_reflected.GetYaxis()->SetTitleSize(0.0625);
 
 	TH2D root_histogram_pf("root_histogram_pf", "", 15 * 8, 0, 300, perp_track ? 39 : 28, -1.5, 5.5);
 	TH2D root_histogram_pf_reflected("root_histogram_pf_reflected", "", 15 * 8, 0, 300, perp_track ? 39 : 28, -1.5, 5.5);
@@ -107,131 +68,8 @@ void cms_ff_ppb(const char *filename_list, const char *trigger_name, const int i
 		root_histogram_pf.GetYaxis()->Set(39, axis);
 		root_histogram_pf_reflected.GetYaxis()->Set(39, axis);
 	}
-
 	root_histogram_pf.Sumw2();
-	root_histogram_pf.SetMarkerStyle(25);
-	root_histogram_pf.SetMarkerColor(kBlack);
-	root_histogram_pf.SetLineColor(kBlack);
-	root_histogram_pf.GetXaxis()->SetLabelSize(0.0625);
-	root_histogram_pf.GetXaxis()->SetTitleSize(0.0625);
-	root_histogram_pf.GetYaxis()->SetLabelSize(0.0625);
-	root_histogram_pf.GetYaxis()->SetTitleSize(0.0625);
-
 	root_histogram_pf_reflected.Sumw2();
-	root_histogram_pf_reflected.SetMarkerStyle(25);
-	root_histogram_pf_reflected.SetMarkerColor(kBlack);
-	root_histogram_pf_reflected.SetLineColor(kBlack);
-	root_histogram_pf_reflected.GetXaxis()->SetLabelSize(0.0625);
-	root_histogram_pf_reflected.GetXaxis()->SetTitleSize(0.0625);
-	root_histogram_pf_reflected.GetYaxis()->SetLabelSize(0.0625);
-	root_histogram_pf_reflected.GetYaxis()->SetTitleSize(0.0625);
-
-	if (strcmp(filename, "builtin") == 0) {
-		filename = strdup(
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/000D4260-D23E-E311-A850-02163E008D77.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/00E41BFD-D93E-E311-A91D-0025901D5DEC.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/022B6AEB-173F-E311-B17D-0025904A90CA.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/02484AF2-E63E-E311-A3F6-003048D2BEE6.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/024E0F96-B93E-E311-8A3C-02163E008DA1.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/027308C4-C73E-E311-8A0C-003048F23FA8.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/02751E29-D73E-E311-B249-02163E00CD78.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0278353F-F23E-E311-AEED-02163E00C482.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/02C290BF-E03E-E311-913B-C860001BD86A.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/02D19806-DD3E-E311-BC8A-002481E0D1F2.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/02E16C94-0B3F-E311-9F2F-02163E00C4FA.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/02E91997-EF3E-E311-8520-0025901AF660.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0420D5E4-B23E-E311-9F88-02163E00BF97.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0422E58A-A53E-E311-9A3E-02163E00ADFE.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/04446C4B-183F-E311-AB6F-02163E008D93.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0444C885-EB3E-E311-AD67-C860001BD834.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0471E862-D03E-E311-B57D-02163E00A38A.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/04A4EED5-053F-E311-A2AF-003048F1B904.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/04CD866D-EE3E-E311-B148-003048F23676.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/04D9EECE-F03E-E311-910B-02163E0079DA.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/04DE8625-BC3E-E311-8E8B-003048F1C9AC.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/04FC376C-053F-E311-9BAC-02163E0079D5.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/06318261-F83E-E311-B60D-003048CF92B8.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/06E59C16-0A40-E311-B387-02163E008D9F.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/06EA1332-D83E-E311-84BD-02163E00BA2B.root:"
-#if 0
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0811F6D0-F63E-E311-8119-003048F0E3E2.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0821EF2C-F13E-E311-82A6-0025901AF58A.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/083338D7-C83E-E311-A6BA-BCAEC518FF52.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/083FB350-E13E-E311-BA07-003048F1B904.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0870B2A1-0F3F-E311-8D3A-0025901D6284.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0875B156-063F-E311-99FE-003048D462BA.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/087BD0EE-073F-E311-84CD-02163E00ADFE.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/08CD351F-DF3E-E311-B4AD-003048F2377E.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/08F80CDC-FC3E-E311-9275-003048FEAF14.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0A00A5BE-D73E-E311-AE52-02163E00A313.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0A0408EF-EA3E-E311-8501-003048FEAECC.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0A046A87-043F-E311-B19F-02163E00CE1C.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0A07557B-043F-E311-A05E-02163E008D9E.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0A41D176-F33E-E311-9E3C-02163E00CAC5.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0A4C2BB0-EB3E-E311-9238-02163E00AD22.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0A6E33A9-E63E-E311-8E0E-C860001BD8BC.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0A73DA1F-FB3E-E311-9D96-02163E00CDF6.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0A817C2C-E43E-E311-823C-003048F1C1A0.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0A909CE8-E43E-E311-A769-02163E00AE41.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0A9FFC83-DA3E-E311-AD1C-003048FEAF90.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0AC9521D-AD3E-E311-BC7B-003048F1182C.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0AD989E0-E33E-E311-AEF9-02163E00CC4F.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0C5B7776-D23E-E311-ACB7-002481E0D1F2.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0C9638EB-CA3E-E311-9D83-0025B32441FA.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0CADD1C9-C33E-E311-892C-003048F01074.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0CCF68F1-E73E-E311-A1EE-003048FEAFA0.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0CD213C3-E03E-E311-88B4-002590494DE8.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0E00131B-D73E-E311-9FBF-0025901D6286.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0E38FEF9-103F-E311-81A2-0025901D5C7E.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0E53E0E6-EA3E-E311-8ACC-02163E008D96.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0E5E5D99-AB3E-E311-ACE7-003048F236DE.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0E721DD8-F23E-E311-96C9-02163E00C09C.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0EB3C1F1-C13E-E311-87F6-C860001BD89E.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0EBF2796-D83E-E311-A794-5404A63886EC.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0EC296FC-E63E-E311-83D0-003048F179C2.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/0ED83F55-063F-E311-96B0-003048F24354.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/10426894-D33E-E311-BEEC-02163E008D96.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/107DEEF2-C73E-E311-8AE2-02163E008D83.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/107E130C-ED3E-E311-BE60-02163E00A1F2.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/10AE0E26-023F-E311-8861-02163E00C7E1.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/10B2D1EE-F43E-E311-B3BC-5404A63886B1.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/10C529FC-EA3E-E311-B0E1-003048F236DA.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/10D9B1AE-E23E-E311-92BE-0030486730E6.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/10EDF04B-A23E-E311-8D99-003048F02C5A.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/122CFC9F-063F-E311-8719-02163E00CACA.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/123F921D-B33E-E311-844D-C860001BD868.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/124D4CF9-0E3F-E311-B402-02163E00B1AA.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/125206EC-C63E-E311-B48E-002590496FE6.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/12C0AED0-B23E-E311-A9E7-003048F1C764.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/140CAFBD-033F-E311-B5B9-0030486730BE.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/140CFF35-CD3E-E311-93CD-02163E008DB1.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/14444AA8-DC3E-E311-9AEE-0025901AF344.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/1463F0BE-C93E-E311-BBB4-003048FEB9C2.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/1475CD2D-113F-E311-A514-00237DDBE8CC.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/147929CD-DA3E-E311-ACDD-003048F01146.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/14792B5E-CA3E-E311-B877-003048F1C9A6.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/1488213F-D03E-E311-B09B-003048FEAEB0.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/14997B2C-AF3E-E311-B1A0-0025904B2C5A.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/14A72041-143F-E311-A4C3-002481E0D1F2.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/14AE996A-FC3E-E311-8ACE-02163E00C010.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/14E46207-D93E-E311-9321-003048CF9AE0.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/14F5FBD5-F63E-E311-8480-3C4A9279B99C.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/14F720D9-EA3E-E311-8540-02163E00BFED.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/16A08478-BF3E-E311-9C70-BCAEC5329720.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/18146DB6-D73E-E311-828B-003048F1C570.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/187A3C72-043F-E311-BBE7-003048F1B952.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/1880FB04-0C3F-E311-A832-003048F02D3A.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/189297B5-163F-E311-83D3-003048FE4C1E.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/18ABE119-FF3E-E311-935B-003048F1C41C.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/34FA4B80-5D40-E311-84A1-02163E008F4B.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/4AEA1386-5740-E311-8A90-003048FEB98E.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/86D25C78-E840-E311-BD36-003048FEAF84.root:"
-"/mnt/by-uuid/5ef92110-4bac-4a68-aa2f-7ad2d84192a9/scratch/data/F6080CC5-A842-E311-AD37-0025904B0568.root:"
-#endif
-);
-	}
-
-	fprintf(stderr, "%s:%d:\n", __FILE__, __LINE__);
 
 	while (filename[0] != '\0') {
 		fprintf(stderr, "%s:%d: %s\n", __FILE__, __LINE__, filename);
@@ -410,11 +248,6 @@ if (hiTree != NULL) {
    Int_t           nBX;
    Int_t           nRun;
    Int_t           nv;
-#if 0
-   Float_t         vx[2];
-   Float_t         vy[2];
-   Float_t         vz[2];
-#endif
    Int_t           nTrk;
    Float_t         trkPt[32768];
    Float_t         trkPtError[32768];
@@ -443,11 +276,6 @@ if (hiTree != NULL) {
    trackTree->SetBranchAddress("nBX",&nBX);
    trackTree->SetBranchAddress("nRun",&nRun);
    trackTree->SetBranchAddress("nv",&nv);
-#if 0
-   trackTree->SetBranchAddress("vx",vx);
-   trackTree->SetBranchAddress("vy",vy);
-   trackTree->SetBranchAddress("vz",vz);
-#endif
    trackTree->SetBranchAddress("nTrk",&nTrk);
    trackTree->SetBranchAddress("trkPt",trkPt);
    trackTree->SetBranchAddress("trkPtError",trkPtError);
@@ -620,8 +448,6 @@ if (hiTree != NULL) {
 			   fprintf(stderr, "%s:%d: %s\n", __FILE__, __LINE__, buf);
 			   break;
 		   }
-	   // HltTree->SetBranchAddress("HLT_Jet30_v9",&HLT_Jet30_v9);
-	   // HltTree->SetBranchAddress("HLT_Jet30_v9_Prescl",&HLT_Jet30_v9_Prescl);
 	   }
    }
 
@@ -685,16 +511,8 @@ if (hiTree != NULL) {
    HltTree2->SetBranchAddress("hltAna",&hltAna);
    }
 
-	fprintf(stderr, "%s:%d:\n", __FILE__, __LINE__);
-
 	//size_t nentries = trackTree->GetEntries();
 	size_t nentries = 100000;
-
-	fprintf(stderr, "%s:%d: offset = %lu, stride = %lu\n", __FILE__, __LINE__, parallel_offset, parallel_stride);
-	fprintf(stderr, "%s:%d: pfTree = %p\n", __FILE__, __LINE__, pfTree);
-	fprintf(stderr, "%s:%d: hiTree = %p\n", __FILE__, __LINE__, hiTree);
-	fprintf(stderr, "%s:%d: t = %p\n", __FILE__, __LINE__, t);
-	fprintf(stderr, "%s:%d: trackTree = %p\n", __FILE__, __LINE__, trackTree);
 
 	size_t event_count = 0;
 	size_t jet_count = 0;
@@ -727,12 +545,11 @@ if (hiTree != NULL) {
 			fprintf(stderr, "%s:%d: boost_pseudorapidity = %f\n", __FILE__, __LINE__, boost_pseudorapidity);
 		}
 
-		//const double boost_pseudorapidity = 0;
-
 		if (((pcollisionEventSelection != 0 ||
 			  pPAcollisionEventSelectionPA != 0) &&
 			 (is_mc || pHBHENoiseFilter != 0)) &&
 			(trigger_name[0] == '\0' || trigger_scaled != 0)
+//JEC Flag
 #if 0
 			&& nVtx >= 2 && nVtx <= 12
 #endif
@@ -741,51 +558,9 @@ if (hiTree != NULL) {
 			event_count++;
 			for (int j = 0; j < nref; j++) {
 				jteta[j] += boost_pseudorapidity;
-
+//JEC Flag
 #if 0
-				const double perp = rawpt[j];
-				const double pseudorapidity = jteta[j];
-				double perp_scale = 1;
-
-				switch (nVtx) {
-case 1:
-#include "jec_pp7tev_pu1.h"
-break;
-case 2:
-#include "jec_pp7tev_pu2.h"
-break;
-case 3:
-#include "jec_pp7tev_pu3.h"
-break;
-case 4:
-#include "jec_pp7tev_pu4.h"
-break;
-case 5:
-#include "jec_pp7tev_pu5.h"
-break;
-case 6:
-#include "jec_pp7tev_pu6.h"
-break;
-case 7:
-#include "jec_pp7tev_pu7.h"
-break;
-case 8:
-#include "jec_pp7tev_pu8.h"
-break;
-case 9:
-#include "jec_pp7tev_pu9.h"
-break;
-case 10:
-#include "jec_pp7tev_pu10.h"
-break;
-case 11:
-#include "jec_pp7tev_pu11.h"
-break;
-case 12:
-#include "jec_pp7tev_pu12.h"
-break;
-				}
-				jtpt[j] = rawpt[j] * perp_scale;
+       			jtpt[j] = get7tevPt(rawpt[j], jteta[j],nVtx);
 #endif
 			}
 			for (int j = 0; j < nTrk; j++) {
@@ -798,7 +573,6 @@ break;
 			long index_jet = 0;
 
 			for (int j = 0; j < nref; j++) {
-//				fprintf(stderr, "%s:%d: %d %d %d %d %d %d %d %d %d %d %d %d %.8e %.8e %.8e %.8e\n", __FILE__, __LINE__, i, j, HLT_Jet30_v9, HLT_Jet30_v9_Prescl, HLT_Jet60_v9, HLT_Jet60_v9_Prescl, HLT_Jet110_v9, HLT_Jet110_v9_Prescl, HLT_Jet190_v9, HLT_Jet190_v9_Prescl, HLT_Jet240_v9, HLT_Jet240_v9_Prescl, rawpt[j], jtpt[j], jteta[j], jtphi[j]);
 				if (fabs(jteta[j]) >= pseudorapidity_min && fabs(jteta[j]) < pseudorapidity_max) {
 					if (select_index_jet == -1 || select_index_jet == index_jet) {
 						root_histogram_jet.Fill(jtpt[j]);
@@ -853,7 +627,7 @@ break;
 								float correction = factorizedPtCorr(getPtBin(trkPt[k], sType), hiBin, trkPt[k], trkPhi[k], trkEta[k], sqrtf(dr_square), sType);
 								if (std::isfinite(correction)) {
 									if (jtpt[j] >= 100 && z > log(1.0 / 0.5)) {
-										//fprintf(stderr, "%s:%d: %d %d %d %.8e %.8e %.8e %.8e %.8e %.8e %.8e\n", __FILE__, __LINE__, run, lumi, evt, jtpt[j], jteta[j], jtphi[j], trkPt[k], trkEta[k], trkPhi[k], factorizedPtCorr(getPtBin(trkPt[k], sType), hiBin, trkPt[k], trkPhi[k], trkEta[k], sqrtf(dr_square), sType));
+						
 									}
 									if (perp_track) {
 										root_histogram_track.Fill(jtpt[j], trkPt[k], correction);
@@ -919,14 +693,6 @@ break;
 		}
 		if (i % 25000 == 0) {
 			fprintf(stderr, "%s:%d: %lu/%lu %lu %lu\n", __FILE__, __LINE__, i, nentries, jet_count, event_count);
-#if 0
-		}
-	}
-
-	f->Close();
-		}
-	}
-#endif
 
 	fprintf(stderr, "%s:%d: \n", __FILE__, __LINE__);
         root_histogram_jet.SetDirectory(0);
@@ -944,20 +710,9 @@ break;
         root_histogram_track.Write();
         root_histogram_track_reflected.Write();
         root_histogram_pf.Write();
-
-	//char output_filename[4096];
-
-	//snprintf(output_filename, 4096, "%s_%s_%d_%g_%g_%g_%ld_%lu_%lu_%lu.C", gSystem->BaseName(filename_list), trigger_name, perp_track, pseudorapidity_min, pseudorapidity_max, boost_ppb, select_index_jet, reflect_type, parallel_offset, parallel_stride);
-
-//	fprintf(stderr, "%s:%d: %s\n", __FILE__, __LINE__, output_filename);
-
-	//canvas.SaveAs(output_filename);
-	fprintf(stderr, "%s:%d:\n", __FILE__, __LINE__);
-
                 }
         }
-
-        //f->Close();
+        f->Close();
                 }
         }
 }
