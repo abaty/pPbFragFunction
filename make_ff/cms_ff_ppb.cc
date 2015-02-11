@@ -17,7 +17,7 @@
 //need to enable this here and below at the JEC flag to run on 7tev
 //#include "JEC7tev/get7tevPt.h"
 
-void cms_ff_ppb(const char *filename_list, const char *trigger_name, const int is_mc = 0, const int perp_track = 1, const double pseudorapidity_min = 0, const double pseudorapidity_max = 1, const double boost_ppb = 1, const long select_index_jet = -1, const unsigned long reflect_type = 0, const unsigned long parallel_offset = 0, const unsigned long parallel_stride = 1)
+void cms_ff_ppb(const char *filename_list, const char *trigger_name, const int is_mc = 0, const int perp_track = 1, const double pseudorapidity_min = 0, const double pseudorapidity_max = 1, const double boost_ppb = 1, const long select_index_jet = -1, const unsigned long reflect_type = 1, const unsigned long parallel_offset = 0, const unsigned long parallel_stride = 1)
 {
 	char *filename = strdup(filename_list);
 	fprintf(stderr, "%s:%d:\n", __FILE__, __LINE__);
@@ -511,8 +511,8 @@ if (hiTree != NULL) {
    HltTree2->SetBranchAddress("hltAna",&hltAna);
    }
 
-	//size_t nentries = trackTree->GetEntries();
-	size_t nentries = 100000;
+	size_t nentries = trackTree->GetEntries();
+	//size_t nentries = 100000;
 
 	size_t event_count = 0;
 	size_t jet_count = 0;
