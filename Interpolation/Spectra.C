@@ -25,6 +25,7 @@ double getdR2(double jet_eta, double jet_phi, double track_eta, double track_phi
   return TMath::Power(jet_eta-track_eta,2)+TMath::Power(acos(cos(jet_phi-track_phi)),2);
 }
 
+//calculation of Xi
 double getXi(double jetPt, double jetEta, double jetPhi, double trkPt, double trkEta, double trkPhi)
 {
   double xi = -2;
@@ -44,14 +45,21 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
   TH1::SetDefaultSumw2();
   TH2::SetDefaultSumw2();
   TRandom * rand = new TRandom(23);
-
   const sampleType sType = kPPDATA;
   InitCorrFiles(sType);
   InitCorrHists(sType);
  
-  for(int f = 0; f<npp2Files; f++)
+  int nFiles;
+  if(strcmp(mode,"pp2") == 0) nFiles = npp2Files;
+  else if(strcmp(mode,"pPb5") == 0) nFiles = npPb5Files;
+  else if(strcmp(mode,"Pbp5") == 0) nFiles = nPbp5Files;
+  else if(strcmp(mode, "pp7") == 0) nFiles = npp7Files;
+  for(int f = 0; f<nFiles; f++)
   {
-    h[f] = new HiForest(pp2File[f],"forest",cPP,0);
+    if(strcmp(mode,"pp2") == 0)       h[f] = new HiForest(pp2File[f],"forest",cPP,0);
+    else if(strcmp(mode,"pPb5") == 0) h[f] = new HiForest(pPb5File[f],"forest",cPPb,0);
+    else if(strcmp(mode,"Pbp5") == 0) h[f] = new HiForest(Pbp5File[f],"forest",cPPb,0);
+    else if(strcmp(mode,"pp7") ==0 )  h[f] = new HiForest(pp7File[f],"forest",cPP,0);
 
     h[f]->LoadNoTrees();
     h[f]->hasAk3JetTree = true;
@@ -72,7 +80,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
   else if(strcmp(mode,"Pbp5") == 0) boost = -pPbRapidity;
   std::cout << mode << " mode is specified; using a boost of: " << boost << std::endl;
 
-  for(int f=0; f<npp2Files; f++)
+  for(int f=0; f<nFiles; f++)
   {
     //int nEntry = h[f]->GetEntries();
     int nEntry = 50000;
@@ -83,7 +91,11 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
 
       int trigger = setTrigger(mode,f,h[f]); 
       if(!trigger) continue;
-      if(!((h[f]->skim.pPAcollisionEventSelectionPA == 1 || h[f]->skim.pcollisionEventSelection) && h[f]->skim.pHBHENoiseFilter == 1)) continue;
+//!!!!!!
+// remove the strcmp !((mode),pp7) when you get a pp7 forest w/ pcollisionEventSelection
+//!!!!!!
+      
+      if(!((h[f]->skim.pPAcollisionEventSelectionPA == 1 || !(strcmp(mode,"pp7")*h[f]->skim.pcollisionEventSelection == 1)) && h[f]->skim.pHBHENoiseFilter == 1)) continue;
 
       for(int j=0; j<h[f]->ak3PF.nref; j++)
       {
@@ -152,8 +164,9 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
   h_trackUE_xi->SetDirectory(0);
 
   h_jet->Write(Form("%s_%d_jet",mode,isMC));
-  h_track->Write(Form("%s%d_track",mode,isMC));
-  h_trackUE->Write(Form("%s%d_trackUE",mode,isMC));
-  h_track_xi->Write(Form("%s%d_track_xi",mode,isMC));
-  h_trackUE_xi->Write(Form("%s%d_trackUE_xi",mode,isMC));
+  h_track->Write(Form("%s_%d_track",mode,isMC));
+  h_trackUE->Write(Form("%s_%d_trackUE",mode,isMC));
+  h_track_xi->Write(Form("%s_%d_track_xi",mode,isMC));
+  h_trackUE_xi->Write(Form("%s_%d_trackUE_xi",mode,isMC));
+  outf->Close();
 }
