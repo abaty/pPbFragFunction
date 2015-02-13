@@ -18,11 +18,11 @@ const double axis[40] = {
                         120.8, 138, 155.2, 172.4, 189.6, 206.8
                         };
 
-TH1D * data2_jet;
-TH2D * data2_track;
-TH2D * data2_trackUE;
-TH2D * data2_track_xi;
-TH2D * data2_trackUE_xi;
+TH1D * h_jet;
+TH2D * h_track;
+TH2D * h_trackUE;
+TH2D * h_track_xi;
+TH2D * h_trackUE_xi;
 
 HiForest * h[5];
 
@@ -89,11 +89,11 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
     h[f]->hasSkimTree = true;
   }
 
-  data2_jet = new TH1D("data2_jet","",nJetBins,0,300); 
-  data2_track = new TH2D("data2_track","",nJetBins,0,300,39,axis);
-  data2_trackUE = new TH2D("data2_trackUE","",nJetBins,0,300,39,axis);
-  data2_track_xi = new TH2D("data2_track_xi","",nJetBins,0,300,28,-1.5,5.5);
-  data2_trackUE_xi = new TH2D("data2_trackUE_xi","",nJetBins,0,300,28,-1.5,5.5);
+  h_jet = new TH1D("h_jet","",nJetBins,0,300); 
+  h_track = new TH2D("h_track","",nJetBins,0,300,39,axis);
+  h_trackUE = new TH2D("h_trackUE","",nJetBins,0,300,39,axis);
+  h_track_xi = new TH2D("h_track_xi","",nJetBins,0,300,28,-1.5,5.5);
+  h_trackUE_xi = new TH2D("h_trackUE_xi","",nJetBins,0,300,28,-1.5,5.5);
 
   //boosting
   double boost = 0;
@@ -117,7 +117,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
       for(int j=0; j<h[f]->ak3PF.nref; j++)
       {
         if(TMath::Abs(h[f]->ak3PF.jteta[j]+boost) < jetEtaMin || TMath::Abs(h[f]->ak3PF.jteta[j]+boost) > jetEtaMax || h[f]->ak3PF.jtpt[j]<lowBound || h[f]->ak3PF.jtpt[j]>upBound) continue; 
-        data2_jet->Fill(h[f]->ak3PF.jtpt[j]);
+        h_jet->Fill(h[f]->ak3PF.jtpt[j]);
      
         for(int t=0; t<h[f]->track.nTrk; t++)
         {
@@ -139,8 +139,8 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
             double trkCorr = factorizedPtCorr(getPtBin(h[f]->track.trkPt[t], sType), 1, h[f]->track.trkPt[t], h[f]->track.trkPhi[t], h[f]->track.trkEta[t], r_min, sType);
             if(std::isfinite(trkCorr))
             {
-              data2_track->Fill(h[f]->ak3PF.jtpt[j],h[f]->track.trkPt[t],trkCorr);
-              data2_track_xi->Fill(h[f]->ak3PF.jtpt[j],getXi(h[f]->ak3PF.jtpt[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
+              h_track->Fill(h[f]->ak3PF.jtpt[j],h[f]->track.trkPt[t],trkCorr);
+              h_track_xi->Fill(h[f]->ak3PF.jtpt[j],getXi(h[f]->ak3PF.jtpt[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
      
@@ -153,8 +153,8 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
             double trkCorr = factorizedPtCorr(getPtBin(h[f]->track.trkPt[t], sType), 1, h[f]->track.trkPt[t], h[f]->track.trkPhi[t], h[f]->track.trkEta[t], r_min, sType);
             if(std::isfinite(trkCorr))
             {
-              data2_trackUE->Fill(h[f]->ak3PF.jtpt[j],h[f]->track.trkPt[t],trkCorr); 
-              data2_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j],getXi(h[f]->ak3PF.jtpt[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
+              h_trackUE->Fill(h[f]->ak3PF.jtpt[j],h[f]->track.trkPt[t],trkCorr); 
+              h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j],getXi(h[f]->ak3PF.jtpt[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
 
@@ -164,12 +164,25 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
             double trkCorr = factorizedPtCorr(getPtBin(h[f]->track.trkPt[t], sType), 1, h[f]->track.trkPt[t], h[f]->track.trkPhi[t], h[f]->track.trkEta[t], r_min, sType);
             if(std::isfinite(trkCorr))
             {
-              data2_trackUE->Fill(h[f]->ak3PF.jtpt[j],h[f]->track.trkPt[t],trkCorr); 
-              data2_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j],getXi(h[f]->ak3PF.jtpt[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
+              h_trackUE->Fill(h[f]->ak3PF.jtpt[j],h[f]->track.trkPt[t],trkCorr); 
+              h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j],getXi(h[f]->ak3PF.jtpt[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
         }
       }
     }
   }
+
+  TFile * outf = new TFile("spectra.root","update");
+  h_jet->SetDirectory(0);
+  h_track->SetDirectory(0);
+  h_trackUE->SetDirectory(0);
+  h_track_xi->SetDirectory(0);
+  h_trackUE_xi->SetDirectory(0);
+
+  h_jet->Write(Form("%s_%d_jet",mode,isMC));
+  h_track->Write(Form("%s%d_track",mode,isMC));
+  h_trackUE->Write(Form("%s%d_trackUE",mode,isMC));
+  h_track_xi->Write(Form("%s%d_track_xi",mode,isMC));
+  h_trackUE_xi->Write(Form("%s%d_trackUE_xi",mode,isMC));
 }
