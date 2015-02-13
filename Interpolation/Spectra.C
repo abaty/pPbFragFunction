@@ -8,6 +8,7 @@
 #include <cmath>
 //#include "JEC7tev/get7tevPt.h"
 #include "factorizedPtCorr.h"
+#include "SpectraFiles.h"
 
 const double pPbRapidity = 0.4654094531;
 const int nJetBins = 120;
@@ -17,36 +18,6 @@ const double axis[40] = {
                         19.2, 24, 28.8, 35.2, 41.6, 48, 60.8, 73.6, 86.4, 103.6,
                         120.8, 138, 155.2, 172.4, 189.6, 206.8
                         };
-
-TH1D * h_jet;
-TH2D * h_track;
-TH2D * h_trackUE;
-TH2D * h_track_xi;
-TH2D * h_trackUE_xi;
-
-HiForest * h[5];
-
-const int npp2Files = 2;
-const char * pp2File[npp2Files] = {
-  "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root",
-  "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root" };
-const double pp2Bound[npp2Files+1] = {60,100,200};
-
-double lowBound;
-double upBound;
-
-int setTrigger(const char* mode, int f, HiForest * h)
-{
-  int trigger;
-  if(strcmp(mode,"pp2")==0);
-  {
-    if(f==0) trigger = h->hlt.HLT_PAJet40_NoJetID_v1;
-    if(f==1) trigger = h->hlt.HLT_PAJet80_NoJetID_v1;
-    lowBound = pp2Bound[f];
-    upBound = pp2Bound[f+1];
-  }
-  return trigger;
-}
 
 //calculates dr^2 to avoid the slow TMath() Sqrt function
 double getdR2(double jet_eta, double jet_phi, double track_eta, double track_phi)
