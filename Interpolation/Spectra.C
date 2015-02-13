@@ -16,10 +16,8 @@ TH2D * data2_track_xi;
 TH2D * data2_trackUE_xi;
 
 /* TODOS
-Track Correction
 7 TEV JEC
 Triggers
-Fix to correct version of xi being used
 */
 
 const double pPbRapidity = 0.4654094531; 
@@ -35,6 +33,13 @@ const double axis[40] = {
 double getdR2(double jet_eta, double jet_phi, double track_eta, double track_phi)
 {
   return TMath::Power(jet_eta-track_eta,2)+TMath::Power(acos(cos(jet_phi-track_phi)),2);
+}
+
+double getXi(double jetPt, double jetEta, double jetPhi, double trkPt, double trkEta, double trkPhi)
+{
+  double xi = -2;
+  xi = TMath::Log((jetPt/trkPt)*TMath::Power(TMath::CosH(jetEta),2)/(TMath::Cos(trkPhi-jetPhi) + TMath::SinH(jetEta)*TMath::SinH(trkEta)));
+  return xi;
 }
 
 //modes are pp2,pp7,pPb5,Pbp5
@@ -109,8 +114,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
           if(std::isfinite(trkCorr))
           {
             data2_track->Fill(h->ak3PF.jtpt[j],h->track.trkPt[t],trkCorr);
-            //need to fix xi
-            data2_track_xi->Fill(h->ak3PF.jtpt[j],TMath::Log(h->ak3PF.jtpt[j]/h->track.trkPt[t]),trkCorr);
+            data2_track_xi->Fill(h->ak3PF.jtpt[j],getXi(h->ak3PF.jtpt[j],h->ak3PF.jteta[j]+boost,h->ak3PF.jtphi[j],h->track.trkPt[t],h->track.trkEta[t]+boost,h->track.trkPhi[t]),trkCorr);
           }
         }
      
@@ -123,9 +127,8 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
           double trkCorr = factorizedPtCorr(getPtBin(h->track.trkPt[t], sType), 1, h->track.trkPt[t], h->track.trkPhi[t], h->track.trkEta[t], r_min, sType);
           if(std::isfinite(trkCorr))
           {
-            data2_trackUE->Fill(h->ak3PF.jtpt[j],h->track.trkPt[t],trkCorr);
-            //need to fix xi here and below
-            data2_trackUE_xi->Fill(h->ak3PF.jtpt[j],TMath::Log(h->ak3PF.jtpt[j]/h->track.trkPt[t]),trkCorr);
+            data2_trackUE->Fill(h->ak3PF.jtpt[j],h->track.trkPt[t],trkCorr); 
+            data2_trackUE_xi->Fill(h->ak3PF.jtpt[j],getXi(h->ak3PF.jtpt[j],h->ak3PF.jteta[j]+boost,h->ak3PF.jtphi[j],h->track.trkPt[t],h->track.trkEta[t]+boost,h->track.trkPhi[t]),trkCorr);
           }
         }
 
@@ -135,9 +138,8 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
           double trkCorr = factorizedPtCorr(getPtBin(h->track.trkPt[t], sType), 1, h->track.trkPt[t], h->track.trkPhi[t], h->track.trkEta[t], r_min, sType);
           if(std::isfinite(trkCorr))
           {
-            data2_trackUE->Fill(h->ak3PF.jtpt[j],h->track.trkPt[t],trkCorr);
-            //need to fix xi here and above
-            data2_trackUE_xi->Fill(h->ak3PF.jtpt[j],TMath::Log(h->ak3PF.jtpt[j]/h->track.trkPt[t]),trkCorr);
+            data2_trackUE->Fill(h->ak3PF.jtpt[j],h->track.trkPt[t],trkCorr); 
+            data2_trackUE_xi->Fill(h->ak3PF.jtpt[j],getXi(h->ak3PF.jtpt[j],h->ak3PF.jteta[j]+boost,h->ak3PF.jtphi[j],h->track.trkPt[t],h->track.trkEta[t]+boost,h->track.trkPhi[t]),trkCorr);
           }
         }
       }
