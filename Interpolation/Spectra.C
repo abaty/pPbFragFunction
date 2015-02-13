@@ -9,6 +9,15 @@
 //#include "JEC7tev/get7tevPt.h"
 #include "factorizedPtCorr.h"
 
+const double pPbRapidity = 0.4654094531;
+const int nJetBins = 120;
+const double axis[40] = {
+                        0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.4, 1.6, 1.8,
+                        2, 2.2, 2.4, 3.2, 4, 4.8, 5.6, 6.4, 7.2, 9.6, 12, 14.4,
+                        19.2, 24, 28.8, 35.2, 41.6, 48, 60.8, 73.6, 86.4, 103.6,
+                        120.8, 138, 155.2, 172.4, 189.6, 206.8
+                        };
+
 TH1D * data2_jet;
 TH2D * data2_track;
 TH2D * data2_trackUE;
@@ -18,31 +27,26 @@ TH2D * data2_trackUE_xi;
 HiForest * h[5];
 
 const int npp2Files = 2;
-const char * pp2Files[npp2Files]    = {
-                                "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root"
-                                "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root",
-                              };
-const char * pp2Triggers[npp2Files] = {
-                               "HLT_PAJet40_NoJetID_v1",
-                               "HLT_PAJet80_NoJetID_v1" 
-                              };
-const double pp2lowBound[npp2Files] = {60,100};
-const double pp2upBound[npp2Files] = {100,200};
+const char * pp2File[npp2Files] = {
+  "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root",
+  "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root" };
+const double pp2Bound[npp2Files+1] = {60,100,200};
 
-/* TODOS
-7 TEV JEC
-Triggers
-*/
+double lowBound;
+double upBound;
 
-const double pPbRapidity = 0.4654094531; 
-const int nJetBins = 120;
-const double axis[40] = {
-                        0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.4, 1.6, 1.8,
-                        2, 2.2, 2.4, 3.2, 4, 4.8, 5.6, 6.4, 7.2, 9.6, 12, 14.4,
-                        19.2, 24, 28.8, 35.2, 41.6, 48, 60.8, 73.6, 86.4, 103.6,
-                        120.8, 138, 155.2, 172.4, 189.6, 206.8
-	                };
-
+int setTrigger(const char* mode, int f, HiForest * h)
+{
+  int trigger;
+  if(strcmp(mode,"pp2")==0);
+  {
+    if(f==0) trigger = h->hlt.HLT_PAJet40_NoJetID_v1;
+    if(f==1) trigger = h->hlt.HLT_PAJet80_NoJetID_v1;
+    lowBound = pp2Bound[f];
+    upBound = pp2Bound[f+1];
+  }
+  return trigger;
+}
 
 //calculates dr^2 to avoid the slow TMath() Sqrt function
 double getdR2(double jet_eta, double jet_phi, double track_eta, double track_phi)
@@ -58,7 +62,6 @@ double getXi(double jetPt, double jetEta, double jetPhi, double trkPt, double tr
 }
 
 //modes are pp2,pp7,pPb5,Pbp5
-
 void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 0, double jetEtaMax = 1.5, bool isMC  = 0)
 {
   if(strcmp(mode,"pp2") && strcmp(mode,"pp7") && strcmp(mode,"pPb5") && strcmp(mode,"Pbp5"))
@@ -77,7 +80,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
  
   for(int f = 0; f<npp2Files; f++)
   {
-    h[f] = new HiForest(pp2File2[f],"forest",cPP,0);
+    h[f] = new HiForest(pp2File[f],"forest",cPP,0);
 
     h[f]->LoadNoTrees();
     h[f]->hasAk3JetTree = true;
@@ -106,35 +109,38 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
     {
       h[f]->GetEntry(i);
       if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
+
+      int trigger = setTrigger(mode,f,h[f]); 
+      if(!trigger) continue;
       if(!((h[f]->skim.pPAcollisionEventSelectionPA == 1 || h[f]->skim.pcollisionEventSelection) && h[f]->skim.pHBHENoiseFilter == 1)) continue;
 
       for(int j=0; j<h[f]->ak3PF.nref; j++)
       {
-        if(TMath::Abs(h[f]->ak3PF.jteta[j]+boost) < jetEtaMin || TMath::Abs(h[f]->ak3PF.jteta[j]+boost) > jetEtaMax || h[f]->ak3PF.jtpt[j]<60 || h[f]->ak3PF.jtpt[j]>200) continue; 
-        data2_jet->Fill(h->ak3PF.jtpt[j]);
+        if(TMath::Abs(h[f]->ak3PF.jteta[j]+boost) < jetEtaMin || TMath::Abs(h[f]->ak3PF.jteta[j]+boost) > jetEtaMax || h[f]->ak3PF.jtpt[j]<lowBound || h[f]->ak3PF.jtpt[j]>upBound) continue; 
+        data2_jet->Fill(h[f]->ak3PF.jtpt[j]);
      
-        for(int t=0; t<h->track.nTrk; t++)
+        for(int t=0; t<h[f]->track.nTrk; t++)
         {
-          if(h->track.trkPt[t] < 0.5 || h->track.trkPt[t] > 1e+5 || !h->track.highPurity[t] || TMath::Abs(h->track.trkEta[t])>2.4 ) continue;
-          if(TMath::Abs(h->track.trkDxy1[t]/h->track.trkDxyError1[t]) > 3 || TMath::Abs(h->track.trkDz1[t]/h->track.trkDzError1[t]) > 3 || h->track.trkPtError[t]/h->track.trkPt[t] > 0.1) continue;
+          if(h[f]->track.trkPt[t] < 0.5 || h[f]->track.trkPt[t] > 1e+5 || !h[f]->track.highPurity[t] || TMath::Abs(h[f]->track.trkEta[t])>2.4 ) continue;
+          if(TMath::Abs(h[f]->track.trkDxy1[t]/h[f]->track.trkDxyError1[t]) > 3 || TMath::Abs(h[f]->track.trkDz1[t]/h[f]->track.trkDzError1[t]) > 3 || h[f]->track.trkPtError[t]/h[f]->track.trkPt[t] > 0.1) continue;
         
           //calculating r_min for tracking correction
           double r_min = 9;
-          for(int j2 = 0; j2<h->ak3PF.nref; j2++)
+          for(int j2 = 0; j2<h[f]->ak3PF.nref; j2++)
           {
-            if(TMath::Abs(h->ak3PF.jteta[j2])>2 || TMath::Abs(h->ak3PF.jtpt[j2]) < 50) continue;
-            double r_min_temp = TMath::Power(getdR2(h->ak3PF.jteta[j2],h->ak3PF.jtphi[j2],h->track.trkEta[t],h->track.trkPhi[t]),0.5);
+            if(TMath::Abs(h[f]->ak3PF.jteta[j2])>2 || TMath::Abs(h[f]->ak3PF.jtpt[j2]) < 50) continue;
+            double r_min_temp = TMath::Power(getdR2(h[f]->ak3PF.jteta[j2],h[f]->ak3PF.jtphi[j2],h[f]->track.trkEta[t],h[f]->track.trkPhi[t]),0.5);
             if(r_min_temp < r_min) r_min = r_min_temp;
           }
  
           //Filling track spectrum in jet cone
-          if(getdR2(h->ak3PF.jteta[j]+boost,h->ak3PF.jtphi[j],h->track.trkEta[t]+boost,h->track.trkPhi[t]) < 0.3*0.3)
+          if(getdR2(h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]) < 0.3*0.3)
           {
-            double trkCorr = factorizedPtCorr(getPtBin(h->track.trkPt[t], sType), 1, h->track.trkPt[t], h->track.trkPhi[t], h->track.trkEta[t], r_min, sType);
+            double trkCorr = factorizedPtCorr(getPtBin(h[f]->track.trkPt[t], sType), 1, h[f]->track.trkPt[t], h[f]->track.trkPhi[t], h[f]->track.trkEta[t], r_min, sType);
             if(std::isfinite(trkCorr))
             {
-              data2_track->Fill(h->ak3PF.jtpt[j],h->track.trkPt[t],trkCorr);
-              data2_track_xi->Fill(h->ak3PF.jtpt[j],getXi(h->ak3PF.jtpt[j],h->ak3PF.jteta[j]+boost,h->ak3PF.jtphi[j],h->track.trkPt[t],h->track.trkEta[t]+boost,h->track.trkPhi[t]),trkCorr);
+              data2_track->Fill(h[f]->ak3PF.jtpt[j],h[f]->track.trkPt[t],trkCorr);
+              data2_track_xi->Fill(h[f]->ak3PF.jtpt[j],getXi(h[f]->ak3PF.jtpt[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
      
@@ -142,24 +148,24 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
           int rotationDirection = 2*(int)rand->Integer(2)-1;
 
           //Phi rotated UE subtraction
-          if(doPhiUE && getdR2(h->ak3PF.jteta[j]+boost,h->ak3PF.jtphi[j]+rotationDirection*TMath::PiOver2(),h->track.trkEta[t]+boost,h->track.trkPhi[t]) < 0.3*0.3)
+          if(doPhiUE && getdR2(h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j]+rotationDirection*TMath::PiOver2(),h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]) < 0.3*0.3)
           {
-            double trkCorr = factorizedPtCorr(getPtBin(h->track.trkPt[t], sType), 1, h->track.trkPt[t], h->track.trkPhi[t], h->track.trkEta[t], r_min, sType);
+            double trkCorr = factorizedPtCorr(getPtBin(h[f]->track.trkPt[t], sType), 1, h[f]->track.trkPt[t], h[f]->track.trkPhi[t], h[f]->track.trkEta[t], r_min, sType);
             if(std::isfinite(trkCorr))
             {
-              data2_trackUE->Fill(h->ak3PF.jtpt[j],h->track.trkPt[t],trkCorr); 
-              data2_trackUE_xi->Fill(h->ak3PF.jtpt[j],getXi(h->ak3PF.jtpt[j],h->ak3PF.jteta[j]+boost,h->ak3PF.jtphi[j],h->track.trkPt[t],h->track.trkEta[t]+boost,h->track.trkPhi[t]),trkCorr);
+              data2_trackUE->Fill(h[f]->ak3PF.jtpt[j],h[f]->track.trkPt[t],trkCorr); 
+              data2_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j],getXi(h[f]->ak3PF.jtpt[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
 
           //Eta Reflected UE subtraction
-          if(!doPhiUE && getdR2(-1*(h->ak3PF.jteta[j]+boost),h->ak3PF.jtphi[j],h->track.trkEta[t]+boost,h->track.trkPhi[t]) < 0.3*0.3)
+          if(!doPhiUE && getdR2(-1*(h[f]->ak3PF.jteta[j]+boost),h[f]->ak3PF.jtphi[j],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]) < 0.3*0.3)
           {
-            double trkCorr = factorizedPtCorr(getPtBin(h->track.trkPt[t], sType), 1, h->track.trkPt[t], h->track.trkPhi[t], h->track.trkEta[t], r_min, sType);
+            double trkCorr = factorizedPtCorr(getPtBin(h[f]->track.trkPt[t], sType), 1, h[f]->track.trkPt[t], h[f]->track.trkPhi[t], h[f]->track.trkEta[t], r_min, sType);
             if(std::isfinite(trkCorr))
             {
-              data2_trackUE->Fill(h->ak3PF.jtpt[j],h->track.trkPt[t],trkCorr); 
-              data2_trackUE_xi->Fill(h->ak3PF.jtpt[j],getXi(h->ak3PF.jtpt[j],h->ak3PF.jteta[j]+boost,h->ak3PF.jtphi[j],h->track.trkPt[t],h->track.trkEta[t]+boost,h->track.trkPhi[t]),trkCorr);
+              data2_trackUE->Fill(h[f]->ak3PF.jtpt[j],h[f]->track.trkPt[t],trkCorr); 
+              data2_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j],getXi(h[f]->ak3PF.jtpt[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
         }
