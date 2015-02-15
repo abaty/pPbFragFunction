@@ -6,7 +6,7 @@
 #include "string.h"
 #include <iostream>
 #include <cmath>
-//#include "JEC7tev/get7tevPt.h"
+#include "JEC7tev/get7tevPt.h"
 #include "factorizedPtCorr.h"
 #include "SpectraFiles.h"
 
@@ -52,13 +52,13 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
   int nFiles;
   if(strcmp(mode,"pp2") == 0) nFiles = npp2Files;
   else if(strcmp(mode,"pPb5") == 0) nFiles = npPb5Files;
-  else if(strcmp(mode,"Pbp5") == 0) nFiles = nPbp5Files;
+  //else if(strcmp(mode,"Pbp5") == 0) nFiles = nPbp5Files;
   else if(strcmp(mode, "pp7") == 0) nFiles = npp7Files;
   for(int f = 0; f<nFiles; f++)
   {
     if(strcmp(mode,"pp2") == 0)       h[f] = new HiForest(pp2File[f],"forest",cPP,0);
     else if(strcmp(mode,"pPb5") == 0) h[f] = new HiForest(pPb5File[f],"forest",cPPb,0);
-    else if(strcmp(mode,"Pbp5") == 0) h[f] = new HiForest(Pbp5File[f],"forest",cPPb,0);
+    //else if(strcmp(mode,"Pbp5") == 0) h[f] = new HiForest(Pbp5File[f],"forest",cPPb,0);
     else if(strcmp(mode,"pp7") ==0 )  h[f] = new HiForest(pp7File[f],"forest",cPP,0);
 
     h[f]->LoadNoTrees();
@@ -97,10 +97,30 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
       
       if(!((h[f]->skim.pPAcollisionEventSelectionPA == 1 || !(strcmp(mode,"pp7")*h[f]->skim.pcollisionEventSelection == 1)) && h[f]->skim.pHBHENoiseFilter == 1)) continue;
 
+//!!!!!!!
+////remove when new 7 pp jec is implemented in forest
+////!!!!!!!!!
+      double JEC[1000] = {0};
+      if(strcmp(mode, "pp7") == 0)
+      {
+        for(int j = 0; j<h[f]->ak3PF.nref; j++)
+        {
+          JEC[j] = get7tevPt(h[f]->ak3PF.rawpt[j], h[f]->ak3PF.jteta[j], h[f]->track.nVtx)/h[f]->ak3PF.jtpt[j];
+        }
+      }
+      else 
+      {
+        if(JEC[0] == 0)
+        {
+          for(int j = 0; j<1000; j++) JEC[j] = 1;
+        }
+      }
+//!!!!!!end of part that needs to be removed for new JEC, get rid of JEC[j] below
+
       for(int j=0; j<h[f]->ak3PF.nref; j++)
       {
-        if(TMath::Abs(h[f]->ak3PF.jteta[j]+boost) < jetEtaMin || TMath::Abs(h[f]->ak3PF.jteta[j]+boost) > jetEtaMax || h[f]->ak3PF.jtpt[j]<lowBound || h[f]->ak3PF.jtpt[j]>upBound) continue; 
-        h_jet->Fill(h[f]->ak3PF.jtpt[j]);
+        if(TMath::Abs(h[f]->ak3PF.jteta[j]+boost) < jetEtaMin || TMath::Abs(h[f]->ak3PF.jteta[j]+boost) > jetEtaMax || h[f]->ak3PF.jtpt[j]*JEC[j]<lowBound || h[f]->ak3PF.jtpt[j]*JEC[j]>upBound) continue; 
+        h_jet->Fill(h[f]->ak3PF.jtpt[j]*JEC[j]);
      
         for(int t=0; t<h[f]->track.nTrk; t++)
         {
@@ -111,7 +131,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
           double r_min = 9;
           for(int j2 = 0; j2<h[f]->ak3PF.nref; j2++)
           {
-            if(TMath::Abs(h[f]->ak3PF.jteta[j2])>2 || TMath::Abs(h[f]->ak3PF.jtpt[j2]) < 50) continue;
+            if(TMath::Abs(h[f]->ak3PF.jteta[j2])>2 || TMath::Abs(h[f]->ak3PF.jtpt[j2]*JEC[j2]) < 50) continue;
             double r_min_temp = TMath::Power(getdR2(h[f]->ak3PF.jteta[j2],h[f]->ak3PF.jtphi[j2],h[f]->track.trkEta[t],h[f]->track.trkPhi[t]),0.5);
             if(r_min_temp < r_min) r_min = r_min_temp;
           }
@@ -122,8 +142,8 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
             double trkCorr = factorizedPtCorr(getPtBin(h[f]->track.trkPt[t], sType), 1, h[f]->track.trkPt[t], h[f]->track.trkPhi[t], h[f]->track.trkEta[t], r_min, sType);
             if(std::isfinite(trkCorr))
             {
-              h_track->Fill(h[f]->ak3PF.jtpt[j],h[f]->track.trkPt[t],trkCorr);
-              h_track_xi->Fill(h[f]->ak3PF.jtpt[j],getXi(h[f]->ak3PF.jtpt[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
+              h_track->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->track.trkPt[t],trkCorr);
+              h_track_xi->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],getXi(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
      
@@ -136,8 +156,8 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
             double trkCorr = factorizedPtCorr(getPtBin(h[f]->track.trkPt[t], sType), 1, h[f]->track.trkPt[t], h[f]->track.trkPhi[t], h[f]->track.trkEta[t], r_min, sType);
             if(std::isfinite(trkCorr))
             {
-              h_trackUE->Fill(h[f]->ak3PF.jtpt[j],h[f]->track.trkPt[t],trkCorr); 
-              h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j],getXi(h[f]->ak3PF.jtpt[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
+              h_trackUE->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->track.trkPt[t],trkCorr); 
+              h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],getXi(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
 
@@ -147,8 +167,8 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
             double trkCorr = factorizedPtCorr(getPtBin(h[f]->track.trkPt[t], sType), 1, h[f]->track.trkPt[t], h[f]->track.trkPhi[t], h[f]->track.trkEta[t], r_min, sType);
             if(std::isfinite(trkCorr))
             {
-              h_trackUE->Fill(h[f]->ak3PF.jtpt[j],h[f]->track.trkPt[t],trkCorr); 
-              h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j],getXi(h[f]->ak3PF.jtpt[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
+              h_trackUE->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->track.trkPt[t],trkCorr); 
+              h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],getXi(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
         }
