@@ -6,7 +6,7 @@
 #include "string.h"
 #include <iostream>
 #include <cmath>
-//#include "get7tevPt.h"
+#include "get7tevPt.h"
 #include "factorizedPtCorr.h"
 #include "SpectraFiles.h"
 
@@ -87,7 +87,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
     for(int i=jobNum; i<nEntry; i+=nJobs)
     {
       h[f]->GetEntry(i);
-      if(i%10000 == jobNum) std::cout << i << "/" << nEntry << std::endl;
+      if(i%100000 == jobNum) std::cout << i << "/" << nEntry << std::endl;
 
       int trigger = 1;
       trigger = setTrigger(mode,f,h[f]); 
@@ -102,7 +102,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
 ////remove when new 7 pp jec is implemented in forest
 ////!!!!!!!!!
       double JEC[1000] = {0};
-  /*    if(strcmp(mode, "pp7") == 0)
+      if(strcmp(mode, "pp7") == 0)
       {
         for(int j = 0; j<h[f]->ak3PF.nref; j++)
         {
@@ -110,12 +110,12 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
         }
       }
       else 
-      {*/ 
+      { 
         if(JEC[0] == 0)
         {
           for(int j = 0; j<1000; j++) JEC[j] = 1;
         }
-      //}
+      }
 //!!!!!!end of part that needs to be removed for new JEC, get rid of JEC[j] below
 
       for(int j=0; j<h[f]->ak3PF.nref; j++)
