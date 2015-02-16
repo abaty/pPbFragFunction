@@ -6,7 +6,7 @@
 #include "string.h"
 #include <iostream>
 #include <cmath>
-#include "get7tevPt.h"
+//#include "get7tevPt.h"
 #include "factorizedPtCorr.h"
 #include "SpectraFiles.h"
 
@@ -102,7 +102,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
 ////remove when new 7 pp jec is implemented in forest
 ////!!!!!!!!!
       double JEC[1000] = {0};
-      if(strcmp(mode, "pp7") == 0)
+  /*    if(strcmp(mode, "pp7") == 0)
       {
         for(int j = 0; j<h[f]->ak3PF.nref; j++)
         {
@@ -110,12 +110,12 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
         }
       }
       else 
-      { 
+      {*/ 
         if(JEC[0] == 0)
         {
           for(int j = 0; j<1000; j++) JEC[j] = 1;
         }
-      }
+      //}
 //!!!!!!end of part that needs to be removed for new JEC, get rid of JEC[j] below
 
       for(int j=0; j<h[f]->ak3PF.nref; j++)
@@ -177,7 +177,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
     }
   }
 
-  TFile * outf = new TFile(Form("spectra_%d.root",nJobs),"update");
+  TFile * outf = new TFile(Form("spectra_%d.root",jobNum),"update");
   h_jet->SetDirectory(0);
   h_track->SetDirectory(0);
   h_trackUE->SetDirectory(0);
@@ -193,7 +193,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
 }
 
 int main(int argc, char *argv[]){
-  if(argc != 3){
+  if(argc != 4){
     std::cout << "Usage: runcorr <condor_iter> <nJobs>" << std::endl;
     return 1;
   }
@@ -207,5 +207,6 @@ int main(int argc, char *argv[]){
   if(argument3 == 0) Spectra("pp2",true,0,1.5,0,argument1,argument2);
   if(argument3 == 1) Spectra("pPb5",true,0,1.5,0,argument1,argument2);
   if(argument3 == 2) Spectra("pp7",true,0,1.5,0,argument1,argument2);
+  std::cout << "finished " << argument1 << argument2 << argument3 << std::endl;
   return 0;
 }

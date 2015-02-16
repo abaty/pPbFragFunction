@@ -1,17 +1,21 @@
-if [ $# -ne 1 ]
+if [ $# -ne 2 ]
 then
   echo "Usage: ./run.sh <condor_iteration> <njobs>"
   exit 1
 fi
 
-echo | awk -v i=$1 j=$2 '{print "./run.exe "i" "j" "0}' 
-echo | awk -v i=$1 j=$2 '{print "./run.exe "i" "j" "0}' | bash
+sleep$((10 * $1))
 
-echo | awk -v i=$1 j=$2 '{print "./run.exe "i" "j" "1}'
-echo | awk -v i=$1 j=$2 '{print "./run.exe "i" "j" "1}' | bash
+nModes=3
 
-echo | awk -v i=$1 j=$2 '{print "./run.exe "i" "j" "2}'
-echo | awk -v i=$1 j=$2 '{print "./run.exe "i" "j" "2}' | bash
+echo | awk -v i=$1 -v j=$2 -v k=$(($1 % $nModes)) '{print "./run.exe "i" "j" "k}' 
+echo | awk -v i=$1 -v j=$2 -v k=$(($1 % $nModes)) '{print "./run.exe "i" "j" "k}' | bash
+
+echo | awk -v i=$1 -v j=$2 -v k=$(($1 % $nModes)) '{print "./run.exe "i" "j" "k}'
+echo | awk -v i=$1 -v j=$2 -v k=$(($1 % $nModes)) '{print "./run.exe "i" "j" "k}' | bash
+
+echo | awk -v i=$1 -v j=$2 -v k=$(($1 % $nModes)) '{print "./run.exe "i" "j" "k}'
+echo | awk -v i=$1 -v j=$2 -v k=$(($1 % $nModes)) '{print "./run.exe "i" "j" "k}' | bash
 
 sleep $((10 * $1))
 

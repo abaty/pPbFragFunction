@@ -32,7 +32,7 @@ const double pp7Bound[npp7Files+1] = {60,80,140,200};
 
 int setTrigger(const char* mode, int f, HiForest * h1)
 {
-  int trigger;
+  int trigger = 0;
   if(strcmp(mode,"pp2")==0)
   {
     if(f==0) trigger = h1->hlt.HLT_PAJet40_NoJetID_v1;

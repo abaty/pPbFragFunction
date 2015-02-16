@@ -10,6 +10,7 @@ njobs=2
 mkdir $now
 cp fake*.root $now
 cp eff*.root $now
+cp secondary*.root $now
 
 cp run.sh $now
 cat run.condor | sed "s@log_flag@$now@g" | sed "s@dir_flag@$PWD/$now@g" | sed "s@user_flag@$USER@g" |  sed "s@arglist@$njobs@g" | sed "s@transfer_filelist@run.exe@g" | sed "s@njobs@$njobs@g" > $now/run.condor
