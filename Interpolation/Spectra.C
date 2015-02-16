@@ -6,7 +6,7 @@
 #include "string.h"
 #include <iostream>
 #include <cmath>
-#include "JEC7tev/get7tevPt.h"
+#include "get7tevPt.h"
 #include "factorizedPtCorr.h"
 #include "SpectraFiles.h"
 
@@ -49,7 +49,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
   InitCorrFiles(sType);
   InitCorrHists(sType);
  
-  int nFiles;
+  int nFiles = 0;
   if(strcmp(mode,"pp2") == 0) nFiles = npp2Files;
   else if(strcmp(mode,"pPb5") == 0) nFiles = npPb5Files;
   //else if(strcmp(mode,"Pbp5") == 0) nFiles = nPbp5Files;
@@ -83,13 +83,14 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
   for(int f=0; f<nFiles; f++)
   {
     int nEntry = h[f]->GetEntries();
-    //if(nEntry>1000000) nEntry = 1000000;
+    if(nEntry>2000) nEntry = 2000;
     for(int i=jobNum; i<nEntry; i+=nJobs)
     {
       h[f]->GetEntry(i);
       if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
 
-      int trigger = setTrigger(mode,f,h[f]); 
+      int trigger = 1;
+      trigger = setTrigger(mode,f,h[f]); 
       if(!trigger) continue;
 //!!!!!!
 // remove the strcmp !((mode),pp7) when you get a pp7 forest w/ pcollisionEventSelection
@@ -198,10 +199,13 @@ int main(int argc, char *argv[]){
   }
   int argument1 = std::atoi(argv[1]);
   int argument2 = std::atoi(argv[2]);
+  int argument3 = std::atoi(argv[3]);
   /*if(argument==0) argument=27;
   else if(argument==1) argument=26;
   else if(argument==2) argument=27;*/
   
-  Spectra("pp2",true,0,1.5,0,argument1,argument2);
+  if(argument3 == 0) Spectra("pp2",true,0,1.5,0,argument1,argument2);
+  if(argument3 == 1) Spectra("pPb5",true,0,1.5,0,argument1,argument2);
+  if(argument3 == 2) Spectra("pp7",true,0,1.5,0,argument1,argument2);
   return 0;
 }
