@@ -5,7 +5,7 @@ then
 fi
 
 now="spectra_$(date +"%Y_%m_%d__%H_%M_%S")"
-njobs=25
+njobs=50
 
 mkdir $now
 cp fake*.root $now
@@ -19,6 +19,7 @@ NAME="Spectra.C"
 g++ $NAME $(root-config --cflags --libs) -Werror -Wall -O2 -o "run.exe"
 cp run.exe $now
 rm run.exe
+echo finished compilation
 echo
 cat $now/run.condor
 echo 
