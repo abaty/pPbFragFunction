@@ -6,7 +6,7 @@
 #include "string.h"
 #include <iostream>
 #include <cmath>
-//#include "JEC7tev/get7tevPt.h"
+#include "JEC7tev/get7tevPt.h"
 #include "factorizedPtCorr.h"
 #include "SpectraFiles.h"
 
@@ -34,7 +34,7 @@ double getXi(double jetPt, double jetEta, double jetPhi, double trkPt, double tr
 }
 
 //modes are pp2,pp7,pPb5,Pbp5
-void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0, double jetEtaMax = 1.5, bool isMC  = 0)
+void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0, double jetEtaMax = 1.5, bool isMC  = 0, int jobNum = 0, int nJobs = 1)
 {
   if(strcmp(mode,"pp2") && strcmp(mode,"pp7") && strcmp(mode,"pPb5") && strcmp(mode,"Pbp5"))
   {
@@ -83,8 +83,8 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
   for(int f=0; f<nFiles; f++)
   {
     int nEntry = h[f]->GetEntries();
-    if(nEntry>1000000) nEntry = 1000000;
-    for(int i=0; i<nEntry; i++)
+    //if(nEntry>1000000) nEntry = 1000000;
+    for(int i=jobNum; i<nEntry; i+=nJobs)
     {
       h[f]->GetEntry(i);
       if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
@@ -101,7 +101,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
 ////remove when new 7 pp jec is implemented in forest
 ////!!!!!!!!!
       double JEC[1000] = {0};
- /*     if(strcmp(mode, "pp7") == 0)
+      if(strcmp(mode, "pp7") == 0)
       {
         for(int j = 0; j<h[f]->ak3PF.nref; j++)
         {
@@ -109,12 +109,12 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
         }
       }
       else 
-      {  */
+      { 
         if(JEC[0] == 0)
         {
           for(int j = 0; j<1000; j++) JEC[j] = 1;
         }
-     // }
+      }
 //!!!!!!end of part that needs to be removed for new JEC, get rid of JEC[j] below
 
       for(int j=0; j<h[f]->ak3PF.nref; j++)
@@ -176,7 +176,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
     }
   }
 
-  TFile * outf = new TFile("spectra.root","update");
+  TFile * outf = new TFile(Form("spectra_%d.root",nJobs),"update");
   h_jet->SetDirectory(0);
   h_track->SetDirectory(0);
   h_trackUE->SetDirectory(0);
@@ -189,4 +189,19 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
   h_track_xi->Write(Form("%s_%d_track_xi",mode,isMC));
   h_trackUE_xi->Write(Form("%s_%d_trackUE_xi",mode,isMC));
   outf->Close();
+}
+
+int main(int argc, char *argv[]){
+  if(argc != 3){
+    std::cout << "Usage: runcorr <condor_iter> <nJobs>" << std::endl;
+    return 1;
+  }
+  int argument1 = std::atoi(argv[1]);
+  int argument2 = std::atoi(argv[2]);
+  /*if(argument==0) argument=27;
+  else if(argument==1) argument=26;
+  else if(argument==2) argument=27;*/
+  
+  Spectra("pp2",true,0,1.5,0,argument1,argument2);
+  return 0;
 }
