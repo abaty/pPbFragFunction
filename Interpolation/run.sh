@@ -4,7 +4,7 @@ then
   exit 1
 fi
 
-sleep $((10 * $1))
+sleep $((2 * $1))
 
 nModes=3
 
