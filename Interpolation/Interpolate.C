@@ -11,13 +11,13 @@
 #include "TMathText.h"
 #include "TMath.h"
 #include "TStyle.h"
-#include "../rawHistograms.h"
+#include "loadHistograms.h"
 #include "makePlots.h"
 #include <iostream>
 
 //forward declarations
 TH1D* getFF_pp(double jetPt_low, double jetPt_high, const char* histTitle, int mode = 0);
-void getSpectra(int mode, double jetPt_low);
+void getSpectra(int mode);
 
 TH1D * jet;
 TH2D * trk;
@@ -28,16 +28,6 @@ TH1D * jet_pPb;
 const int trkBins = 39;
 double yAxis[trkBins+1] = {0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 3.2, 4, 4.8, 5.6, 6.4, 7.2, 9.6, 12, 14.4, 19.2, 24, 28.8, 35.2, 41.6, 48, 60.8, 73.6, 86.4, 103.6, 120.8, 138, 155.2, 172.4, 189.6, 206.8};
 
-//jet pt boundaries for FF's
-const int FF_Bins = 5;
-double FF_Bound[FF_Bins+1] = {60,80,100,120,140,200};
-
-TH1D * pp2TeV_data[FF_Bins];
-TH1D * pp7TeV_data[FF_Bins];
-TH1D * pPb5TeV_data[FF_Bins];
-TH1D * pp5TeV_interp[FF_Bins];
-TH1D * pPb_FF[FF_Bins];
-
 //main execution starts here
 void makeFF()
 { 
@@ -45,7 +35,7 @@ void makeFF()
   TH2D::SetDefaultSumw2();
 
   //initializing histograms for analysis
-  baseHistos();
+  loadHistos();
 
   for(int i = 0; i < FF_Bins; i++)
   {
@@ -64,7 +54,7 @@ void makeFF()
     pp5TeV_interp[i] = new TH1D(Form("pPb5TeV_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),";p_{T trk};#frac{1}{N_{jet}} #frac{dN_{trk}}{dp_{t trk}}",trkBins,yAxis);
 
     //setting jet spectrum to 5TeV for use in the interpolation weighting (only "jet" is used)
-    getSpectra(2,FF_Bound[i]);
+    getSpectra(2);
     
     for(int t = 1; t < trkBins+1; t++)
     {
@@ -107,7 +97,7 @@ TH1D* getFF_pp(double jetPt_low, double jetPt_high, const char* histTitle, int m
 {
   TH1D * FF = new TH1D(histTitle,";p_{T trk};#frac{1}{N_{jet}} #frac{dN_{trk}}{dp_{t trk}}",trkBins ,yAxis);
 
-  getSpectra(mode, jetPt_low);
+  getSpectra(mode);
 
   //looping over bins in Trk pt
     for(int t = 1; t < trkBins+1; t++)
@@ -143,81 +133,30 @@ TH1D* getFF_pp(double jetPt_low, double jetPt_high, const char* histTitle, int m
 //tells the getFF_pp exactly which spectra to use in which jetPt range
 //Numbers here in the if statements are hard-coded for triggers atm
 //to do: combine the spectra before so I can remove this step
-void getSpectra(int mode, double jetPt_low)
+void getSpectra(int mode)
 {
   if(mode == 0)
   {
-    if(jetPt_low < 80)
-    {
-      jet     = root_histogram_data2tev40_jet;
-      jet_pPb = root_histogram_data5tevmb_jet;
-      trk     = root_histogram_data2tev40_track;
-      trkUE   = root_histogram_data2tev40_track_reflected;
-    }
-    else if(jetPt_low<160)
-    {
-      jet     = root_histogram_data2tev40_jet;
-      jet_pPb = root_histogram_data5tev40_jet;
-      trk     = root_histogram_data2tev40_track;
-      trkUE   = root_histogram_data2tev40_track_reflected;
-    }
-    else
-    {
-      jet     = root_histogram_data2tev80_jet;
-      jet_pPb = root_histogram_data5tev80_jet;
-      trk     = root_histogram_data2tev80_track;
-      trkUE   = root_histogram_data2tev80_track_reflected;
-    }
+    jet     = pp2_0_jet;
+    jet_pPb = pPb5_0_jet;
+    trk     = pp2_0_track;
+    trkUE   = pp2_0_trackUE;
   }
   
   if(mode == 1)
   {
-    if(jetPt_low < 80)
-    {
-      jet     = root_histogram_data7tev30_jet1;
-      jet_pPb = root_histogram_data5tevmb_jet;
-      trk     = root_histogram_data7tev30_track2;
-      trkUE   = root_histogram_data7tev30_track_reflected3;
-    }
-    else if(jetPt_low<140)
-    {
-      jet     = root_histogram_data7tev60_jet1;
-      jet_pPb = root_histogram_data5tev40_jet;
-      trk     = root_histogram_data7tev60_track2;
-      trkUE   = root_histogram_data7tev60_track_reflected3;
-    }
-    else
-    {
-      jet     = root_histogram_data7tev110_jet1;
-      jet_pPb = root_histogram_data5tev80_jet;
-      trk     = root_histogram_data7tev110_track2;
-      trkUE   = root_histogram_data7tev110_track_reflected3;
-    }
+    jet     = pp7_0_jet;
+    jet_pPb = pPb5_0_jet;
+    trk     = pp7_0_track;
+    trkUE   = pp7_0_trackUE;
   }
 
-   if(mode == 2)
+  if(mode == 2)
   {
-    if(jetPt_low < 80)
-    {
-      jet     = root_histogram_data5tevmb_jet;
-      jet_pPb = root_histogram_data5tevmb_jet;
-      trk     = root_histogram_data5tevmb_track;
-      trkUE   = root_histogram_data5tevmb_track_reflected;
-    }
-    else if(jetPt_low<140)
-    {
-      jet     = root_histogram_data5tev40_jet;
-      jet_pPb = root_histogram_data5tev40_jet;
-      trk     = root_histogram_data5tev40_track;
-      trkUE   = root_histogram_data5tev40_track_reflected;
-    }
-    else
-    {
-      jet     = root_histogram_data5tev80_jet;
-      jet_pPb = root_histogram_data5tev80_jet;
-      trk     = root_histogram_data5tev80_track;
-      trkUE   = root_histogram_data5tev80_track_reflected;
-    }
+    jet     = pPb5_0_jet;
+    jet_pPb = pPb5_0_jet;
+    trk     = pPb5_0_track;
+    trkUE   = pPb5_0_trackUE;
   }
   return;
 }

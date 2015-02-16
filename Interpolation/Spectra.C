@@ -6,7 +6,7 @@
 #include "string.h"
 #include <iostream>
 #include <cmath>
-#include "JEC7tev/get7tevPt.h"
+//#include "JEC7tev/get7tevPt.h"
 #include "factorizedPtCorr.h"
 #include "SpectraFiles.h"
 
@@ -34,7 +34,7 @@ double getXi(double jetPt, double jetEta, double jetPhi, double trkPt, double tr
 }
 
 //modes are pp2,pp7,pPb5,Pbp5
-void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 0, double jetEtaMax = 1.5, bool isMC  = 0)
+void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0, double jetEtaMax = 1.5, bool isMC  = 0)
 {
   if(strcmp(mode,"pp2") && strcmp(mode,"pp7") && strcmp(mode,"pPb5") && strcmp(mode,"Pbp5"))
   {
@@ -82,9 +82,9 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
 
   for(int f=0; f<nFiles; f++)
   {
-    //int nEntry = h[f]->GetEntries();
-    int nEntry = 50000;
-   for(int i=0; i<nEntry; i++)
+    int nEntry = h[f]->GetEntries();
+    if(nEntry>1000000) nEntry = 1000000;
+    for(int i=0; i<nEntry; i++)
     {
       h[f]->GetEntry(i);
       if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
@@ -101,7 +101,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
 ////remove when new 7 pp jec is implemented in forest
 ////!!!!!!!!!
       double JEC[1000] = {0};
-      if(strcmp(mode, "pp7") == 0)
+ /*     if(strcmp(mode, "pp7") == 0)
       {
         for(int j = 0; j<h[f]->ak3PF.nref; j++)
         {
@@ -109,12 +109,12 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = false, double jetEtaMin = 
         }
       }
       else 
-      {
+      {  */
         if(JEC[0] == 0)
         {
           for(int j = 0; j<1000; j++) JEC[j] = 1;
         }
-      }
+     // }
 //!!!!!!end of part that needs to be removed for new JEC, get rid of JEC[j] below
 
       for(int j=0; j<h[f]->ak3PF.nref; j++)
