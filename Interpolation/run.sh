@@ -4,20 +4,18 @@ then
   exit 1
 fi
 
-sleep$((10 * $1))
+sleep $((10 * $1))
 
 nModes=3
 
 echo | awk -v i=$1 -v j=$2 -v k=$(($1 % $nModes)) '{print "./run.exe "i" "j" "k}' 
 echo | awk -v i=$1 -v j=$2 -v k=$(($1 % $nModes)) '{print "./run.exe "i" "j" "k}' | bash
 
-echo | awk -v i=$1 -v j=$2 -v k=$(($1 % $nModes)) '{print "./run.exe "i" "j" "k}'
-echo | awk -v i=$1 -v j=$2 -v k=$(($1 % $nModes)) '{print "./run.exe "i" "j" "k}' | bash
+echo | awk -v i=$1 -v j=$2 -v k=$((($1 + 1) % $nModes)) '{print "./run.exe "i" "j" "k}'
+echo | awk -v i=$1 -v j=$2 -v k=$((($1 + 1) % $nModes)) '{print "./run.exe "i" "j" "k}' | bash
 
-echo | awk -v i=$1 -v j=$2 -v k=$(($1 % $nModes)) '{print "./run.exe "i" "j" "k}'
-echo | awk -v i=$1 -v j=$2 -v k=$(($1 % $nModes)) '{print "./run.exe "i" "j" "k}' | bash
-
-sleep $((10 * $1))
+echo | awk -v i=$1 -v j=$2 -v k=$((($1 + 2) % $nModes)) '{print "./run.exe "i" "j" "k}'
+echo | awk -v i=$1 -v j=$2 -v k=$((($1 + 2) % $nModes)) '{print "./run.exe "i" "j" "k}' | bash
 
 echo | awk -v tag=$4 -v user=$USER '{print "mv spectra*.root /net/hisrv0001/home/"user"/pPb_Fragfunc/CMSSW_6_2_11/src/Interpolation/tempRootFiles/"}'
 echo | awk -v tag=$4 -v user=$USER '{print "mv spectra*.root /net/hisrv0001/home/"user"/pPb_Fragfunc/CMSSW_6_2_11/src/Interpolation/tempRootFiles/"}' | bash

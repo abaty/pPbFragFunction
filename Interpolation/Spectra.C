@@ -83,11 +83,11 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
   for(int f=0; f<nFiles; f++)
   {
     int nEntry = h[f]->GetEntries();
-    if(nEntry>2000) nEntry = 2000;
+    //if(nEntry>2000) nEntry = 2000;
     for(int i=jobNum; i<nEntry; i+=nJobs)
     {
       h[f]->GetEntry(i);
-      if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
+      if(i%10000 == jobNum) std::cout << i << "/" << nEntry << std::endl;
 
       int trigger = 1;
       trigger = setTrigger(mode,f,h[f]); 
