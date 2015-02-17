@@ -22,6 +22,14 @@ const char * pPb5File[npPb5Files] = {
   "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_JSonPPb_forestv77.root"};
 const double pPb5Bound[npPb5Files+1] = {60,80,120,200};
 
+const int nPbp5Files = 3;
+const char * Pbp5File[nPbp5Files] = {
+  "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_KrisztianMB_JSonPPb_forestv84.root",
+  "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_JSonPPb_forestv72_HLT40_HLT60.root",
+  "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_JSonPPb_forestv77.root"};
+const double Pbp5Bound[nPbp5Files+1] = {60,80,120,200};
+
+
 const int npp7Files = 3;
 const char * pp7File[npp7Files] = {
   "/mnt/hadoop/cms/store/user/velicanu/mergedFF_forests/data/pp_7TeV_2011A_12Oct2013-v1/0.root ",
@@ -43,11 +51,20 @@ int setTrigger(const char* mode, int f, HiForest * h1)
 
   if(strcmp(mode,"pPb5")==0)
   {
-    if(f==0) trigger = 1;
-    if(f==1) trigger = h1->hlt.HLT_PAJet40_NoJetID_v1;
-    if(f==2) trigger = h1->hlt.HLT_PAJet80_NoJetID_v1;
+    if(f==0) trigger = (int)(h1->track.nRun<211313);
+    if(f==1) trigger = h1->hlt.HLT_PAJet40_NoJetID_v1*(int)(h1->track.nRun<211313);
+    if(f==2) trigger = h1->hlt.HLT_PAJet80_NoJetID_v1*(int)(h1->track.nRun<211313);
     lowBound = pPb5Bound[f];
     upBound = pPb5Bound[f+1];
+  }
+
+  if(strcmp(mode,"Pbp5")==0)
+  {
+    if(f==0) trigger = (int)(h1->track.nRun>=211313);
+    if(f==1) trigger = h1->hlt.HLT_PAJet40_NoJetID_v1*(int)(h1->track.nRun>=211313);
+    if(f==2) trigger = h1->hlt.HLT_PAJet80_NoJetID_v1*(int)(h1->track.nRun>=211313);;
+    lowBound = Pbp5Bound[f];
+    upBound = Pbp5Bound[f+1];
   }
 
   if(strcmp(mode,"pp7")==0)
