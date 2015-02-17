@@ -6,7 +6,7 @@
 #include "string.h"
 #include <iostream>
 #include <cmath>
-#include "get7tevPt.h"
+//#include "get7tevPt.h"
 #include "factorizedPtCorr.h"
 #include "SpectraFiles.h"
 
@@ -52,13 +52,13 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
   int nFiles = 0;
   if(strcmp(mode,"pp2") == 0) nFiles = npp2Files;
   else if(strcmp(mode,"pPb5") == 0) nFiles = npPb5Files;
-  //else if(strcmp(mode,"Pbp5") == 0) nFiles = nPbp5Files;
+  else if(strcmp(mode,"Pbp5") == 0) nFiles = nPbp5Files;
   else if(strcmp(mode, "pp7") == 0) nFiles = npp7Files;
   for(int f = 0; f<nFiles; f++)
   {
     if(strcmp(mode,"pp2") == 0)       h[f] = new HiForest(pp2File[f],"forest",cPP,0);
     else if(strcmp(mode,"pPb5") == 0) h[f] = new HiForest(pPb5File[f],"forest",cPPb,0);
-    //else if(strcmp(mode,"Pbp5") == 0) h[f] = new HiForest(Pbp5File[f],"forest",cPPb,0);
+    else if(strcmp(mode,"Pbp5") == 0) h[f] = new HiForest(Pbp5File[f],"forest",cPPb,0);
     else if(strcmp(mode,"pp7") ==0 )  h[f] = new HiForest(pp7File[f],"forest",cPP,0);
 
     h[f]->LoadNoTrees();
@@ -83,7 +83,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
   for(int f=0; f<nFiles; f++)
   {
     int nEntry = h[f]->GetEntries();
-    //if(nEntry>2000) nEntry = 2000;
+    if(nEntry>500000) nEntry = 500000;
     for(int i=jobNum; i<nEntry; i+=nJobs)
     {
       h[f]->GetEntry(i);
@@ -102,7 +102,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
 ////remove when new 7 pp jec is implemented in forest
 ////!!!!!!!!!
       double JEC[1000] = {0};
-      if(strcmp(mode, "pp7") == 0)
+   /*   if(strcmp(mode, "pp7") == 0)
       {
         for(int j = 0; j<h[f]->ak3PF.nref; j++)
         {
@@ -110,12 +110,12 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
         }
       }
       else 
-      { 
+      {*/ 
         if(JEC[0] == 0)
         {
           for(int j = 0; j<1000; j++) JEC[j] = 1;
         }
-      }
+     // }
 //!!!!!!end of part that needs to be removed for new JEC, get rid of JEC[j] below
 
       for(int j=0; j<h[f]->ak3PF.nref; j++)
@@ -177,7 +177,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
     }
   }
 
-  TFile * outf = new TFile(Form("spectra_%d.root",jobNum),"update");
+  TFile * outf = new TFile(Form("spectra_%d_%d_%d_%d.root",jobNum,(int)doPhiUE,(int)(10*jetEtaMin),(int)(10*jetEtaMax)),"update");
   h_jet->SetDirectory(0);
   h_track->SetDirectory(0);
   h_trackUE->SetDirectory(0);
@@ -204,9 +204,17 @@ int main(int argc, char *argv[]){
   else if(argument==1) argument=26;
   else if(argument==2) argument=27;*/
   
-  if(argument3 == 0) Spectra("pp2",true,0,1.5,0,argument1,argument2);
+//for running on condor
+/*  if(argument3 == 0) Spectra("pp2",true,0,1.5,0,argument1,argument2);
   if(argument3 == 1) Spectra("pPb5",true,0,1.5,0,argument1,argument2);
   if(argument3 == 2) Spectra("pp7",true,0,1.5,0,argument1,argument2);
   std::cout << "finished " << argument1 << argument2 << argument3 << std::endl;
-  return 0;
+  return 0;*/
+  }
+void makeAll()
+{
+//for runnign interacively
+  Spectra("pp2",false,0.3,1.5,0,0,1);
+  Spectra("pPb5",false,0.3,1.5,0,0,1);
+  Spectra("pp7",false,0.3,1.5,0,0,1);
 }
