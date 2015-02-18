@@ -167,6 +167,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
             if(std::isfinite(trkCorr))
             {
               h_trackUE->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->track.trkPt[t],trkCorr); 
+              //need to fix xi UE calculation when you have time
               h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],getXi(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
@@ -178,6 +179,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
             if(std::isfinite(trkCorr))
             {
               h_trackUE->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->track.trkPt[t],trkCorr); 
+              //need to fix xi UE calculation when you have time
               h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],getXi(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
