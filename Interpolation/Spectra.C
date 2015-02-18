@@ -85,12 +85,12 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
     int nEntry = h[f]->GetEntries();
     int startNum = jobNum;
     //adding manual run no cuts to speed up pPb5/Pbp5 data parsing
-    if(strcmp(mode, "Pbp5")==0 && f==0) startNum += 6743253;
-    if(strcmp(mode, "Pbp5")==0 && f==1) startNum += 5829747;
-    if(strcmp(mode, "Pbp5")==0 && f==2) startNum += 2422139;
-    if(strcmp(mode, "pPb5")==0 && f==0) nEntry = 6743253;
-    if(strcmp(mode, "pPb5")==0 && f==1) nEntry = 5829747;
-    if(strcmp(mode, "pPb5")==0 && f==2) nEntry = 2422139;
+    //if(strcmp(mode, "Pbp5")==0 && f==0) startNum += 6743253;
+    if(strcmp(mode, "Pbp5")==0 && f==0) startNum += 5829747;
+    if(strcmp(mode, "Pbp5")==0 && f==1) startNum += 2422139;
+    //if(strcmp(mode, "pPb5")==0 && f==0) nEntry = 6743253;
+    if(strcmp(mode, "pPb5")==0 && f==0) nEntry = 5829747;
+    if(strcmp(mode, "pPb5")==0 && f==1) nEntry = 2422139;
  
     //if(nEntry>500000) nEntry = 500000;
     for(int i=startNum; i<nEntry; i+=nJobs)
@@ -186,7 +186,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
     }
   }
 
-  TFile * outf = new TFile(Form("spectra_%d_%d_%d_%d.root",jobNum,(int)doPhiUE,(int)(10*jetEtaMin),(int)(10*jetEtaMax)),"update");
+  TFile * outf = new TFile(Form("spectra%s_%d_%d_%d_%d.root",mode,jobNum,(int)doPhiUE,(int)(10*jetEtaMin),(int)(10*jetEtaMax)),"update");
   h_jet->SetDirectory(0);
   h_track->SetDirectory(0);
   h_trackUE->SetDirectory(0);
