@@ -6,7 +6,7 @@
 #include "string.h"
 #include <iostream>
 #include <cmath>
-//#include "get7tevPt.h"
+#include "get7tevPt.h"
 #include "factorizedPtCorr.h"
 #include "SpectraFiles.h"
 
@@ -83,8 +83,17 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
   for(int f=0; f<nFiles; f++)
   {
     int nEntry = h[f]->GetEntries();
-    if(nEntry>500000) nEntry = 500000;
-    for(int i=jobNum; i<nEntry; i+=nJobs)
+    int startNum = jobNum;
+    //adding manual run no cuts to speed up pPb5/Pbp5 data parsing
+    if(strcmp(mode, "Pbp5")==0 && f==0) startNum += 6743253;
+    if(strcmp(mode, "Pbp5")==0 && f==1) startNum += 5829747;
+    if(strcmp(mode, "Pbp5")==0 && f==2) startNum += 2422139;
+    if(strcmp(mode, "pPb5")==0 && f==0) nEntry = 6743253;
+    if(strcmp(mode, "pPb5")==0 && f==1) nEntry = 5829747;
+    if(strcmp(mode, "pPb5")==0 && f==2) nEntry = 2422139;
+ 
+    //if(nEntry>500000) nEntry = 500000;
+    for(int i=startNum; i<nEntry; i+=nJobs)
     {
       h[f]->GetEntry(i);
       if(i%100000 == jobNum) std::cout << i << "/" << nEntry << std::endl;
@@ -102,7 +111,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
 ////remove when new 7 pp jec is implemented in forest
 ////!!!!!!!!!
       double JEC[1000] = {0};
-   /*   if(strcmp(mode, "pp7") == 0)
+      if(strcmp(mode, "pp7") == 0)
       {
         for(int j = 0; j<h[f]->ak3PF.nref; j++)
         {
@@ -110,12 +119,12 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
         }
       }
       else 
-      {*/ 
+      { 
         if(JEC[0] == 0)
         {
           for(int j = 0; j<1000; j++) JEC[j] = 1;
         }
-     // }
+      }
 //!!!!!!end of part that needs to be removed for new JEC, get rid of JEC[j] below
 
       for(int j=0; j<h[f]->ak3PF.nref; j++)
