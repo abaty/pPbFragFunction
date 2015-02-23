@@ -20,6 +20,12 @@ TH2D * pPb5_0_trackUE;
 TH2D * pPb5_0_track_xi;
 TH2D * pPb5_0_trackUE_xi;
 
+TH1D * Pbp5_0_jet;
+TH2D * Pbp5_0_track;
+TH2D * Pbp5_0_trackUE;
+TH2D * Pbp5_0_track_xi;
+TH2D * Pbp5_0_trackUE_xi;
+
 TH1D *root_histogram_gluon_2tev;
 TH1D *root_histogram_gluon_5tev;
 TH1D *root_histogram_gluon_7tev;
@@ -48,6 +54,12 @@ void loadHistos()
   pPb5_0_trackUE = (TH2D*) spectraFilepPb5->Get("pPb5_0_trackUE");
   pPb5_0_track_xi = (TH2D*) spectraFilepPb5->Get("pPb5_0_track_xi");
   pPb5_0_trackUE_xi = (TH2D*) spectraFilepPb5->Get("pPb5_0_trackUE_xi");
+
+  Pbp5_0_jet = (TH1D*) spectraFilePbp5->Get("Pbp5_0_jet");
+  Pbp5_0_track = (TH2D*) spectraFilePbp5->Get("Pbp5_0_track");
+  Pbp5_0_trackUE = (TH2D*) spectraFilePbp5->Get("Pbp5_0_trackUE");
+  Pbp5_0_track_xi = (TH2D*) spectraFilePbp5->Get("Pbp5_0_track_xi");
+  Pbp5_0_trackUE_xi = (TH2D*) spectraFilePbp5->Get("Pbp5_0_trackUE_xi");
 
   TFile * gluonFracFile = new TFile("gluonFracs.root","read");
   root_histogram_gluon_2tev = (TH1D*) gluonFracFile->Get("gFrac2tev");

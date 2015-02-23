@@ -41,7 +41,8 @@ void makeFF()
   {
     pp2TeV_data[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),0);
     pp7TeV_data[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),1);
-    pPb5TeV_data[i]= getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),2); 
+    pPb5TeV_data[i]= getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),2);
+    Pbp5TeV_data[i]= getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("Pbp5TeV_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),3);    
   }
   
   //interpolation  
@@ -51,7 +52,7 @@ void makeFF()
   
   for(int i = 0; i < FF_Bins; i++)
   {
-    pp5TeV_interp[i] = new TH1D(Form("pPb5TeV_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),";p_{T trk};#frac{1}{N_{jet}} #frac{dN_{trk}}{dp_{t trk}}",trkBins,yAxis);
+    pp5TeV_interp[i] = new TH1D(Form("pp5TeV_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),";p_{T trk};#frac{1}{N_{jet}} #frac{dN_{trk}}{dp_{t trk}}",trkBins,yAxis);
 
     //setting jet spectrum to 5TeV for use in the interpolation weighting (only "jet" is used)
     getSpectra(2);
@@ -84,7 +85,57 @@ void makeFF()
     pPb_FF[i] = (TH1D*) pPb5TeV_data[i]->Clone(Form("pPb_FF_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
     pPb_FF[i]->Divide(pp5TeV_interp[i]);
   }
+  //reversing for Pbp side 
   
+  for(int i = 0; i < FF_Bins; i++)
+  {
+    pp5TeV_interp_swap[i] = new TH1D(Form("pp5TeV_interp_swap_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),";p_{T trk};#frac{1}{N_{jet}} #frac{dN_{trk}}{dp_{t trk}}",trkBins,yAxis);
+
+    //setting jet spectrum to 5TeV for use in the interpolation weighting (only "jet" is used)
+    getSpectra(3);
+    
+    for(int t = 1; t < trkBins+1; t++)
+    {
+      //number of gluon jets for 2/5/7 MC (proportional to the jet fraction because jet spectra are all reweighted to 5TeV)
+      double glu2 = 0;
+      double glu5 = 0;
+      double glu7 = 0;    
+
+      for(int j = jet->FindBin(FF_Bound[i]); j < jet->FindBin(FF_Bound[i+1]); j++)
+      {
+        double nJet = jet->GetBinContent(j); 
+
+        glu2 += gFrac_2TeV->GetBinContent(j)*nJet;
+        glu5 += gFrac_5TeV->GetBinContent(j)*nJet;
+        glu7 += gFrac_7TeV->GetBinContent(j)*nJet;
+      }
+    
+    double average = ((glu5 - glu7)*pp2TeV_data[i]->GetBinContent(t)+(glu2-glu5)*pp7TeV_data[i]->GetBinContent(t))/(glu2-glu7);
+    double error = TMath::Power(TMath::Power((glu5 - glu7)*pp2TeV_data[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power((glu2-glu5)*pp7TeV_data[i]->GetBinError(t)/(glu2-glu7),2),0.5);
+    pp5TeV_interp_swap[i]->SetBinContent(t, average);
+    pp5TeV_interp_swap[i]->SetBinError(t, error);
+    }
+  }
+
+  for(int i = 0; i < FF_Bins; i++)
+  {
+    Pbp_FF[i] = (TH1D*) Pbp5TeV_data[i]->Clone(Form("Pbp_FF_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+    Pbp_FF[i]->Divide(pp5TeV_interp_swap[i]);
+  }
+ 
+  TFile * outfile = new TFile("FragmentationFunctions.root","recreate");
+  for(int i = 0; i < FF_Bins; i++)
+  {
+    pp2TeV_data[i]->Write();
+    pp7TeV_data[i]->Write();
+    pPb5TeV_data[i]->Write();
+    Pbp5TeV_data[i]->Write();
+    pp5TeV_interp[i]->Write();
+    pp5TeV_interp_swap[i]->Write();
+    pPb_FF[i]->Write();
+    Pbp_FF[i]->Write();    
+  }
+
   //handing it over to a plotting macro
   makePlots();  
 }
@@ -157,6 +208,13 @@ void getSpectra(int mode)
     jet_pPb = pPb5_0_jet;
     trk     = pPb5_0_track;
     trkUE   = pPb5_0_trackUE;
+  }
+  if(mode == 3)
+  {
+    jet     = Pbp5_0_jet;
+    jet_pPb = Pbp5_0_jet;
+    trk     = Pbp5_0_track;
+    trkUE   = Pbp5_0_trackUE;
   }
   return;
 }
