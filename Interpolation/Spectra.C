@@ -34,7 +34,7 @@ double getXi(double jetPt, double jetEta, double jetPhi, double trkPt, double tr
 }
 
 //modes are pp2,pp7,pPb5,Pbp5
-void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0, double jetEtaMax = 1.5, bool isMC  = 0, int jobNum = 0, int nJobs = 1)
+void Spectra(const char* mode = "pp2", int typeUE = 0, double jetEtaMin = 0, double jetEtaMax = 1.5, bool isMC  = 0, int jobNum = 0, int nJobs = 1)
 {
   if(strcmp(mode,"pp2") && strcmp(mode,"pp7") && strcmp(mode,"pPb5") && strcmp(mode,"Pbp5"))
   {
@@ -161,26 +161,25 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
           int rotationDirection = 2*(int)rand->Integer(2)-1;
 
           //Phi rotated UE subtraction
-          if(doPhiUE && getdR2(h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j]+rotationDirection*TMath::PiOver2(),h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]) < 0.3*0.3)
+          if(typeUE==0 && getdR2(h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j]+rotationDirection*TMath::PiOver2(),h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]) < 0.3*0.3)
           {
             double trkCorr = factorizedPtCorr(getPtBin(h[f]->track.trkPt[t], sType), 1, h[f]->track.trkPt[t], h[f]->track.trkPhi[t], h[f]->track.trkEta[t], r_min, sType);
             if(std::isfinite(trkCorr))
             {
-              h_trackUE->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->track.trkPt[t],trkCorr); 
-              //need to fix xi UE calculation when you have time
-              h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],getXi(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
+              h_trackUE->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->track.trkPt[t],trkCorr);  
+              h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],getXi(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j]+rotationDirection*TMath::PiOver2(),h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
 
           //Eta Reflected UE subtraction
-          if(!doPhiUE && getdR2(-1*(h[f]->ak3PF.jteta[j]+boost),h[f]->ak3PF.jtphi[j],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]) < 0.3*0.3)
+          if(typeUE==1 && getdR2(-1*(h[f]->ak3PF.jteta[j]+boost),h[f]->ak3PF.jtphi[j],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]) < 0.3*0.3)
           {
             double trkCorr = factorizedPtCorr(getPtBin(h[f]->track.trkPt[t], sType), 1, h[f]->track.trkPt[t], h[f]->track.trkPhi[t], h[f]->track.trkEta[t], r_min, sType);
             if(std::isfinite(trkCorr))
             {
               h_trackUE->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->track.trkPt[t],trkCorr); 
               //need to fix xi UE calculation when you have time
-              h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],getXi(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
+              h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],getXi(h[f]->ak3PF.jtpt[j]*JEC[j],-1*(h[f]->ak3PF.jteta[j]+boost),h[f]->ak3PF.jtphi[j],h[f]->track.trkPt[t],h[f]->track.trkEta[t]+boost,h[f]->track.trkPhi[t]),trkCorr);
             }
           }
         }
@@ -188,7 +187,7 @@ void Spectra(const char* mode = "pp2", bool doPhiUE = true, double jetEtaMin = 0
     }
   }
 
-  TFile * outf = new TFile(Form("spectra%s_%d_%d_%d_%d.root",mode,jobNum,(int)doPhiUE,(int)(10*jetEtaMin),(int)(10*jetEtaMax)),"update");
+  TFile * outf = new TFile(Form("spectra%s_%d_%d_%d_%d.root",mode,jobNum,(int)typeUE,(int)(10*jetEtaMin),(int)(10*jetEtaMax)),"update");
   h_jet->SetDirectory(0);
   h_track->SetDirectory(0);
   h_trackUE->SetDirectory(0);
