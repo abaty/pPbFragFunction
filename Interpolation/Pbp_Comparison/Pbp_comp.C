@@ -12,7 +12,10 @@
 void Pbp_Comparison()
 {
   TH1::SetDefaultSumw2();
-  
+ 
+  TLatex * lat = new TLatex(0.1,0.1,"test");
+  lat->SetTextSize(0.06);
+   
   const int bins[6] = {60,80,100,120,140,200};
 
   TFile * infpPb = new TFile("../FragmentationFunctions.root","read"); 
@@ -79,6 +82,7 @@ void Pbp_Comparison()
 
   pPbFF[i]->DrawCopy("e");
   PbpFF[i]->DrawCopy("same e");
+  lat->DrawLatex(0.6,0.002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)bins[i],(int)bins[i+1]));
   }
   c2->cd(1);
   TLegend * leg = new TLegend(0.2,0.1,0.5,0.5);
@@ -104,4 +108,6 @@ void Pbp_Comparison()
   l->Draw("same");
   }
   c2->SaveAs("Pbp_Comparison.png");
+  c2->SaveAs("Pbp_Comparison.pdf");
+
 }

@@ -66,6 +66,17 @@ void Spectra(const char* mode = "pp2", int typeUE = 0, double jetEtaMin = 0, dou
     h[f]->hasTrackTree = true;
     h[f]->hasHltTree = true;
     h[f]->hasSkimTree = true;
+    h[f]->hasEvtTree = true;
+  }
+
+  if(typeUE==2)
+  {
+    if(strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0) mix = new HiForest("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_KrisztianMB_JSonPPb_forestv84.root","forest",cPPb,0);
+    else if(strcmp(mode,"pp2")==0) mix = new HiForest("/mnt/hadoop/cms/store/user/luck/pp_minbiasSkim_forest_53x_2013-08-15-0155/pp_minbiasSkim_forest_53x_2013-08-15-0155.root","forest",cPP,0);
+    mix->LoadNoTrees();
+    mix->hasTrackTree = true;
+    mix->hasAk3JetTree = true;
+    mix->hasEvtTree = true;
   }
 
   h_jet = new TH1D("h_jet","",nJetBins,0,300); 
@@ -80,23 +91,27 @@ void Spectra(const char* mode = "pp2", int typeUE = 0, double jetEtaMin = 0, dou
   else if(strcmp(mode,"Pbp5") == 0) boost = -pPbRapidity;
   std::cout << mode << " mode is specified; using a boost of: " << boost << std::endl;
 
+  //variables for mixing
+  int startMixEvt = 0;
+  if(strcmp(mode, "Pbp5")==0) startMixEvt = 6743253;
+  int lastMixEvt = startMixEvt;
+
   for(int f=0; f<nFiles; f++)
   {
     int nEntry = h[f]->GetEntries();
     int startNum = jobNum;
-    //adding manual run no cuts to speed up pPb5/Pbp5 data parsing
-    //if(strcmp(mode, "Pbp5")==0 && f==0) startNum += 6743253;
+    //adding manual run no cuts to speed up pPb5/Pbp5 data parsing    
     if(strcmp(mode, "Pbp5")==0 && f==0) startNum += 5829747;
     if(strcmp(mode, "Pbp5")==0 && f==1) startNum += 2422139;
-    //if(strcmp(mode, "pPb5")==0 && f==0) nEntry = 6743253;
+ 
     if(strcmp(mode, "pPb5")==0 && f==0) nEntry = 5829747;
     if(strcmp(mode, "pPb5")==0 && f==1) nEntry = 2422139;
  
-    //if(nEntry>500000) nEntry = 500000;
+    //if(nEntry-startNum>500000) nEntry = startNum+500000;
     for(int i=startNum; i<nEntry; i+=nJobs)
     {
       h[f]->GetEntry(i);
-      if(i%100000 == jobNum) std::cout << i << "/" << nEntry << std::endl;
+      if(i%10000 == jobNum) std::cout << i << "/" << nEntry << std::endl;
 
       int trigger = 1;
       trigger = setTrigger(mode,f,h[f]); 
@@ -105,7 +120,7 @@ void Spectra(const char* mode = "pp2", int typeUE = 0, double jetEtaMin = 0, dou
 // remove the strcmp !((mode),pp7) when you get a pp7 forest w/ pcollisionEventSelection
 //!!!!!!
       
-      if(!((h[f]->skim.pPAcollisionEventSelectionPA == 1 || !(strcmp(mode,"pp7")*h[f]->skim.pcollisionEventSelection == 1)) && h[f]->skim.pHBHENoiseFilter == 1)) continue;
+      if(!((h[f]->skim.pPAcollisionEventSelectionPA == 1 || !(strcmp(mode,"pp7")*h[f]->skim.pcollisionEventSelection == 1)) && h[f]->skim.pHBHENoiseFilter == 1) || TMath::Abs(h[f]->evt.vz)>15) continue;
 
 //!!!!!!!
 ////remove when new 7 pp jec is implemented in forest
@@ -126,7 +141,34 @@ void Spectra(const char* mode = "pp2", int typeUE = 0, double jetEtaMin = 0, dou
         }
       //}
 //!!!!!!end of part that needs to be removed for new JEC, get rid of JEC[j] below
+       
+      //finding a MB event to mix with if needed 
+      if(typeUE==2)
+      {
+        int loopIter=0;
+        int maxIter = 5000000;
+        if(strcmp(mode,"pp2")==0) maxIter = mix->GetEntries()-1;
+        while(true)
+        {
+          //preventing infinite loop
+          loopIter++;
+          if(loopIter == maxIter)
+          {
+            std::cout << "error finding matching MB event, using random MB event" << std::endl;
+            break;
+          }            
+ 
+          //finding matching event
+          lastMixEvt++;
+          if(lastMixEvt>startMixEvt+maxIter) lastMixEvt = startMixEvt;
+          mix->GetEntry(lastMixEvt); 
+          if(strcmp(mode,"pPb5")==0 && mix->track.nRun<211313 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz)) break;
+          else if(strcmp(mode,"Pbp5")==0 && mix->track.nRun>=211313 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz)) break;
+          else if(strcmp(mode,"pp2")==0 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz)) break;
+        }
+      }
 
+      //starting jet loop
       for(int j=0; j<h[f]->ak3PF.nref; j++)
       {
         if(TMath::Abs(h[f]->ak3PF.jteta[j]+boost) < jetEtaMin || TMath::Abs(h[f]->ak3PF.jteta[j]+boost) > jetEtaMax || h[f]->ak3PF.jtpt[j]*JEC[j]<lowBound || h[f]->ak3PF.jtpt[j]*JEC[j]>upBound) continue; 
@@ -183,11 +225,42 @@ void Spectra(const char* mode = "pp2", int typeUE = 0, double jetEtaMin = 0, dou
             }
           }
         }
+
+        //UE subtraction w/ MB mixing
+        if(typeUE==2)
+        { 
+          for(int tmix = 0; tmix<mix->track.nTrk; tmix++)
+          {
+            if(mix->track.trkPt[tmix] < 0.5 || mix->track.trkPt[tmix] > 1e+5 || !mix->track.highPurity[tmix] || TMath::Abs(mix->track.trkEta[tmix])>2.4 ) continue;
+            if(TMath::Abs(mix->track.trkDxy1[tmix]/mix->track.trkDxyError1[tmix]) > 3 || TMath::Abs(mix->track.trkDz1[tmix]/mix->track.trkDzError1[tmix]) > 3 || mix->track.trkPtError[tmix]/mix->track.trkPt[tmix] > 0.1) continue;
+
+            //calculating r_min for tracking correction
+            double r_min = 9;
+            for(int j2 = 0; j2<mix->ak3PF.nref; j2++)
+            {
+              //may need to fix JEC later, 
+              if(TMath::Abs(mix->ak3PF.jteta[j2])>2 || TMath::Abs(mix->ak3PF.jtpt[j2]) < 50) continue;
+              double r_min_temp = TMath::Power(getdR2(mix->ak3PF.jteta[j2],mix->ak3PF.jtphi[j2],mix->track.trkEta[tmix],mix->track.trkPhi[tmix]),0.5);
+              if(r_min_temp < r_min) r_min = r_min_temp;
+            }                                                                          
+            
+            //Filling track spectrum in jet cone
+            if(getdR2(h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],mix->track.trkEta[tmix]+boost,mix->track.trkPhi[tmix]) < 0.3*0.3)
+            {
+              double trkCorr = factorizedPtCorr(getPtBin(mix->track.trkPt[tmix], sType), 1, mix->track.trkPt[tmix], mix->track.trkPhi[tmix], mix->track.trkEta[tmix], r_min, sType);
+              if(std::isfinite(trkCorr))
+              {
+                h_trackUE->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],mix->track.trkPt[tmix],trkCorr);
+                h_trackUE_xi->Fill(h[f]->ak3PF.jtpt[j]*JEC[j],getXi(h[f]->ak3PF.jtpt[j]*JEC[j],h[f]->ak3PF.jteta[j]+boost,h[f]->ak3PF.jtphi[j],mix->track.trkPt[tmix],mix->track.trkEta[tmix]+boost,mix->track.trkPhi[tmix]),trkCorr);
+              }
+            }
+          }
+        }
       }
     }
   }
 
-  TFile * outf = new TFile(Form("spectra%s_%d_%d_%d_%d.root",mode,jobNum,(int)typeUE,(int)(10*jetEtaMin),(int)(10*jetEtaMax)),"update");
+  TFile * outf = new TFile(Form("spectra%s_%d_%d_%d_%d.root",mode,jobNum,(int)typeUE,(int)(10*jetEtaMin),(int)(10*jetEtaMax)),"recreate");
   h_jet->SetDirectory(0);
   h_track->SetDirectory(0);
   h_trackUE->SetDirectory(0);
@@ -202,8 +275,10 @@ void Spectra(const char* mode = "pp2", int typeUE = 0, double jetEtaMin = 0, dou
   outf->Close();
 }
 
-int main(int argc, char *argv[]){
-  if(argc != 4){
+int main(int argc, char *argv[])
+{
+  if(argc != 4)
+  {
     std::cout << "Usage: runcorr <condor_iter> <nJobs>" << std::endl;
     return 1;
   }
@@ -220,7 +295,8 @@ int main(int argc, char *argv[]){
   if(argument3 == 2) Spectra("pp7",true,0,1.5,0,argument1,argument2);
   std::cout << "finished " << argument1 << argument2 << argument3 << std::endl;
   return 0;*/
-  }
+}
+
 void makeAll()
 {
 //for runnign interacively

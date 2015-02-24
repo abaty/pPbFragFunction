@@ -8,7 +8,7 @@ double lowBound;
 double upBound;
 
 HiForest * h[5];
-
+HiForest * mix;
 const int npp2Files = 2;
 const char * pp2File[npp2Files] = {
   "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root",
