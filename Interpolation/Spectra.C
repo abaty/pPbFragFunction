@@ -162,8 +162,8 @@ void Spectra(const char* mode = "pp2", int typeUE = 0, double jetEtaMin = 0, dou
           lastMixEvt++;
           if(lastMixEvt>startMixEvt+maxIter) lastMixEvt = startMixEvt;
           mix->GetEntry(lastMixEvt); 
-          if(strcmp(mode,"pPb5")==0 && mix->track.nRun<211313 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz)) break;
-          else if(strcmp(mode,"Pbp5")==0 && mix->track.nRun>=211313 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz)) break;
+          if(strcmp(mode,"pPb5")==0 && mix->track.nRun<211313 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz) && TMath::Abs(mix->evt.hiHFplus-h[f]->evt.hiHFplus)<5) break;
+          else if(strcmp(mode,"Pbp5")==0 && mix->track.nRun>=211313 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz) && TMath::Abs(mix->evt.hiHFminus-h[f]->evt.hiHFminus)<5) break;
           else if(strcmp(mode,"pp2")==0 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz)) break;
         }
       }
