@@ -74,9 +74,8 @@ void Spectra(const char* mode = "pp2", int typeUE = 0, double jetEtaMin = 0, dou
     if(strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0) mix = new HiForest("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_KrisztianMB_JSonPPb_forestv84.root","forest",cPPb,0);
     else if(strcmp(mode,"pp2")==0) mix = new HiForest("/mnt/hadoop/cms/store/user/luck/pp_minbiasSkim_forest_53x_2013-08-15-0155/pp_minbiasSkim_forest_53x_2013-08-15-0155.root","forest",cPP,0);
     mix->LoadNoTrees();
-    mix->hasTrackTree = true;
-    mix->hasAk3JetTree = true;
     mix->hasEvtTree = true;
+    mix->hasSkimTree = true;
   }
 
   h_jet = new TH1D("h_jet","",nJetBins,0,300); 
@@ -162,8 +161,9 @@ void Spectra(const char* mode = "pp2", int typeUE = 0, double jetEtaMin = 0, dou
           lastMixEvt++;
           if(lastMixEvt>startMixEvt+maxIter) lastMixEvt = startMixEvt;
           mix->GetEntry(lastMixEvt); 
-          if(strcmp(mode,"pPb5")==0 && mix->track.nRun<211313 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz) && TMath::Abs(mix->evt.hiHFplus-h[f]->evt.hiHFplus)<5) break;
-          else if(strcmp(mode,"Pbp5")==0 && mix->track.nRun>=211313 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz) && TMath::Abs(mix->evt.hiHFminus-h[f]->evt.hiHFminus)<5) break;
+          if(!((mix->skim.pPAcollisionEventSelectionPA == 1 || !(strcmp(mode,"pp7")*mix->skim.pcollisionEventSelection == 1)) && mix->skim.pHBHENoiseFilter == 1) || TMath::Abs(mix->evt.vz)>15) continue;
+          if(strcmp(mode,"pPb5")==0 && mix->evt.run<211313 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz) && TMath::Abs(mix->evt.hiHFplus-h[f]->evt.hiHFplus)<5) break;
+          else if(strcmp(mode,"Pbp5")==0 && mix->evt.run>=211313 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz) && TMath::Abs(mix->evt.hiHFminus-h[f]->evt.hiHFminus)<5) break;
           else if(strcmp(mode,"pp2")==0 && TMath::Floor(mix->evt.vz)==TMath::Floor(h[f]->evt.vz)) break;
         }
       }
@@ -228,7 +228,10 @@ void Spectra(const char* mode = "pp2", int typeUE = 0, double jetEtaMin = 0, dou
 
         //UE subtraction w/ MB mixing
         if(typeUE==2)
-        { 
+        {        
+          mix->hasTrackTree = true;
+          mix->hasAk3JetTree = true;
+          mix->GetEntry(lastMixEvt);
           for(int tmix = 0; tmix<mix->track.nTrk; tmix++)
           {
             if(mix->track.trkPt[tmix] < 0.5 || mix->track.trkPt[tmix] > 1e+5 || !mix->track.highPurity[tmix] || TMath::Abs(mix->track.trkEta[tmix])>2.4 ) continue;
@@ -255,6 +258,8 @@ void Spectra(const char* mode = "pp2", int typeUE = 0, double jetEtaMin = 0, dou
               }
             }
           }
+          mix->hasTrackTree = false;
+          mix->hasAk3JetTree = false;
         }
       }
     }
