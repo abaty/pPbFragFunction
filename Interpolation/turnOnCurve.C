@@ -11,14 +11,16 @@
 #include "TColor.h"
 #include "TMath.h"
 #include "TCanvas.h"
-//#include "JEC7tev/get7tevPt.h"
+#include "TPad.h"
+#include "TLegend.h"
+#include "JEC7tev/get7tevPt.h"
 
 void turnOnCurve(int mode = 0)
 {
   TH1::SetDefaultSumw2();
 
   const int nbins = 8; 
-  float bins[nbins+1] = {15,30,50,80,120,170,220,280,10000};
+  float bins[nbins+2] = {15,30,50,80,120,170,220,280,10000,10000};
 
   //pp cross sections for 2.76 tev
   /*float crossSection[nbins+1] = {2.034E-01,1.075E-02,1.025E-03,9.865E-05,1.129E-05,1.465E-06,2.837E-07,5.323E-08,0};
@@ -55,7 +57,7 @@ void turnOnCurve(int mode = 0)
     h[file]->hasAk3JetTree = true;
     h[file]->hasSkimTree = true;
     h[file]->hasHltTree = true;
-    h[file]->hasEvtTree = true;
+    
     if(mode == 2) 
     {
       h[file]->hasTrackTree = true;
@@ -75,21 +77,19 @@ void turnOnCurve(int mode = 0)
   for(int ifile = 0; ifile<maxFile; ifile++)
   {
     float nEntries = h[ifile]->GetEntries();
-
-    for(int i = 0; i<200; i++)
+    for(int i = 0; i<nEntries; i++)
     {
       h[ifile]->GetEntry(i);
       if(i%10000 == 0) std::cout << i << "/" << nEntries << std::endl;
       
-      if(!((h[ifile]->skim.pPAcollisionEventSelectionPA == 1 || !(mode==2)*h[ifile]->skim.pcollisionEventSelection == 1)) && h[ifile]->skim.pHBHENoiseFilter == 1) continue; 
-
+      if(!((h[ifile]->skim.pPAcollisionEventSelectionPA == 1 || !(mode==2)*h[ifile]->skim.pcollisionEventSelection == 1)) && h[ifile]->skim.pHBHENoiseFilter == 1) continue;   
       if(mode!=2)
       { 
         if(h[ifile]->hlt.HLT_PAJet40_NoJetID_v1 && TMath::Abs(h[ifile]->ak3PF.jteta[0])<2) turnon40->Fill(h[ifile]->ak3PF.jtpt[0]);//,crossSection[ifile]/nEntries);
         if(h[ifile]->hlt.HLT_PAJet80_NoJetID_v1 && TMath::Abs(h[ifile]->ak3PF.jteta[0])<2) turnon80->Fill(h[ifile]->ak3PF.jtpt[0]);//,crossSection[ifile]/nEntries);
         if(TMath::Abs(h[ifile]->ak3PF.jteta[0])<2) denom->Fill(h[ifile]->ak3PF.jtpt[0]);//,crossSection[ifile]/nEntries);
       }
-      /*else
+      else
       {
         double jtpt[100] = {0};
         for(int j = 0; j<h[ifile]->ak3PF.nref; j++)
@@ -108,10 +108,9 @@ void turnOnCurve(int mode = 0)
         if(h[ifile]->hlt.HLT_Jet80_v10 && TMath::Abs(h[ifile]->ak3PF.jteta[leadIndx])<2) turnon80->Fill(jtpt[leadIndx]);
         if(h[ifile]->hlt.HLT_Jet110_v10 && TMath::Abs(h[ifile]->ak3PF.jteta[leadIndx])<2) turnon110->Fill(jtpt[leadIndx]);
         if(TMath::Abs(h[ifile]->ak3PF.jteta[leadIndx])<2) denom->Fill(jtpt[leadIndx]); 
-      }*/
+      }
     }
   }
-
 
   TGraphAsymmErrors * turnon40Asym;// = new TGraphAsymmErrors(turnon40);
   TGraphAsymmErrors * turnon80Asym;// = new TGraphAsymmErrors(turnon80);
@@ -119,12 +118,14 @@ void turnOnCurve(int mode = 0)
   TGraphAsymmErrors * turnon60Asym;// = new TGraphAsymmErrors(turnon60);
   TGraphAsymmErrors * turnon110Asym;// = new TGraphAsymmErrors(turnon110);
 
-  TCanvas * c2 = new TCanvas("c2","c2",600,400);
-  TMultiGraph * mp = new TMultiGraph();
+  TCanvas * c2 = new TCanvas("c2","c2",800,600);
+  TMultiGraph * mg = new TMultiGraph();
+  mg->SetTitle(";lead jet p_{T}^{reco};Efficiency");
 
   if(mode !=2)
   {
     turnon40Asym = new TGraphAsymmErrors();
+    turnon40Asym->SetName("turnon40Asym");
     turnon40Asym->BayesDivide(turnon40,denom);
     for(int i =1; i<41; i++)
     {
@@ -135,6 +136,7 @@ void turnOnCurve(int mode = 0)
     turnon40Asym->SetMarkerSize(0.8);
 
     turnon80Asym = new TGraphAsymmErrors();
+    turnon80Asym->SetName("turnon80Asym");
     turnon80Asym->BayesDivide(turnon80,denom);
     for(int i =1; i<41; i++)
     {
@@ -144,25 +146,84 @@ void turnOnCurve(int mode = 0)
     turnon80Asym->SetLineColor(kRed+1);
     turnon80Asym->SetMarkerColor(kRed+1);
     turnon80Asym->SetMarkerSize(0.8);
-    mg->Add(turnon40Asym,"AP");
-    mg->Add(turnon80Asym,"AP");
-    mg->Draw();
+    mg->Add(turnon40Asym,"");
+    mg->Add(turnon80Asym,"");
+    mg->Draw("AP");  
+    //TLegend * leg = (TLegend*)c2->BuildLegend(0.6,0.2,0.9,0.6);
+    TLegend * leg = new TLegend(0.5,0.2,0.9,0.4);
+    if(mode==0)leg->AddEntry((TObject*)0,"2.76 TeV PYTHIA","");
+    if(mode==1)leg->AddEntry((TObject*)0,"5.02 TeV PYTHIA+HIJING","");
+    leg->AddEntry(turnon40Asym,"Jet 40 Trigger","p");
+    leg->AddEntry(turnon80Asym,"Jet 80 Trigger","p");
+    leg->Draw("same");
+    c2->SaveAs(Form("plots/TriggerTurnOn_%d.png",mode));
+    c2->SaveAs(Form("plots/TriggerTurnOn_%d.pdf",mode));
   }
   else
-  {
-    turnon30->Divide(denom);
-    turnon60->Divide(denom);
-    turnon80->Divide(denom);
-    turnon110->Divide(denom);
+  { 
+    turnon30Asym = new TGraphAsymmErrors();
+    turnon30Asym->SetName("turnon30Asym");
+    turnon30Asym->BayesDivide(turnon30,denom);
+    for(int i =1; i<41; i++)
+    {
+      turnon30Asym->SetPointEXlow(i,0);
+      turnon30Asym->SetPointEXhigh(i,0);
+    }
+    turnon30Asym->SetLineColor(1);
+    turnon30Asym->SetMarkerSize(0.8); 
     
-    turnon60->SetMarkerColor(kRed+1);
-    turnon80->SetMarkerColor(kBlue);
-    turnon110->SetMarkerColor(kGreen);
 
-    turnon30->Draw();
-    turnon60->Draw("same");
-    turnon80->Draw("same");
-    turnon110->Draw("same");
+    turnon60Asym = new TGraphAsymmErrors();
+    turnon60Asym->SetName("turnon60Asym");
+    turnon60Asym->BayesDivide(turnon60,denom);
+    for(int i =1; i<41; i++)
+    {
+      turnon60Asym->SetPointEXlow(i,0);
+      turnon60Asym->SetPointEXhigh(i,0);
+    }
+    turnon60Asym->SetLineColor(kGreen+1);
+    turnon60Asym->SetMarkerColor(kGreen+1);
+    turnon60Asym->SetMarkerSize(0.8);
+
+    turnon80Asym = new TGraphAsymmErrors();
+    turnon80Asym->SetName("turnon80Asym");
+    turnon80Asym->BayesDivide(turnon80,denom);
+    for(int i =1; i<41; i++)
+    {
+      turnon80Asym->SetPointEXlow(i,0);
+      turnon80Asym->SetPointEXhigh(i,0);
+    }
+    turnon80Asym->SetLineColor(kRed+1);
+    turnon80Asym->SetMarkerColor(kRed+1);
+    turnon80Asym->SetMarkerSize(0.8);
+
+    turnon110Asym = new TGraphAsymmErrors();
+    turnon110Asym->SetName("turnon110Asym");
+    turnon110Asym->BayesDivide(turnon110,denom);
+    for(int i =1; i<41; i++)
+    {
+      turnon110Asym->SetPointEXlow(i,0);
+      turnon110Asym->SetPointEXhigh(i,0);
+    }
+    turnon110Asym->SetLineColor(kBlue);
+    turnon110Asym->SetMarkerColor(kBlue);
+    turnon110Asym->SetMarkerSize(0.8);
+
+    mg->Add(turnon30Asym,"");
+    mg->Add(turnon60Asym,"");
+//    mg->Add(turnon80Asym,"");
+    mg->Add(turnon110Asym,"");
+    mg->Draw("AP");  
+    //TLegend * leg = (TLegend*)c2->BuildLegend(0.6,0.2,0.9,0.6);
+    TLegend * leg = new TLegend(0.5,0.2,0.9,0.55);
+    leg->AddEntry((TObject*)0,"7 TeV PYTHIA","");
+    leg->AddEntry(turnon30Asym,"Jet 30 Trigger","p");
+    leg->AddEntry(turnon60Asym,"Jet 60 Trigger","p");
+//    leg->AddEntry(turnon80Asym,"Jet 80 Trigger","p");
+    leg->AddEntry(turnon110Asym,"Jet 110 Trigger","p");
+    leg->Draw("same");
+    c2->SaveAs(Form("plots/TriggerTurnOn_%d.png",mode));
+    c2->SaveAs(Form("plots/TriggerTurnOn_%d.pdf",mode));
   }
     return;
 }
