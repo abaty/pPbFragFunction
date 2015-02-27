@@ -1,4 +1,4 @@
-//Written by Austin Baty on 26/02/2015
+
 TFile * outf;
 TTree * track;
 TTree * ak3PF;
@@ -24,6 +24,7 @@ double trkDz1[maxTrack];
 double trkDxyError1[maxTrack];
 double trkDxy1[maxTrack];
 int highPurity[maxTrack];
+//double trkRmin[maxTrack];
 
 const int maxJet = 500;
 int nref;
@@ -55,6 +56,7 @@ int fileSize;
 
 void openOutFile(const char * mode, const char * trigger, int isMC, int date,int iteration)
 {
+  //outf = new TFile(Form("/mnt/hadoop/cms/store/user/abaty/FF_forests/skims/%s/%s%s_%d_%d_%d.root",mode,mode,trigger,isMC,date,iteration),"recreate");
   outf = new TFile(Form("/export/d00/scratch/abaty/skims/%s%s_%d_%d_%d.root",mode,trigger,isMC,date,iteration),"recreate");
   track = new TTree("track","track");
   ak3PF = new TTree("ak3PF","ak3PF");
@@ -71,6 +73,7 @@ void openOutFile(const char * mode, const char * trigger, int isMC, int date,int
   track->Branch("trkDxy1",&trkDxy1,"trkDxy1[nTrk]/F");
   track->Branch("highPurity",&highPurity,"highPurity[nTrk]/O");
   track->Branch("nVtx",&nVtx,"nVtx/I"); 
+  //track->Branch("trkRmin",&trkRmin,"trkRmin[nTrk]/F");
 
   ak3PF->Branch("nref",&nref,"nref/I");
   ak3PF->Branch("rawpt",&rawpt,"rawpt[nref]/F");
