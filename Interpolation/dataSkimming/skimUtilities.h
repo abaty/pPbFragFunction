@@ -50,6 +50,7 @@ int pcollisionEventSelection;
 int pPAcollisionEventSelectionPA;
 int HLT_PAJet80_NoJetID_v1;
 int HLT_PAJet40_NoJetID_v1;
+int HLT_PAZeroBiasPixel_SingleTrack_v1;
 int pHBHENoiseFilter;
 
 int fileSize;
@@ -153,6 +154,7 @@ void openInFile(const char * name, const char * mode, int isMC)
 
   hltIn->SetBranchAddress("HLT_PAJet80_NoJetID_v1",&HLT_PAJet80_NoJetID_v1);
   hltIn->SetBranchAddress("HLT_PAJet40_NoJetID_v1",&HLT_PAJet40_NoJetID_v1);
+  hltIn->SetBranchAddress("HLT_PAZeroBiasPixel_SingleTrack_v1",&HLT_PAZeroBiasPixel_SingleTrack_v1);
 
   if(!(trackIn->GetEntries() == ak3PFIn->GetEntries() &&
        trackIn->GetEntries() == evtIn->GetEntries() &&

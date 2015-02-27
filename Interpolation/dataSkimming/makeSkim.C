@@ -14,7 +14,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     std::cout << "invalid mode, terminating execution" << std::endl;
     return;
   }
-  if(!((strcmp(trigger,"jet80") == 0 || strcmp(trigger,"jet40") == 0) && !(strcmp(mode,"pp7") == 0)))
+  if(!((strcmp(trigger,"jet80") == 0 || strcmp(trigger,"jet40") == 0 || strcmp(trigger,"MB") == 0) && !(strcmp(mode,"pp7") == 0)))
   {
     std::cout << "invalid trigger, terminating execution" << std::endl;
     return;
@@ -28,8 +28,8 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   const int maxFileSize = 200000;
   const int nFiles = 1;
   const char * fileList[nFiles] = {
-                "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_JSonPPb_forestv77.root"}; 
-
+               //"/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_JSonPPb_forestv77.root"}; 
+               "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_JSonPPb_forestv72_HLT40_HLT60.root"};
   int outFileNum = 0;
   //looping over forests to skim out of
   for(int f = 0; f<nFiles; f++)
@@ -58,6 +58,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
       hltIn->GetEntry(i);
       if(strcmp(trigger,"jet80") == 0 && HLT_PAJet80_NoJetID_v1 == 0) continue;
       if(strcmp(trigger,"jet40") == 0 && HLT_PAJet40_NoJetID_v1 == 0) continue;
+      if(strcmp(trigger,"MB") == 0 && HLT_PAZeroBiasPixel_SingleTrack_v1 == 0) continue;
 
       //Filling Trees 
       trackIn->GetEntry(i);   
