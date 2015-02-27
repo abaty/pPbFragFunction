@@ -1,11 +1,10 @@
-#include "../HiForestAnalysis/hiForest.h"
 #include "TFile.h"
 #include "TTree.h"
 #include "TBranch.h"
 #include "TMath.h"
 #include "TDatime.h"
 #include <iostream>
-#include "skimUtilities.h"
+#include "skimUtilities2.h"
 
 void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC = 0)
 {
@@ -23,7 +22,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   TDatime * time = new TDatime();
   int date = time->GetDate();
 
-  const int maxFileSize = 500;
+  const int maxFileSize = 50;
   const int nFiles = 2;
   const char * fileList[nFiles] = {
                                 "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_JSonPPb_forestv72_HLT40_HLT60.root"
@@ -31,63 +30,53 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
 
   //setting up output skim trees 
   int outFileNum = 0;
-  setupOutputFile(mode,trigger,isMC,date,outFileNum);  
 
   //looping over forests to skim out of
-  for(int f = 0; f<nFiles; f++)
+  for(int f = 0; f<3; f++)
   { 
-    openForestFile(fileList[f],mode,isMC);    
-    int nEntries = h->GetEntries();
-    nEntries = 1000;
+    openInFile(fileList[f%2],mode,isMC);    
+    if(f==0) openOutFile(mode,trigger,isMC,date,outFileNum);
+    int nEntries = evtIn->GetEntries();
+    nEntries = 200;
 
     for(int i = 0; i<nEntries; i++)
     {
       if(i%10000==0) std::cout << i << "/" << nEntries << std::endl;
-      h->GetEntry(i);
-
+      evtIn->GetEntry(i);
+      skimIn->GetEntry(i);
+      std::cout << f << " " << i << " " << fileSize<< std::endl;
       //event and run selections (veto the other-going way as well as first 7 runs for misalignment)
       if(isMC == 0)
       {
-        //if(strcmp(mode,"pPb5") == 0 && (h->evt.run<210676 || h->evt.run>=211313)) continue;
-        if(strcmp(mode,"Pbp5") == 0 && h->evt.run<211313) continue;
-        if(h->skim.pHBHENoiseFilter == 0) continue;
+        //if(strcmp(mode,"pPb5") == 0 && (run<210676 || run>=211313)) continue;
+        if(strcmp(mode,"Pbp5") == 0 && run<211313) continue;
+        if(pHBHENoiseFilter == 0) continue;
       }
-      if(h->skim.pPAcollisionEventSelectionPA == 0 && h->skim.pcollisionEventSelection == 0) continue; 
+      if(pPAcollisionEventSelectionPA == 0 && pcollisionEventSelection == 0) continue; 
  
       //trigger selection
-      if(strcmp(trigger,"jet80") == 0 && h->hlt.HLT_PAJet80_NoJetID_v1 == 0) continue;
-      if(strcmp(trigger,"jet40") == 0 && h->hlt.HLT_PAJet40_NoJetID_v1 == 0) continue;
+      hltIn->GetEntry(i);
+      if(strcmp(trigger,"jet80") == 0 && HLT_PAJet80_NoJetID_v1 == 0) continue;
+      if(strcmp(trigger,"jet40") == 0 && HLT_PAJet40_NoJetID_v1 == 0) continue;
 
       //Filling Trees
-      h->hasTrackTree = true;
-      h->hasAk3JetTree = true;
-      h->hasSkimTree = false;    
-      h->hasHltTree = false;
-
-      h->GetEntry(i); 
+      trackIn->GetEntry(i); 
+      ak3PFIn->GetEntry(i);
       track->Fill();
       ak3PF->Fill();
       evt->Fill();
-      fileSize++;    
+      fileSize++; 
 
-      h->hasTrackTree = false;
-      h->hasAk3JetTree = false;
-      h->hasSkimTree = true;
-      h->hasHltTree = true;
-     
       if(fileSize>=maxFileSize)
       {
-        closeOutputFile();
+        closeOutFile();
         outFileNum++;              
-        setupOutputFile(mode,trigger,isMC,date,outFileNum);   
+        openOutFile(mode,trigger,isMC,date,outFileNum);   
       }
     }
     //cleanup so we can open another forest if needed
-    track->ResetBranchAddresses();
-    ak3PF->ResetBranchAddresses();
-    evt->ResetBranchAddresses();
-    closeForestFile(); 
+    closeInFile();  
   }
-  closeOutputFile();
+  closeOutFile();
 }
 
