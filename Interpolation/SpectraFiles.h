@@ -4,9 +4,6 @@ TH2D * h_trackUE;
 TH2D * h_track_xi;
 TH2D * h_trackUE_xi;
 
-double lowBound;
-double upBound;
-
 TFile * inf, *infMix;
 TTree * track, *trackMix;
 TTree * ak3PF, *ak3PFMix;
@@ -43,6 +40,38 @@ float hiHFplusEta4, hiHFplusEta4Mix;
 float hiHFminusEta4, hiHFminusEta4Mix;
 float hiHFhitPlus, hiHFhitPlusMix;
 float hiHFhitMinus, hiHFhitMinusMix;
+
+double lowJetPtBound;
+double upJetPtBound;
+
+void setJetPtRange(const char * mode, const char* trigger)
+{
+  if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp2")==0) && strcmp(trigger,"jet80"))
+  {
+    lowJetPtBound = 100; 
+    upJetPtBound  = 200;
+  }
+  if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp2")==0) && strcmp(trigger,"jet40"))
+  {
+    lowJetPtBound = 60;
+    upJetPtBound  = 100;
+  }
+  if(strcmp(mode,"pp7")==0 && strcmp(trigger,"jet30"))
+  {
+    lowJetPtBound = 60;
+    upJetPtBound  = 80;
+  }
+  if(strcmp(mode,"pp7")==0 && strcmp(trigger,"jet60"))
+  {
+    lowJetPtBound = 80;
+    upJetPtBound  = 140;
+  }
+  if(strcmp(mode,"pp7")==0 && strcmp(trigger,"jet110"))
+  {
+    lowJetPtBound = 140;
+    upJetPtBound  = 200;
+  }
+}
 
 void getInputFile(const char * name, int isMC)
 {
@@ -86,7 +115,7 @@ void getInputFile(const char * name, int isMC)
   return;
 }
 
-void getInputEntry(int i);
+void getInputEntry(int i)
 {
   track->GetEntry(i);
   ak3PF->GetEntry(i);
@@ -94,7 +123,7 @@ void getInputEntry(int i);
   return;
 }
 
-void getInputMixFile(const char * name, int isMC)
+void getInputFileMix(const char * name, int isMC)
 {
   infMix = new TFile(name,"read");  
   
@@ -143,6 +172,7 @@ void getInputEntryMix(int i)
   ak3PFMix->GetEntry(i);
   return;
 }
+
 
 /*HiForest * h[5];
 HiForest * mix;

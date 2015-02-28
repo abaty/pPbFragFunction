@@ -1,9 +1,10 @@
-#include "HiForestAnalysis/hiForest.h"
+//#include "HiForestAnalysis/hiForest.h"
 #include "TH2D.h"
 #include "TH1D.h"
 #include "TMath.h"
 #include "TRandom.h"
 #include "string.h"
+#include "TDatime.h"
 #include <iostream>
 #include <cmath>
 //#include "get7tevPt.h"
@@ -26,10 +27,10 @@ double getdR2(double jet_eta, double jet_phi, double track_eta, double track_phi
 }
 
 //calculation of Xi
-double getXi(double jetPt, double jetEta, double jetPhi, double trkPt, double trkEta, double trkPhi)
+double getXi(double jet_pt, double jet_eta, double jet_phi, double track_pt, double track_eta, double track_phi)
 {
   double xi = -2;
-  xi = TMath::Log((jetPt/trkPt)*TMath::Power(TMath::CosH(jetEta),2)/(TMath::Cos(trkPhi-jetPhi) + TMath::SinH(jetEta)*TMath::SinH(trkEta)));
+  xi = TMath::Log((jet_pt/track_pt)*TMath::Power(TMath::CosH(jet_eta),2)/(TMath::Cos(track_phi-jet_phi) + TMath::SinH(jet_eta)*TMath::SinH(track_eta)));
   return xi;
 }
 
@@ -43,8 +44,9 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
   }
 
   TH1::SetDefaultSumw2();
-  TH2::SetDefaultSumw2();
-  TRandom * rand = new TRandom(23);
+  TH2::SetDefaultSumw2(); 
+  TDatime * dateTime = new TDatime();
+  TRandom * rand = new TRandom(dateTime->GetTime());
   const sampleType sType = kPPDATA;
   InitCorrFiles(sType);
   InitCorrHists(sType);
@@ -100,7 +102,8 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
   //for(int f=0; f<nFiles; f++)
   //{
     int nEntry = evt->GetEntries();
-    nEntry = 1000;
+    std::cout << nEntry << std::endl;
+    nEntry = 5;
     //int startNum = jobNum;
     //adding manual run no cuts to speed up pPb5/Pbp5 data parsing    
     //if(strcmp(mode, "Pbp5")==0 && f==0) startNum += 5829747;
@@ -113,7 +116,7 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
     for(int i=0; i<nEntry; i++)
     {
       getInputEntry(i);
-      if(i%10 == jobNum) std::cout << i << "/" << nEntry << std::endl;
+      if(i%1 == jobNum) std::cout << i << "/" << nEntry << std::endl;
 
      // int trigger1 = 1;
      // trigger1 = setTrigger(mode,f,h[f]); 
@@ -154,6 +157,7 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
         {
           //preventing infinite loop
           loopIter++;
+          if(loopIter%10000 == 0) std::cout << "in UE loop" << std::endl;
           if(loopIter == maxIter)
           {
             std::cout << "error finding matching MB event, using random MB event" << std::endl;
@@ -174,7 +178,7 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
       //starting jet loop
       for(int j=0; j<nref; j++)
       {
-        if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax || jtpt[j]<lowBound || jtpt[j]>upBound) continue; 
+        if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax || jtpt[j]<lowJetPtBound || jtpt[j]>=upJetPtBound) continue; 
         h_jet->Fill(jtpt[j]);
      
         for(int t=0; t<nTrk; t++)

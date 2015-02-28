@@ -5,9 +5,8 @@ jet40: pt range where should be used 60-100
 jet80: "   "      "     "    "   "   >100
 
 5.02 pPb:
-MB: 60-80
-jet40: 80-120
-jet80: 120+
+same as 2.76 pp (may want to make sure since this is right where the trigger
+becomes efficient)
 
 7 pp:
 Jet30: 0-80
