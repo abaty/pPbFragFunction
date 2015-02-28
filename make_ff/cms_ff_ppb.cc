@@ -624,7 +624,7 @@ if (hiTree != NULL) {
 							const float z = ptl.longitudinal_fraction_of(pjl);
 
 							if (dr_square < 0.3 * 0.3 && trkPt[k] > 0.5 && trkPt[k] < 1e+5 && highPurity[k] && fabsf(trkDxy1[k]) / trkDxyError1[k] < 3 && fabsf(trkDz1[k]) / trkDzError1[k] < 3 && trkPtError[k] /trkPt[k] < 0.1) {
-								float correction = factorizedPtCorr(getPtBin(trkPt[k], sType), hiBin, trkPt[k], trkPhi[k], trkEta[k], sqrtf(dr_square), sType);
+								float correction = factorizedPtCorr(getPtBin(trkPt[k], sType), hiBin, trkPt[k], trkPhi[k], trkEta[k]-boost_pseudorapidity, sqrtf(dr_square), sType);
 								if (std::isfinite(correction)) {
 									if (jtpt[j] >= 100 && z > log(1.0 / 0.5)) {
 						
@@ -650,7 +650,7 @@ if (hiTree != NULL) {
 							const float z = ptl.longitudinal_fraction_of(pjl);
 
 							if (dr_square < 0.3 * 0.3 && trkPt[k] > 0.5 && trkPt[k] < 1e+5 && highPurity[k] && fabsf(trkDxy1[k]) / trkDxyError1[k] < 3 && fabsf(trkDz1[k]) / trkDzError1[k] < 3 && trkPtError[k] /trkPt[k] < 0.1) {
-								float correction = factorizedPtCorr(getPtBin(trkPt[k], sType), hiBin, trkPt[k], trkPhi[k], trkEta[k], sqrtf(dr_square), sType);
+								float correction = factorizedPtCorr(getPtBin(trkPt[k], sType), hiBin, trkPt[k], trkPhi[k], trkEta[k]-boost_pseudorapidity, sqrtf(dr_square), sType);
 								if (std::isfinite(correction)) {
 									if (perp_track) {
 										root_histogram_track_reflected.Fill(jtpt[j], trkPt[k], correction);

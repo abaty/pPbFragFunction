@@ -103,8 +103,8 @@ void makePlots()
   leg->AddEntry(pp5TeV_interp[1],"pp 5TeV interpolation");
   leg->Draw();
 
-  c1->SaveAs("plots/pPb_FFs.png");
-  c1->SaveAs("plots/pPb_FFs.pdf");
+  c1->SaveAs("plots/pPb_FFs_UEMixed.png");
+  c1->SaveAs("plots/pPb_FFs_UEMixed.pdf");
 
 //Pbp
   
@@ -182,8 +182,8 @@ void makePlots()
   leg2->AddEntry(pp5TeV_interp_swap[1],"pp 5TeV interpolation");
   leg2->Draw();
 
-  c2->SaveAs("plots/Pbp_FFs.png");
-  c2->SaveAs("plots/Pbp_FFs.pdf");
+  c2->SaveAs("plots/Pbp_FFs_UEMixed.png");
+  c2->SaveAs("plots/Pbp_FFs_UEMixed.pdf");
   
 }
  

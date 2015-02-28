@@ -13,11 +13,13 @@ void Pbp_Comparison()
 {
   TH1::SetDefaultSumw2();
   
-  TFile * infpPb = new TFile("../rootFiles/pPbFF_80triggeredOnly.root","read");
-  TFile * infPbp = new TFile("../rootFiles/PbpFF_80triggeredOnly.root","read");
+  TFile * infpPb = new TFile("../FragmentationFunction.root","read");
+  TFile * infPbp = new TFile("../FragmentationFunction.root","read");
 
-  TH1D * pPbFF = (TH1D*)infpPb->Get("root_histogram_data_5tev_temp_7");
-  TH1D * PbpFF = (TH1D*)infPbp->Get("root_histogram_data_5tev_temp_7");
+  TH1D * pPbFF[5];
+  TH1D * PbpFF[5];
+  pPbFF[0] = (TH1D*)infpPb->Get("root_histogram_data_5tev_temp_7");
+  PbpFF[0] = (TH1D*)infPbp->Get("root_histogram_data_5tev_temp_7");
 
   TCanvas * c2 = new TCanvas("c2","",500,600);
   c2->SetLeftMargin(0.15);
@@ -90,5 +92,4 @@ void Pbp_Comparison()
   l->Draw("same");
 
   c2->SaveAs("Pbp_Comparison_80Triggered.png");
-
 }

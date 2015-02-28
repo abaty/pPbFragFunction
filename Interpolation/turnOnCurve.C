@@ -13,7 +13,7 @@
 #include "TCanvas.h"
 #include "TPad.h"
 #include "TLegend.h"
-#include "JEC7tev/get7tevPt.h"
+//#include "JEC7tev/get7tevPt.h"
 
 void turnOnCurve(int mode = 0)
 {
@@ -156,8 +156,8 @@ void turnOnCurve(int mode = 0)
     leg->AddEntry(turnon40Asym,"Jet 40 Trigger","p");
     leg->AddEntry(turnon80Asym,"Jet 80 Trigger","p");
     leg->Draw("same");
-    c2->SaveAs(Form("plots/TriggerTurnOn_%d.png",mode));
-    c2->SaveAs(Form("plots/TriggerTurnOn_%d.pdf",mode));
+    c2->SaveAs(Form("plots/TriggerTurnOn_%d_l1.png",mode));
+    c2->SaveAs(Form("plots/TriggerTurnOn_%d_l1.pdf",mode));
   }
   else
   { 
