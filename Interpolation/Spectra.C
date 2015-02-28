@@ -47,6 +47,7 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
   TH2::SetDefaultSumw2(); 
   TDatime * dateTime = new TDatime();
   TRandom * rand = new TRandom(dateTime->GetTime());
+  setJetPtRange(mode,trigger);
   const sampleType sType = kPPDATA;
   InitCorrFiles(sType);
   InitCorrHists(sType);
@@ -103,7 +104,7 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
   //{
     int nEntry = evt->GetEntries();
     std::cout << nEntry << std::endl;
-    nEntry = 5;
+    nEntry = 20000;
     //int startNum = jobNum;
     //adding manual run no cuts to speed up pPb5/Pbp5 data parsing    
     //if(strcmp(mode, "Pbp5")==0 && f==0) startNum += 5829747;
@@ -116,7 +117,7 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
     for(int i=0; i<nEntry; i++)
     {
       getInputEntry(i);
-      if(i%1 == jobNum) std::cout << i << "/" << nEntry << std::endl;
+      if(i%10000 == jobNum) std::cout << i << "/" << nEntry << std::endl;
 
      // int trigger1 = 1;
      // trigger1 = setTrigger(mode,f,h[f]); 
@@ -156,8 +157,7 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
         while(true)
         {
           //preventing infinite loop
-          loopIter++;
-          if(loopIter%10000 == 0) std::cout << "in UE loop" << std::endl;
+          loopIter++; 
           if(loopIter == maxIter)
           {
             std::cout << "error finding matching MB event, using random MB event" << std::endl;
@@ -174,12 +174,12 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
           else if(strcmp(mode,"pp2")==0 && TMath::Floor(vzMix)==TMath::Floor(vz)) break;
         }
       }
-
+ 
       //starting jet loop
       for(int j=0; j<nref; j++)
       {
-        if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax || jtpt[j]<lowJetPtBound || jtpt[j]>=upJetPtBound) continue; 
-        h_jet->Fill(jtpt[j]);
+        std::cout << jtpt[j] << " " << jteta[j]+boost << std::endl;
+        if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax || jtpt[j]<lowJetPtBound || jtpt[j]>=upJetPtBound) continue;          h_jet->Fill(jtpt[j]);
      
         for(int t=0; t<nTrk; t++)
         {
