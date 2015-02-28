@@ -103,7 +103,6 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
   //for(int f=0; f<nFiles; f++)
   //{
     int nEntry = evt->GetEntries();
-    std::cout << nEntry << std::endl;
     nEntry = 20000;
     //int startNum = jobNum;
     //adding manual run no cuts to speed up pPb5/Pbp5 data parsing    
@@ -177,8 +176,7 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
  
       //starting jet loop
       for(int j=0; j<nref; j++)
-      {
-        std::cout << jtpt[j] << " " << jteta[j]+boost << std::endl;
+      { 
         if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax || jtpt[j]<lowJetPtBound || jtpt[j]>=upJetPtBound) continue;          h_jet->Fill(jtpt[j]);
      
         for(int t=0; t<nTrk; t++)
