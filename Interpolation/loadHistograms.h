@@ -32,10 +32,10 @@ TH1D *root_histogram_gluon_7tev;
 
 void loadHistos()
 {
-  TFile * spectraFilepp2 = new TFile("spectrapp2_0_2_0_15.root","read");
-  TFile * spectraFilepPb5 = new TFile("spectrapPb5_0_2_0_15.root","read");
-  TFile * spectraFilePbp5 = new TFile("spectraPbp5_0_2_0_15.root","read");
-  TFile * spectraFilepp7 = new TFile("spectrapp7_0_1_0_15.root","read");
+  TFile * spectraFilepp2 = new TFile("tempRootFiles/03_01_2015_processing/spectra_pp2_2_0_15.root","read");
+  TFile * spectraFilepPb5 = new TFile("tempRootFiles/03_01_2015_processing/spectra_pPb5_2_0_15.root","read");
+  TFile * spectraFilePbp5 = new TFile("tempRootFiles/03_01_2015_processing/spectra_Pbp5_2_0_15.root","read");
+  TFile * spectraFilepp7 = new TFile("spectrapp7_0_0_0_15.root","read");
 
   pp2_0_jet = (TH1D*) spectraFilepp2->Get("pp2_0_jet");
   pp2_0_track = (TH2D*) spectraFilepp2->Get("pp2_0_track");

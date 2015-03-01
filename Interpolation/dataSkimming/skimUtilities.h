@@ -1,7 +1,8 @@
+// MC info
 const int npp2MC = 6;
 const int npPb5MC = 7;
-double pp2PthatBounds[npp2MC+1] = {50,80,120,170,220,280,10000};
-double pPb5PthatBounds[npPb5MC+1]= {50,80,120,170,220,280,370,10000};
+double pp2PthatBounds[npp2MC+2] = {50,80,120,170,220,280,10000,10000};
+double pPb5PthatBounds[npPb5MC+2]= {50,80,120,170,220,280,370,10000,10000};
 double crossSection2[npp2MC+1]  = {1.025E-03,9.865E-05,1.129E-05,1.465E-06,2.837E-07,5.323E-08,0};
 double crossSection5[npPb5MC+1]  = {3.778E-03,4.412E-04,6.147E-05,1.018E-05,2.477E-06,6.160E-07,1.088E-07,0};
 
