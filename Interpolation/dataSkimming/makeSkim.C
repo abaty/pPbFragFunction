@@ -30,10 +30,12 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   const char * fileList[nFiles] = {
                //"/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_JSonPPb_forestv77.root"}; 
                //"/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_JSonPPb_forestv72_HLT40_HLT60.root"};
-               "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_KrisztianMB_JSonPPb_forestv84.root"};
+              // "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_KrisztianMB_JSonPPb_forestv84.root"};
               // "/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"};
                  //"/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root"};
                  //"/mnt/hadoop/cms/store/user/luck/pp_minbiasSkim_forest_53x_2013-08-15-0155/pp_minbiasSkim_forest_53x_2013-08-15-0155.root"};
+                "/mnt/hadoop/cms/store/user/dgulhan/pp2013/P01/prod22/Signal_Pythia_pt50/HiForest_v81_merged01/pt50_pp2013_P01_prod22_v81_merged_forest_0.root"};
+   
   int outFileNum = 0;
   //looping over forests to skim out of
   for(int f = 0; f<nFiles; f++)
@@ -42,7 +44,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     if(f==0) openOutFile(mode,trigger,isMC,date,outFileNum);
     
     int nEntries = evtIn->GetEntries();
-    //nEntries = 2;
+    nEntries = 50;
     for(int i = 0; i<nEntries; i++)
     {
       if(i%10000==0) std::cout <<"file: " << f << " event: " << i << "/" << nEntries << std::endl;
@@ -67,6 +69,22 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
       //Filling Trees 
       trackIn->GetEntry(i);   
       ak3PFIn->GetEntry(i);
+
+      if(isMC)
+      {
+        std::cout <<"pthat "<< pthat << std::endl;
+        if(strcmp("pp2",mode)==0)
+        {
+          if(pthat > pp2PthatBounds[f+1]) continue;
+          weight = crossSection2[f]*1e6/(float)nEntries;
+        }
+        if(strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0)
+        {
+          if(pthat > pPb5PthatBounds[f+1]) continue; 
+          weight = crossSection5[f]*1e6/(float)nEntries;
+        }
+        std::cout << "weight " << weight << std::endl;
+      }
 
       track->Fill();
       ak3PF->Fill();

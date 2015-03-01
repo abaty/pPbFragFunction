@@ -1,3 +1,9 @@
+const int npp2MC = 6;
+const int npPb5MC = 7;
+double pp2PthatBounds[npp2MC+1] = {50,80,120,170,220,280,10000};
+double pPb5PthatBounds[npPb5MC+1]= {50,80,120,170,220,280,370,10000};
+double crossSection2[npp2MC+1]  = {1.025E-03,9.865E-05,1.129E-05,1.465E-06,2.837E-07,5.323E-08,0};
+double crossSection5[npPb5MC+1]  = {3.778E-03,4.412E-04,6.147E-05,1.018E-05,2.477E-06,6.160E-07,1.088E-07,0};
 
 TFile * outf;
 TTree * track;
@@ -24,7 +30,11 @@ double trkDz1[maxTrack];
 double trkDxyError1[maxTrack];
 double trkDxy1[maxTrack];
 int highPurity[maxTrack];
-//double trkRmin[maxTrack];
+//double trkRmin[maxTrack];i
+int nParticle;
+double pEta[2*maxTrack];
+double pPhi[2*maxTrack];
+double pPt[2*maxTrack];
 
 const int maxJet = 500;
 int nref;
@@ -33,6 +43,17 @@ double jtpt[maxJet];
 double jteta[maxJet];
 double jtphi[maxJet];
 double chargedSum[maxJet];
+double refpt[maxJet];
+double refeta[maxJet];
+double refphi[maxJet];
+int refparton_flavor[maxJet];
+double genChargedSum[maxJet];
+float pthat;
+int ngen;
+double genpt[maxJet];
+double geneta[maxJet];
+double genphi[maxJet];
+
 
 int run;
 int event;
@@ -43,6 +64,7 @@ float hiHFplusEta4;
 float hiHFminusEta4;
 float hiHFhitPlus;
 float hiHFhitMinus;
+float weight;
 
 
 //unwritten variables cut on
@@ -94,8 +116,24 @@ void openOutFile(const char * mode, const char * trigger, int isMC, int date,int
   evt->Branch("evt",&event,"evt/I");
 
   if(isMC)
-  {
-    //placeholder
+  {    
+    track->Branch("nParticle",&nParticle,"nParticle/I");
+    track->Branch("pEta",&pEta,"pEta[nParticle]/F");
+    track->Branch("pPhi",&pPhi,"pPhi[nParticle]/F");
+    track->Branch("pPt",&pPt,"pPt[nParticle]/F");
+    
+    ak3PF->Branch("refpt",&refpt,"refpt[nref]/F");
+    ak3PF->Branch("refeta",&refeta,"refeta[nref]/F");
+    ak3PF->Branch("refphi",&refphi,"refphi[nref]/F");
+    ak3PF->Branch("refparton_flavor",&refparton_flavor,"refparton_flavor[nref]/I");
+    ak3PF->Branch("genChargedSum",&genChargedSum,"genChargedSum[nref]/F");
+    ak3PF->Branch("pthat",&pthat,"pthat/F");
+    ak3PF->Branch("ngen",&ngen,"ngen/I");
+    ak3PF->Branch("genpt",&genpt,"genpt[ngen]/F");
+    ak3PF->Branch("geneta",&geneta,"geneta[ngen]/F");
+    ak3PF->Branch("genphi",&genphi,"genphi[ngen]/F"); 
+
+    evt->Branch("weight",&weight,"weight/F");
   }
 
   fileSize = 0;
@@ -113,11 +151,6 @@ void openInFile(const char * name, const char * mode, int isMC)
   evtIn = (TTree*)inf->Get("hiEvtAnalyzer/HiTree");
   hltIn = (TTree*)inf->Get("hltanalysis/HltTree"); 
   
-  if(isMC)
-  {
-    //place holder
-  }
-
   //Setting addresses
   trackIn->SetBranchAddress("nTrk",&nTrk); 
   trackIn->SetBranchAddress("trkPt",&trkPt);
@@ -155,6 +188,25 @@ void openInFile(const char * name, const char * mode, int isMC)
   hltIn->SetBranchAddress("HLT_PAJet80_NoJetID_v1",&HLT_PAJet80_NoJetID_v1);
   hltIn->SetBranchAddress("HLT_PAJet40_NoJetID_v1",&HLT_PAJet40_NoJetID_v1);
   hltIn->SetBranchAddress("HLT_PAZeroBiasPixel_SingleTrack_v1",&HLT_PAZeroBiasPixel_SingleTrack_v1);
+
+  if(isMC)
+  {
+    trackIn->SetBranchAddress("nParticle",&nParticle);
+    trackIn->SetBranchAddress("pEta",&pEta);
+    trackIn->SetBranchAddress("pPhi",&pPhi);
+    trackIn->SetBranchAddress("pPt",&pPt); 
+ 
+    ak3PFIn->SetBranchAddress("refpt",&refpt);
+    ak3PFIn->SetBranchAddress("refeta",&refeta);
+    ak3PFIn->SetBranchAddress("refphi",&refphi);
+    ak3PFIn->SetBranchAddress("refparton_flavor",&refparton_flavor);
+    ak3PFIn->SetBranchAddress("genChargedSum",&genChargedSum);
+    ak3PFIn->SetBranchAddress("pthat",&pthat);
+    ak3PFIn->SetBranchAddress("ngen",&ngen);
+    ak3PFIn->SetBranchAddress("genpt",&genpt);
+    ak3PFIn->SetBranchAddress("geneta",&geneta);
+    ak3PFIn->SetBranchAddress("genphi",&genphi); 
+  }
 
   if(!(trackIn->GetEntries() == ak3PFIn->GetEntries() &&
        trackIn->GetEntries() == evtIn->GetEntries() &&
