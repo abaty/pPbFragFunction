@@ -82,7 +82,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   for(int i=0; i<nEntry; i++)
   {
     getInputEntry(i);
-    if(i%10000 == jobNum) std::cout << i << "/" << nEntry << std::endl;
+    if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
        
     //finding a MB event to mix with if needed 
     if(typeUE==2)
