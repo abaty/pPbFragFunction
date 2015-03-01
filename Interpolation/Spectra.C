@@ -217,7 +217,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
 
 int main(int argc, const char* argv[])
 {
-  if(argc != 4)
+  if(argc != 5)
   {
     std::cout << "Usage: Spectra <fileListJets> <fileListMB> <MCStatus> <job>" << std::endl;
     return 1;
@@ -271,19 +271,21 @@ int main(int argc, const char* argv[])
   std::cout << "FileListMB Loaded" << std::endl;
   std::cout << "FileJobMB: " << listOfFilesMB[job] << std::endl;
 
-  const char * parsedMode = "";
-  const char * parsedTrigger = "";
+  std::string  parsedMode;
+  std::string  parsedTrigger;
   if(listOfFilesJets[job].find("pp2") != std::string::npos) parsedMode = "pp2";
   if(listOfFilesJets[job].find("pp7") != std::string::npos) parsedMode = "pp7";
   if(listOfFilesJets[job].find("pPb5") != std::string::npos) parsedMode = "pPb5";
+  
   if(listOfFilesJets[job].find("Pbp5") != std::string::npos) parsedMode = "Pbp5";
 
-  if(listOfFilesMB[job].find("jet80_") != std::string::npos) parsedTrigger = "jet80";
-  if(listOfFilesMB[job].find("jet40_") != std::string::npos) parsedTrigger = "jet40";
+  if(listOfFilesJets[job].find("jet80_") != std::string::npos) parsedTrigger = "jet80";
+  if(listOfFilesJets[job].find("jet40_") != std::string::npos) parsedTrigger = "jet40";
 
-  std::cout << parsedTrigger << " " << parsedTrigger << std::endl;
+  std::cout << "Results of parsing input files for mode and trigger used:" << std::endl;
+  std::cout << "Mode: " <<  parsedMode.data() << "  Trigger: " << parsedTrigger.data() << std::endl;
   
-  Spectra(listOfFilesJets[job].data(),listOfFilesMB[job].data(),parsedMode,parsedTrigger,MCStatus,job,2,0,1.5);
+  Spectra(listOfFilesJets[job].data(),listOfFilesMB[job].data(),parsedMode.data(),parsedTrigger.data(),MCStatus,job,2,0,1.5);
   return 0;
 }
 
