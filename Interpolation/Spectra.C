@@ -57,6 +57,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     getInputFile("/mnt/hadoop/cms/store/user/abaty/FF_forests/skims/pPb5/data/pPb5jet80_0_20150227_0.root",0);
     if(typeUE==2) getInputFileMix("/mnt/hadoop/cms/store/user/abaty/FF_forests/skims/pPb5/data/pPb5MB_0_20150227_0.root",0);
   }
+
   getInputFile(inputJets,isMC);
   if(typeUE==2) getInputFileMix(inputMB,isMC);
 
@@ -78,7 +79,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   int lastMixEvt = evtMix->GetEntries();
 
   int nEntry = evt->GetEntries();
-  nEntry = 20000;
+  //nEntry = 20000;
   for(int i=0; i<nEntry; i++)
   {
     getInputEntry(i);
