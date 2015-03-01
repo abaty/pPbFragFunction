@@ -1,4 +1,3 @@
-//#include "HiForestAnalysis/hiForest.h"
 #include "TH2D.h"
 #include "TH1D.h"
 #include "TMath.h"
@@ -6,6 +5,7 @@
 #include "string.h"
 #include "TDatime.h"
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include "factorizedPtCorr.h"
 #include "SpectraFiles.h"
@@ -34,7 +34,7 @@ double getXi(double jet_pt, double jet_eta, double jet_phi, double track_pt, dou
 }
 
 //modes are pp2,pp7,pPb5,Pbp5
-void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE = 0, double jetEtaMin = 0, double jetEtaMax = 1.5, bool isMC  = 0, int jobNum = 0)
+void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2", const char* trigger = "jet80", bool isMC = 0,int  jobNum = -1, int typeUE = 2, double jetEtaMin = 0, double jetEtaMax = 1.5)
 {
   if(strcmp(mode,"pp2") && strcmp(mode,"pp7") && strcmp(mode,"pPb5") && strcmp(mode,"Pbp5"))
   {
@@ -51,8 +51,14 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
   InitCorrFiles(sType);
   InitCorrHists(sType);
 
-  getInputFile("/mnt/hadoop/cms/store/user/abaty/FF_forests/skims/pPb5/data/pPb5jet80_0_20150227_0.root",0);
-  if(typeUE==2) getInputFileMix("/mnt/hadoop/cms/store/user/abaty/FF_forests/skims/pPb5/data/pPb5MB_0_20150227_0.root",0);
+  //for testing code in interactive mode only
+  if(jobNum == -1)
+  {
+    getInputFile("/mnt/hadoop/cms/store/user/abaty/FF_forests/skims/pPb5/data/pPb5jet80_0_20150227_0.root",0);
+    if(typeUE==2) getInputFileMix("/mnt/hadoop/cms/store/user/abaty/FF_forests/skims/pPb5/data/pPb5MB_0_20150227_0.root",0);
+  }
+  getInputFile(inputJets,isMC);
+  if(typeUE==2) getInputFileMix(inputMB,isMC);
 
   h_jet = new TH1D("h_jet","",nJetBins,0,300); 
   h_track = new TH2D("h_track","",nJetBins,0,300,39,axis);
@@ -209,25 +215,75 @@ void Spectra(const char* mode = "pp2", const char* trigger = "jet80", int typeUE
   outf->Close();
 }
 
-int main(int argc, char *argv[])
+int main(int argc, const char* argv[])
 {
   if(argc != 4)
   {
-    std::cout << "Usage: runcorr <condor_iter> <nJobs>" << std::endl;
+    std::cout << "Usage: Spectra <fileListJets> <fileListMB> <MCStatus> <job>" << std::endl;
     return 1;
   }
-  int argument1 = std::atoi(argv[1]);
-  int argument2 = std::atoi(argv[2]);
-  int argument3 = std::atoi(argv[3]);
-  /*if(argument==0) argument=27;
-  else if(argument==1) argument=26;
-  else if(argument==2) argument=27;*/
   
-//for running on condor
-/*  if(argument3 == 0) Spectra("pp2",true,0,1.5,0,argument1,argument2);
-  if(argument3 == 1) Spectra("pPb5",true,0,1.5,0,argument1,argument2);
-  if(argument3 == 2) Spectra("pp7",true,0,1.5,0,argument1,argument2);
-  std::cout << "finished " << argument1 << argument2 << argument3 << std::endl;
-  return 0;*/
+  std::string fList = argv[1];
+  std::string fListMB = argv[2];
+  int MCStatus = std::atoi(argv[3]);
+  int job = std::atoi(argv[4]);
+
+  /*if(job==0) job=27;
+  else if(job==1) job=26;
+  else if(job==2) job=27;*/
+ 
+  std::string buffer, bufferMB;
+  std::vector<std::string> listOfFilesJets;
+  std::vector<std::string> listOfFilesMB;  
+
+  ifstream inFile(fList.data());
+  ifstream inFileMB(fListMB.data());
+  std::cout << fList << std::endl;
+  std::cout << fListMB << std::endl;
+  std::cout << inFile.is_open() << std::endl;
+  std::cout << inFileMB.is_open() << std::endl;
+
+  if(!inFile.is_open())
+  {
+    std::cout << "Error opening jet file. Exiting." <<std::endl;
+    return 1;
+  }
+  else if (!inFileMB.is_open())
+  {
+    std::cout << "Error opening MB file. Exiting." <<std::endl;
+    return 1;
+  }
+  else
+  {
+    while(true)
+    {
+      inFile >> buffer;
+      inFileMB >> bufferMB;
+      if(inFile.eof()) break;
+      if(inFileMB.eof()) break;
+      listOfFilesJets.push_back(buffer);
+      listOfFilesMB.push_back(bufferMB);
+    }
+  }
+
+  std::cout << "FileListJets Loaded" << std::endl;
+  std::cout << "FileJobJets: " << listOfFilesJets[job] << std::endl;
+  std::cout << "FileListMB Loaded" << std::endl;
+  std::cout << "FileJobMB: " << listOfFilesMB[job] << std::endl;
+
+  const char * parsedMode = "";
+  const char * parsedTrigger = "";
+  if(listOfFilesJets[job].find("pp2") != std::string::npos) parsedMode = "pp2";
+  if(listOfFilesJets[job].find("pp7") != std::string::npos) parsedMode = "pp7";
+  if(listOfFilesJets[job].find("pPb5") != std::string::npos) parsedMode = "pPb5";
+  if(listOfFilesJets[job].find("Pbp5") != std::string::npos) parsedMode = "Pbp5";
+
+  if(listOfFilesMB[job].find("jet80_") != std::string::npos) parsedTrigger = "jet80";
+  if(listOfFilesMB[job].find("jet40_") != std::string::npos) parsedTrigger = "jet40";
+
+  std::cout << parsedTrigger << " " << parsedTrigger << std::endl;
+  
+  Spectra(listOfFilesJets[job].data(),listOfFilesMB[job].data(),parsedMode,parsedTrigger,MCStatus,job,2,0,1.5);
+  return 0;
 }
 

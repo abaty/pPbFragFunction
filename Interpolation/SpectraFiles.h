@@ -113,6 +113,11 @@ void getInputFile(const char * name, int isMC)
   evt->SetBranchAddress("hiHFhitMinus",&hiHFhitMinus);
   evt->SetBranchAddress("evt",&event);
 
+  if(isMC)
+  {
+
+  }
+
   return;
 }
 
@@ -162,6 +167,11 @@ void getInputFileMix(const char * name, int isMC)
   evtMix->SetBranchAddress("hiHFhitPlus",&hiHFhitPlusMix);
   evtMix->SetBranchAddress("hiHFhitMinus",&hiHFhitMinusMix);
   evtMix->SetBranchAddress("evt",&eventMix);
+
+  if(isMC)
+  {
+
+  }
 
   return;
 }
