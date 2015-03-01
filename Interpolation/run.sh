@@ -4,12 +4,10 @@ then
   exit 1
 fi
 
-sleep $((2 * $1))
+sleep $((3 * $1))
 
-nModes=3
-
-echo | awk -v i=$1 '{print "./run.exe "i}' 
-echo | awk -v i=$1 '{print "./run.exe "i}' | bash
+echo | awk -v i=$1 '{print "./run.exe masterJetFileList.txt masterMBFileList.txt 0 "i}' 
+echo | awk -v i=$1 '{print "./run.exe masterJetFileList.txt masterMBFileList.txt 0 "i}' | bash
 
 echo | awk -v tag=$4 -v user=$USER '{print "mv spectra*.root /net/hisrv0001/home/"user"/pPb_Fragfunc/CMSSW_6_2_11/src/Interpolation/tempRootFiles/"}'
 echo | awk -v tag=$4 -v user=$USER '{print "mv spectra*.root /net/hisrv0001/home/"user"/pPb_Fragfunc/CMSSW_6_2_11/src/Interpolation/tempRootFiles/"}' | bash

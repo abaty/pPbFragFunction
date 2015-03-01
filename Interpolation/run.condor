@@ -11,6 +11,6 @@ Rank         = Mips
 +AccountingGroup = "group_cmshi.user_flag"
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
-transfer_input_files = transfer_filelist,secondary_pp.root,eff_pt0_1_ak3Calo_dogenjet0.root,eff_pt1_3_ak3Calo_dogenjet0.root,eff_pt3_8_ak3Calo_dogenjet0.root,eff_pt8_300_ak3Calo_dogenjet0.root,fake_pt0_1_ak3Calo_dogenjet0.root,fake_pt1_3_ak3Calo_dogenjet0.root,fake_pt3_8_ak3Calo_dogenjet0.root,fake_pt8_300_ak3Calo_dogenjet0.root
+transfer_input_files = transfer_filelist,masterJetFileList.txt,masterMBFileList.txt,secondary_pp.root,eff_pt0_1_ak3Calo_dogenjet0.root,eff_pt1_3_ak3Calo_dogenjet0.root,eff_pt3_8_ak3Calo_dogenjet0.root,eff_pt8_300_ak3Calo_dogenjet0.root,fake_pt0_1_ak3Calo_dogenjet0.root,fake_pt1_3_ak3Calo_dogenjet0.root,fake_pt3_8_ak3Calo_dogenjet0.root,fake_pt8_300_ak3Calo_dogenjet0.root
 
 Queue njobs
