@@ -19,12 +19,20 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     std::cout << "invalid trigger, terminating execution" << std::endl;
     return;
   }
+  if(!((strcmp(trigger,"jet30") == 0 || strcmp(trigger,"jet60") == 0 || strcmp(trigger,"110") == 0 || strcmp(trigger,"MB")) && strcmp(mode,"pp7") == 0))
+  {
+    std::cout << "invalid trigger, terminating execution" << std::endl;
+    return;
+  }
+  //event counters to check how many events we use/cut out
+  int totalEvents =0, afterRunCut = 0, afterNoiseCut = 0, afterHLTCut = 0;
 
   //date execution started for labeling output files
   TDatime * time = new TDatime();
   int date = time->GetDate();
 
   //some parameters for  files
+  //max output file size
   const int maxFileSize = 200000;
   int nFiles = 1;
   if(isMC)
@@ -32,7 +40,8 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     if(strcmp(mode,"pp2")==0) nFiles = npp2MC;
     if(strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0) nFiles = npPb5MC;
   } 
- 
+
+//setting up files 
   const char * fileList[nFiles];
   if(isMC)
   {
@@ -68,6 +77,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     //nEntries = 50;
     for(int i = 0; i<nEntries; i++)
     {
+      totalEvents++;
       if(i%10000==0) std::cout <<"file: " << f << " event: " << i << "/" << nEntries << std::endl;
       evtIn->GetEntry(i);
       skimIn->GetEntry(i);
@@ -77,7 +87,9 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
       {
         if(strcmp(mode,"pPb5") == 0 && (run<210676 || run>=211313)) continue;
         if(strcmp(mode,"Pbp5") == 0 && run<211313) continue;
+        afterRunCut++;
         if(pHBHENoiseFilter == 0) continue;
+        afterNoiseCut++
       }
       if(pPAcollisionEventSelectionPA == 0 && pcollisionEventSelection == 0) continue; 
  
@@ -86,6 +98,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
       if(strcmp(trigger,"jet80") == 0 && HLT_PAJet80_NoJetID_v1 == 0) continue;
       if(strcmp(trigger,"jet40") == 0 && HLT_PAJet40_NoJetID_v1 == 0) continue;
       if(strcmp(trigger,"MB") == 0 && HLT_PAZeroBiasPixel_SingleTrack_v1 == 0) continue;
+      afterHLTCut++;
 
       //Filling Trees 
       trackIn->GetEntry(i);   
@@ -122,5 +135,11 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     closeInFile();  
   }
   closeOutFile();
+
+  //output number of files used
+  std::cout << "Total Events scanned: " << totalEvents << std::endl;
+  std::cout << "Total Events after Run cuts " << afterRunCut << std::endl;
+  std::cout << "Total Events after Noise cuts: " << afterNoiseCut << std::endl;
+  std::cout << "Total Events after HLT cuts: " << afterHLTCut << std::endl;
 }
 
