@@ -1,11 +1,10 @@
 #include <fstream>
 // MC info
-const int npp2MC = 6;
 const int npPb5MC = 7;
-double pp2PthatBounds[npp2MC+2] = {50,80,120,170,220,280,10000,10000};
-double pPb5PthatBounds[npPb5MC+2]= {50,80,120,170,220,280,370,10000,10000};
-double crossSection2[npp2MC+1]  = {1.025E-03,9.865E-05,1.129E-05,1.465E-06,2.837E-07,5.323E-08,0};
-double crossSection5[npPb5MC+1]  = {3.778E-03,4.412E-04,6.147E-05,1.018E-05,2.477E-06,6.160E-07,1.088E-07,0};
+double pp2PthatBounds[8] = {50,80,120,170,220,280,10000,10000};
+double pPb5PthatBounds[9]= {50,80,120,170,220,280,370,10000,10000};
+double crossSection2[7]  = {1.025E-03,9.865E-05,1.129E-05,1.465E-06,2.837E-07,5.323E-08,0};
+double crossSection5[8]  = {3.778E-03,4.412E-04,6.147E-05,1.018E-05,2.477E-06,6.160E-07,1.088E-07,0};
 
 TFile * outf;
 TTree * track;
@@ -75,6 +74,9 @@ int pPAcollisionEventSelectionPA;
 int HLT_PAJet80_NoJetID_v1;
 int HLT_PAJet40_NoJetID_v1;
 int HLT_PAZeroBiasPixel_SingleTrack_v1;
+int HLT_Jet30;
+int HLT_Jet60;
+int HLT_Jet110;
 int pHBHENoiseFilter;
 
 int fileSize;
@@ -188,8 +190,31 @@ void openInFile(const char * name, const char * mode, int isMC)
   skimIn->SetBranchAddress("pPAcollisionEventSelectionPA",&pPAcollisionEventSelectionPA);
   skimIn->SetBranchAddress("pHBHENoiseFilter",&pHBHENoiseFilter);
 
-  hltIn->SetBranchAddress("HLT_PAJet80_NoJetID_v1",&HLT_PAJet80_NoJetID_v1);
-  hltIn->SetBranchAddress("HLT_PAJet40_NoJetID_v1",&HLT_PAJet40_NoJetID_v1);
+  if(!strcmp(mode,"pp7")==0)
+  {
+    hltIn->SetBranchAddress("HLT_PAJet80_NoJetID_v1",&HLT_PAJet80_NoJetID_v1);
+    hltIn->SetBranchAddress("HLT_PAJet40_NoJetID_v1",&HLT_PAJet40_NoJetID_v1);
+  }
+
+  if(strcmp(mode,"pp7")==0)
+  {
+    for(int vNum = 0; vNum<100; vNum++)
+    {
+      int status = hltIn->SetBranchAddress(Form("HLT_Jet30_v%d",vNum),&HLT_Jet30);
+      if(status!=-5) break;
+    }
+    for(int vNum = 0; vNum<100; vNum++)
+    {
+      int status = hltIn->SetBranchAddress(Form("HLT_Jet60_v%d",vNum),&HLT_Jet60);
+      if(status!=-5) break;
+    }
+    for(int vNum = 0; vNum<100; vNum++)
+    {
+      int status = hltIn->SetBranchAddress(Form("HLT_Jet110_v%d",vNum),&HLT_Jet110);
+      if(status!=-5) break;
+    }
+  } 
+ 
   hltIn->SetBranchAddress("HLT_PAZeroBiasPixel_SingleTrack_v1",&HLT_PAZeroBiasPixel_SingleTrack_v1);
 
   if(isMC)
@@ -242,32 +267,6 @@ void closeInFile()
   delete inf;
   return;
 }
-
-/*int getNumberOfInputFiles(const char * fileName)
-{
-  std::string buffer;
-  ifstream inFile(fileName);
-  std::cout << inFile.is_open() << std::endl;
-  std::cout << fileName << std::endl;
-
-  int nLines = 0;
-
-  if(!inFile.is_open())
-  {
-    std::cout << "Error opening file. Returning 1 file to file number." <<std::endl;
-    return 1;
-  }
-  else
-  {
-    while(true)
-    {
-      inFile >> buffer;
-      if(inFile.eof()) break;
-      nLines++;
-    }
-  }
-  return nLines;
-}*/
 
 std::vector<std::string> readInputFileList(const char* fList)
 {

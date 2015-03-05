@@ -36,26 +36,14 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   //some parameters for  files
   //max output file size
   const int maxOutputFileSize = 200000;
-  //if(isMC)
-  //{
-  //  if(strcmp(mode,"pp2")==0) nFiles = npp2MC;
-  //  if(strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0) nFiles = npPb5MC;
-  //} 
-  //if(strcmp(mode,"pp7")==0) nFiles = getNumberOfInputFiles("7tevFiles.txt");
-  
+  //if(isMC) 
 
 //setting up files 
   std::vector<std::string> fileList;
   if(isMC)
   {
-    if(strcmp("pp2",mode)==0)
-    {
-      for(int file=0; file<npp2MC; file++) fileList.push_back(Form("/mnt/hadoop/cms/store/user/dgulhan/pp2013/P01/prod22/Signal_Pythia_pt%d/HiForest_v81_merged01/pt%d_pp2013_P01_prod22_v81_merged_forest_0.root",(int)pp2PthatBounds[file],(int)pp2PthatBounds[file]));
-    }
-    else if(strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0)
-    {
-      for(int file=0; file<npPb5MC; file++) fileList.push_back(Form("/mnt/hadoop/cms/store/user/dgulhan/pPb/HP04/prod16/Hijing_Pythia_pt%d/HiForest_v77_merged01/pt%d_HP04_prod16_v77_merged_forest_0.root",(int)pPb5PthatBounds[file],(int)pPb5PthatBounds[file]));
-    }
+    if(strcmp("pp2",mode)==0) fileList = readInputFileList("pp2MCFiles.txt");
+    if(strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0) fileList = readInputFileList("pPb5MCFiles.txt");
   }
   else 
   {
@@ -65,7 +53,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     if(strcmp("pp2",mode)==0 && strcmp(trigger,"jet80")==0) fileList.push_back("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root");
     if(strcmp("pp2",mode)==0 && strcmp(trigger,"jet40")==0) fileList.push_back("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root");
     if(strcmp("pp2",mode)==0 && strcmp(trigger,"MB")==0) fileList.push_back("/mnt/hadoop/cms/store/user/luck/pp_minbiasSkim_forest_53x_2013-08-15-0155/pp_minbiasSkim_forest_53x_2013-08-15-0155.root");
-    if(strcmp("pp7",mode)==0) fileList = readInputFileList("7tevFiles.txt");
+    if(strcmp("pp7",mode)==0) fileList = readInputFileList("pp7Files.txt");
   }
   int nFiles = fileList.size();
 
@@ -101,6 +89,9 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
       if(strcmp(trigger,"jet80") == 0 && HLT_PAJet80_NoJetID_v1 == 0) continue;
       if(strcmp(trigger,"jet40") == 0 && HLT_PAJet40_NoJetID_v1 == 0) continue;
       if(strcmp(trigger,"MB") == 0 && HLT_PAZeroBiasPixel_SingleTrack_v1 == 0) continue;
+      if(strcmp(trigger,"jet30") == 0 && HLT_Jet30 == 0 ) continue;
+      if(strcmp(trigger,"jet60") == 0 && HLT_Jet60 == 0 ) continue;
+      if(strcmp(trigger,"jet110") == 0 && HLT_Jet110 == 0 ) continue;
       afterHLTCut++;
 
       //Filling Trees 
