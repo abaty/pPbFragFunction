@@ -75,8 +75,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
 
   //variables for mixing
   int startMixEvt = 0;
+  int lastMixEvt = 1;
   //if(strcmp(mode, "Pbp5")==0) startMixEvt = 6743253;
-  int lastMixEvt = evtMix->GetEntries();
+  if(typeUE==2) lastMixEvt = evtMix->GetEntries();
 
   int nEntry = evt->GetEntries();
   //nEntry = 20000;
@@ -201,7 +202,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     }
   }
 
-  TFile * outf = new TFile(Form("spectra%s%s_%d_%d_%d_%d.root",mode,trigger,jobNum,(int)typeUE,(int)(10*jetEtaMin),(int)(10*jetEtaMax)),"recreate");
+  TFile * outf = new TFile(Form("spectra%s%s_%d_%d_%d_%d_%d.root",mode,trigger,jobNum,(int)isMC,(int)typeUE,(int)(10*jetEtaMin),(int)(10*jetEtaMax)),"recreate");
   h_jet->SetDirectory(0);
   h_track->SetDirectory(0);
   h_trackUE->SetDirectory(0);
@@ -286,7 +287,7 @@ int main(int argc, const char* argv[])
   std::cout << "Results of parsing input files for mode and trigger used:" << std::endl;
   std::cout << "Mode: " <<  parsedMode.data() << "  Trigger: " << parsedTrigger.data() << std::endl;
   
-  Spectra(listOfFilesJets[job].data(),listOfFilesMB[job].data(),parsedMode.data(),parsedTrigger.data(),MCStatus,job,2,0,1.5);
+  Spectra(listOfFilesJets[job].data(),listOfFilesMB[job].data(),parsedMode.data(),parsedTrigger.data(),MCStatus,job,3,0,1.5);
   return 0;
 }
 

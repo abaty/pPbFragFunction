@@ -76,13 +76,12 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   { 
     openInFile(fileList[f].data(),mode,isMC);    
     if(f==0) openOutFile(mode,trigger,isMC,date,outFileNum);
-    
-    int nEntries = evtIn->GetEntries();
+    int nEntries = trackIn->GetEntries();
     //nEntries = 50;
     for(int i = 0; i<nEntries; i++)
     {
       totalEvents++;
-      if(i%10000==0) std::cout <<"file: " << f << " event: " << i << "/" << nEntries << std::endl;
+      if(i%1000==0) std::cout <<"file: " << f << " event: " << i << "/" << nEntries << std::endl;
       evtIn->GetEntry(i);
       skimIn->GetEntry(i);
 

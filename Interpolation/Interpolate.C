@@ -123,7 +123,7 @@ void makeFF()
     Pbp_FF[i]->Divide(pp5TeV_interp_swap[i]);
   }
  
-  TFile * outfile = new TFile("FragmentationFunctionsMixing.root","recreate");
+  TFile * outfile = new TFile("FragmentationFunctionsUE3MC.root","recreate");
   for(int i = 0; i < FF_Bins; i++)
   {
     pp2TeV_data[i]->Write();
