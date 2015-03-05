@@ -1,3 +1,4 @@
+#include <fstream>
 // MC info
 const int npp2MC = 6;
 const int npPb5MC = 7;
@@ -143,8 +144,9 @@ void openOutFile(const char * mode, const char * trigger, int isMC, int date,int
 
 void openInFile(const char * name, const char * mode, int isMC)
 {
-  inf = new TFile(name,"read");  
-  
+  //inf = new TFile(name,"read");  
+  inf = TFile::Open(name,"read");  
+
   trackIn = (TTree*)inf->Get("anaTrack/trackTree");
   if(trackIn == 0) trackIn = (TTree*) inf->Get("ppTrack/trackTree");
   ak3PFIn = (TTree*)inf->Get("ak3PFJetAnalyzer/t");
@@ -241,3 +243,54 @@ void closeInFile()
   return;
 }
 
+/*int getNumberOfInputFiles(const char * fileName)
+{
+  std::string buffer;
+  ifstream inFile(fileName);
+  std::cout << inFile.is_open() << std::endl;
+  std::cout << fileName << std::endl;
+
+  int nLines = 0;
+
+  if(!inFile.is_open())
+  {
+    std::cout << "Error opening file. Returning 1 file to file number." <<std::endl;
+    return 1;
+  }
+  else
+  {
+    while(true)
+    {
+      inFile >> buffer;
+      if(inFile.eof()) break;
+      nLines++;
+    }
+  }
+  return nLines;
+}*/
+
+std::vector<std::string> readInputFileList(const char* fList)
+{
+  std::string buffer;
+  std::vector<std::string> listOfFiles;
+
+  ifstream inFile(fList);
+  std::cout << fList << std::endl;
+  std::cout << inFile.is_open() << std::endl;
+
+  if(!inFile.is_open())
+  {
+    std::cout << "Error opening jet file. Exiting." <<std::endl;
+    return listOfFiles;
+  }
+  else
+  {
+    while(true)
+    {
+      inFile >> buffer;
+      if(inFile.eof()) break;
+      listOfFiles.push_back(buffer);
+    }
+  }
+  return listOfFiles;
+}
