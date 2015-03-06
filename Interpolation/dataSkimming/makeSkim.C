@@ -69,7 +69,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     for(int i = 0; i<nEntries; i++)
     {
       totalEvents++;
-      if(i%1000==0) std::cout <<"file: " << f << " event: " << i << "/" << nEntries << std::endl;
+      if(i%10000==0) std::cout <<"file: " << f << " event: " << i << "/" << nEntries << std::endl;
       evtIn->GetEntry(i);
       skimIn->GetEntry(i);
 
