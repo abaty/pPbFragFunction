@@ -83,10 +83,10 @@ int pHBHENoiseFilter;
 
 int fileSize;
 
-void openOutFile(const char * mode, const char * trigger, int isMC, int date,int iteration, int pthat = 0)
+void openOutFile(const char * mode, const char * trigger, int isMC, int date,int iteration)
 {
   //outf = new TFile(Form("/mnt/hadoop/cms/store/user/abaty/FF_forests/skims/%s/%s%s_%d_%d_%d.root",mode,mode,trigger,isMC,date,iteration),"recreate");
-  outf = new TFile(Form("/export/d00/scratch/abaty/skims/%s%s_%d_%d_%d_%d.root",mode,trigger,isMC,date, pthat, iteration),"recreate");
+  outf = new TFile(Form("/export/d00/scratch/abaty/skims/%s%s_%d_%d_%d.root",mode,trigger,isMC,date, iteration),"recreate");
   track = new TTree("track","track");
   ak3PF = new TTree("ak3PF","ak3PF");
   evt   = new TTree("evt","evt");
@@ -149,16 +149,16 @@ void openOutFile(const char * mode, const char * trigger, int isMC, int date,int
 int openInFile(const char * name, const char * mode, int isMC)
 {
   //inf = new TFile(name,"read");  
-  inf = TFile::Open(name,"read");  
+  inf = TFile::Open(name,"read"); 
   if(inf->GetNbytesInfo()==0) return 0;
 
   trackIn = (TTree*)inf->Get("anaTrack/trackTree");
-  if(trackIn == 0) trackIn = (TTree*) inf->Get("ppTrack/trackTree");
+  if(trackIn == 0) trackIn = (TTree*) inf->Get("ppTrack/trackTree"); 
   ak3PFIn = (TTree*)inf->Get("ak3PFJetAnalyzer/t");
   skimIn = (TTree*)inf->Get("skimanalysis/HltTree");
   evtIn = (TTree*)inf->Get("hiEvtAnalyzer/HiTree");
   hltIn = (TTree*)inf->Get("hltanalysis/HltTree"); 
-  
+ 
   //Setting addresses
   trackIn->SetBranchAddress("nTrk",&nTrk); 
   trackIn->SetBranchAddress("trkPt",&trkPt);
@@ -179,15 +179,18 @@ int openInFile(const char * name, const char * mode, int isMC)
   ak3PFIn->SetBranchAddress("jtphi",&jtphi);
   ak3PFIn->SetBranchAddress("chargedSum",&chargedSum);
 
-  evtIn->SetBranchAddress("run",&run);
-  evtIn->SetBranchAddress("vz",&vz);
-  evtIn->SetBranchAddress("hiHFplus",&hiHFplus);
-  evtIn->SetBranchAddress("hiHFminus",&hiHFminus);
-  evtIn->SetBranchAddress("hiHFplusEta4",&hiHFplusEta4);
-  evtIn->SetBranchAddress("hiHFminusEta4",&hiHFminusEta4);
-  evtIn->SetBranchAddress("hiHFhitPlus",&hiHFhitPlus);
-  evtIn->SetBranchAddress("hiHFhitMinus",&hiHFhitMinus);
-  evtIn->SetBranchAddress("evt",&event);
+  if(strcmp(mode,"pp7")!=0 || !isMC)
+  {
+    evtIn->SetBranchAddress("run",&run);
+    evtIn->SetBranchAddress("vz",&vz);
+    evtIn->SetBranchAddress("hiHFplus",&hiHFplus);
+    evtIn->SetBranchAddress("hiHFminus",&hiHFminus);
+    evtIn->SetBranchAddress("hiHFplusEta4",&hiHFplusEta4);
+    evtIn->SetBranchAddress("hiHFminusEta4",&hiHFminusEta4);
+    evtIn->SetBranchAddress("hiHFhitPlus",&hiHFhitPlus);
+    evtIn->SetBranchAddress("hiHFhitMinus",&hiHFhitMinus);
+    evtIn->SetBranchAddress("evt",&event);
+  }
 
   skimIn->SetBranchAddress("pcollisionEventSelection",&pcollisionEventSelection);
   skimIn->SetBranchAddress("pPAcollisionEventSelectionPA",&pPAcollisionEventSelectionPA);
@@ -217,7 +220,7 @@ int openInFile(const char * name, const char * mode, int isMC)
       if(status!=-5) break;
     }
   } 
- 
+
   hltIn->SetBranchAddress("HLT_PAZeroBiasPixel_SingleTrack_v1",&HLT_PAZeroBiasPixel_SingleTrack_v1);
 
   if(isMC)

@@ -62,7 +62,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   int totalEntriesForWeighting[7] = {0};
   if(strcmp(mode, "pp7")==0 && isMC)
   {
-    for(int f=4200; f<nFiles; f++)
+    for(int f=4400; f<nFiles; f++)
     { 
       if(f%100 == 0) std::cout << "tabulating entries; file " << f << "/" << nFiles <<std::endl;
       int isGoodFile = openInFileFast(fileList[f].data(),mode,isMC);
@@ -88,13 +88,16 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   for(int f = 0; f<nFiles; f++)
   {   
     int isGoodFile = openInFile(fileList[f].data(),mode,isMC);
+     std::cout << 1 << std::endl;
+    if(f==0) openOutFile(mode,trigger,isMC,date,outFileNum);
+    std::cout << 0 << std::endl;
     if( isGoodFile == 0)
-    { 
+    {
       closeInFile(0);
       continue;
     }
+    std::cout << 0 << std::endl;
 
-    if(f==0) openOutFile(mode,trigger,isMC,date,outFileNum);
     int nEntries = trackIn->GetEntries();
     //nEntries = 50;
     for(int i = 0; i<nEntries; i++)
@@ -152,7 +155,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
 
       track->Fill();
       ak3PF->Fill();
-      evt->Fill();
+      if(strcmp(mode,"pp7")!=0 || !isMC) evt->Fill();
       fileSize++; 
       //open a new output file if the old one is "full"
       if(fileSize>=maxOutputFileSize)
