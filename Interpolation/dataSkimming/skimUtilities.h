@@ -3,8 +3,10 @@
 const int npPb5MC = 7;
 double pp2PthatBounds[8] = {50,80,120,170,220,280,10000,10000};
 double pPb5PthatBounds[9]= {50,80,120,170,220,280,370,10000,10000};
+double pp7PthatBounds[8] = {30,50,80,120,170,300,470,600};
 double crossSection2[7]  = {1.025E-03,9.865E-05,1.129E-05,1.465E-06,2.837E-07,5.323E-08,0};
 double crossSection5[8]  = {3.778E-03,4.412E-04,6.147E-05,1.018E-05,2.477E-06,6.160E-07,1.088E-07,0};
+double crossSection7[7]  = {5.31E-2, 6.36E-3, 7.84E-4, 1.15E-4, 2.43E-5, 1.17E-6, 7.02E-8};
 
 TFile * outf;
 TTree * track;
@@ -81,10 +83,10 @@ int pHBHENoiseFilter;
 
 int fileSize;
 
-void openOutFile(const char * mode, const char * trigger, int isMC, int date,int iteration)
+void openOutFile(const char * mode, const char * trigger, int isMC, int date,int iteration, int pthat = 0)
 {
   //outf = new TFile(Form("/mnt/hadoop/cms/store/user/abaty/FF_forests/skims/%s/%s%s_%d_%d_%d.root",mode,mode,trigger,isMC,date,iteration),"recreate");
-  outf = new TFile(Form("/export/d00/scratch/abaty/skims/%s%s_%d_%d_%d.root",mode,trigger,isMC,date,iteration),"recreate");
+  outf = new TFile(Form("/export/d00/scratch/abaty/skims/%s%s_%d_%d_%d_%d.root",mode,trigger,isMC,date, pthat, iteration),"recreate");
   track = new TTree("track","track");
   ak3PF = new TTree("ak3PF","ak3PF");
   evt   = new TTree("evt","evt");
@@ -144,10 +146,11 @@ void openOutFile(const char * mode, const char * trigger, int isMC, int date,int
   return;
 }
 
-void openInFile(const char * name, const char * mode, int isMC)
+int openInFile(const char * name, const char * mode, int isMC)
 {
   //inf = new TFile(name,"read");  
   inf = TFile::Open(name,"read");  
+  if(inf->GetNbytesInfo()==0) return 0;
 
   trackIn = (TTree*)inf->Get("anaTrack/trackTree");
   if(trackIn == 0) trackIn = (TTree*) inf->Get("ppTrack/trackTree");
@@ -241,7 +244,16 @@ void openInFile(const char * name, const char * mode, int isMC)
        trackIn->GetEntries() == skimIn->GetEntries() &&
        trackIn->GetEntries() == hltIn->GetEntries())) std::cout << "\n\nWarning, input files have missmatched number of entries!!!\n\n" << std::endl;
 
-  return;
+  return 1;
+}
+    
+int openInFileFast(const char * name, const char * mode, int isMC)
+{ 
+  inf = TFile::Open(name,"read"); 
+  if(inf->GetNbytesInfo()==0) return 0;
+  trackIn = (TTree*)inf->Get("anaTrack/trackTree");
+  if(trackIn == 0) trackIn = (TTree*) inf->Get("ppTrack/trackTree");
+  return 1;
 }
 
 void closeOutFile()
@@ -255,14 +267,26 @@ void closeOutFile()
   return;
 }
 
-void closeInFile()
+void closeInFile(int isGoodFile = 1)
 {
   inf->cd();
-  delete trackIn;
-  delete evtIn;
-  delete ak3PFIn;
-  delete skimIn;
-  delete hltIn;
+  if(isGoodFile == 1)
+  {
+    delete trackIn;
+    delete evtIn;
+    delete ak3PFIn;
+    delete skimIn;
+    delete hltIn;
+  }
+  inf->Close();
+  delete inf;
+  return;
+}
+
+void closeInFileFast(int isGoodFile = 1)
+{
+  inf->cd();
+  if(isGoodFile == 1) delete trackIn;
   inf->Close();
   delete inf;
   return;

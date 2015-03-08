@@ -44,6 +44,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   {
     if(strcmp("pp2",mode)==0) fileList = readInputFileList("pp2MCFiles.txt");
     if(strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0) fileList = readInputFileList("pPb5MCFiles.txt");
+    if(strcmp("pp7",mode)==0) fileList = readInputFileList("pp7MCFiles.txt");
   }
   else 
   {
@@ -57,12 +58,42 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   }
   int nFiles = fileList.size();
 
+  //pp7 MC reweighting
+  int totalEntriesForWeighting[7] = {0};
+  if(strcmp(mode, "pp7")==0 && isMC)
+  {
+    for(int f=4200; f<nFiles; f++)
+    { 
+      if(f%100 == 0) std::cout << "tabulating entries; file " << f << "/" << nFiles <<std::endl;
+      int isGoodFile = openInFileFast(fileList[f].data(),mode,isMC);
+      if( isGoodFile == 0)
+      { 
+        closeInFileFast(0);
+        continue;
+      }
+
+      for(int i = 0; i<7; i++)
+      {
+        if(fileList[f].find(Form("%dto%d",(int)pp7PthatBounds[i],(int)pp7PthatBounds[i+1])) != std::string::npos) totalEntriesForWeighting[i] += trackIn->GetEntries();
+      }
+      closeInFileFast();
+    }
+    for(int i = 0 ; i<7; i++) std::cout << pp7PthatBounds[i] << " has " << totalEntriesForWeighting[i] << " entries." <<std::endl;
+  }
+
 //start of skim here 
   int outFileNum = 0;
   //looping over forests to skim out of
+  //change f= at 2 spots to change starting point, as well as skim outFileNum
   for(int f = 0; f<nFiles; f++)
-  { 
-    openInFile(fileList[f].data(),mode,isMC);    
+  {   
+    int isGoodFile = openInFile(fileList[f].data(),mode,isMC);
+    if( isGoodFile == 0)
+    { 
+      closeInFile(0);
+      continue;
+    }
+
     if(f==0) openOutFile(mode,trigger,isMC,date,outFileNum);
     int nEntries = trackIn->GetEntries();
     //nEntries = 50;
@@ -109,6 +140,13 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
         {
           if(pthat > pPb5PthatBounds[f+2]) continue; 
           weight = crossSection5[f]/(float)nEntries;
+        }
+        if(strcmp("pp7",mode)==0)
+        {
+          for(int k = 0; k<7; k++)
+          {
+            if(fileList[f].find(Form("%dto%d",(int)pp7PthatBounds[k],(int)pp7PthatBounds[k+1])) != std::string::npos) weight = crossSection7[k]/(float)totalEntriesForWeighting[k];
+          }    
         }
       }
 
