@@ -52,9 +52,9 @@ void makeFF()
   }
   
   //interpolation  
-  TH1D * gFrac_2TeV = root_histogram_gluon_2tev;
-  TH1D * gFrac_7TeV = root_histogram_gluon_7tev;
-  TH1D * gFrac_5TeV = root_histogram_gluon_5tev;
+  //TH1D * gFrac_2TeV = gluon_2tev;
+  //TH1D * gFrac_7TeV = gluon_7tev;
+  //TH1D * gFrac_5TeV = gluon_5tev;
   
   for(int i = 0; i < FF_Bins; i++)
   {
@@ -74,9 +74,9 @@ void makeFF()
       {
         double nJet = jet->GetBinContent(j); 
 
-        glu2 += gFrac_2TeV->GetBinContent(j)*nJet;
-        glu5 += gFrac_5TeV->GetBinContent(j)*nJet;
-        glu7 += gFrac_7TeV->GetBinContent(j)*nJet;
+        glu2 += gluon_2tev_reco->GetBinContent(j)*nJet;
+        glu5 += gluon_5tev_reco->GetBinContent(j)*nJet;
+        glu7 += gluon_7tev_reco->GetBinContent(j)*nJet;
       }
     
       double average = ((glu5 - glu7)*pp2TeV_data[i]->GetBinContent(t)+(glu2-glu5)*pp7TeV_data[i]->GetBinContent(t))/(glu2-glu7);
@@ -105,9 +105,9 @@ void makeFF()
       {
         double nJet = jet->GetBinContent(j); 
 
-        glu2 += gFrac_2TeV->GetBinContent(j)*nJet;
-        glu5 += gFrac_5TeV->GetBinContent(j)*nJet;
-        glu7 += gFrac_7TeV->GetBinContent(j)*nJet;
+        glu2 += gluon_2tev_reco->GetBinContent(j)*nJet;
+        glu5 += gluon_5tev_reco->GetBinContent(j)*nJet;
+        glu7 += gluon_7tev_reco->GetBinContent(j)*nJet;
       }
     
       double average = ((glu5 - glu7)*pp2TeV_data[i]->GetBinContent(t)+(glu2-glu5)*pp7TeV_data[i]->GetBinContent(t))/(glu2-glu7);
@@ -136,9 +136,9 @@ void makeFF()
       {
         double nJet = jet->GetBinContent(j); 
 
-        glu2 += gFrac_2TeV->GetBinContent(j)*nJet;
-        glu5 += gFrac_5TeV->GetBinContent(j)*nJet;
-        glu7 += gFrac_7TeV->GetBinContent(j)*nJet;
+        glu2 += gluon_2tev_reco->GetBinContent(j)*nJet;
+        glu5 += gluon_5tev_reco->GetBinContent(j)*nJet;
+        glu7 += gluon_7tev_reco->GetBinContent(j)*nJet;
       }
     
       double average = ((glu5 - glu7)*pp2TeV_recoMC[i]->GetBinContent(t)+(glu2-glu5)*pp7TeV_recoMC[i]->GetBinContent(t))/(glu2-glu7);
@@ -168,9 +168,9 @@ void makeFF()
       {
         double nJet = jet->GetBinContent(j); 
 
-        glu2 += gFrac_2TeV->GetBinContent(j)*nJet;
-        glu5 += gFrac_5TeV->GetBinContent(j)*nJet;
-        glu7 += gFrac_7TeV->GetBinContent(j)*nJet;
+        glu2 += gluon_2tev_gen->GetBinContent(j)*nJet;
+        glu5 += gluon_5tev_gen->GetBinContent(j)*nJet;
+        glu7 += gluon_7tev_gen->GetBinContent(j)*nJet;
       }
     
       double average = ((glu5 - glu7)*pp2TeV_genMC[i]->GetBinContent(t)+(glu2-glu5)*pp7TeV_genMC[i]->GetBinContent(t))/(glu2-glu7);

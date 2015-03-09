@@ -12,6 +12,8 @@ const double pPbRapidity = 0.4654094531;
 
 void getGlu(const char * mode = "pp2")
 {
+  TH1::SetDefaultSumw2();
+
   int nbinsFine = 28;
   TH1D * recoGlu = new TH1D("recoGlu","",nbinsFine,60,200);
   TH1D * recoTot = new TH1D("recoTot","",nbinsFine,60,200);
@@ -21,7 +23,7 @@ void getGlu(const char * mode = "pp2")
 //setting up files 
   std::vector<std::string> fileList;
   if(strcmp("pp2",mode)==0) fileList = readInputFileList("pp2MCFiles.txt");
-  if(strcmp("pPb5",mode)==0) fileList = readInputFileList("pPb5MCFiles.txt");
+  if(strcmp("pPb5",mode)==0) fileList = readInputFileList("pPbMCFiles.txt");
   if(strcmp("pp7",mode)==0) fileList = readInputFileList("pp7MCFiles.txt");
   int nFiles = fileList.size();
 
@@ -122,7 +124,7 @@ void getGlu(const char * mode = "pp2")
 
 void getGluFracs()
 {
- // getGlu("pp2");
+  getGlu("pp2");
   getGlu("pPb5");
   getGlu("pp7");
 }

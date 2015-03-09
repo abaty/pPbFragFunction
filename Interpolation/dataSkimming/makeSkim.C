@@ -43,7 +43,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   if(isMC)
   {
     if(strcmp("pp2",mode)==0) fileList = readInputFileList("pp2MCFiles.txt");
-    if(strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0) fileList = readInputFileList("pPb5MCFiles.txt");
+    if(strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0) fileList = readInputFileList("pPbMCFiles.txt");
     if(strcmp("pp7",mode)==0) fileList = readInputFileList("pp7MCFiles.txt");
   }
   else 

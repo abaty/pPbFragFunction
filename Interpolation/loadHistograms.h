@@ -91,9 +91,12 @@ TH2D * pPb5_1_trackUE_gen;
 TH2D * pPb5_1_track_xi_gen;
 TH2D * pPb5_1_trackUE_xi_gen;
 
-TH1D *root_histogram_gluon_2tev;
-TH1D *root_histogram_gluon_5tev;
-TH1D *root_histogram_gluon_7tev;
+TH1D *gluon_2tev_reco;
+TH1D *gluon_5tev_reco;
+TH1D *gluon_7tev_reco;
+TH1D *gluon_2tev_gen;
+TH1D *gluon_5tev_gen;
+TH1D *gluon_7tev_gen;
 
 void loadHistos()
 {
@@ -166,7 +169,10 @@ void loadHistos()
   pPb5_1_trackUE_xi_gen = (TH2D*)MCFilepPb5->Get("pPb5_gen_trackUE_xi");
 
   TFile * gluonFracFile = new TFile("gluonFracs.root","read");
-  root_histogram_gluon_2tev = (TH1D*) gluonFracFile->Get("gFrac2tev");
-  root_histogram_gluon_5tev = (TH1D*) gluonFracFile->Get("gFrac5tev");
-  root_histogram_gluon_7tev = (TH1D*) gluonFracFile->Get("gFrac7tev");
+  gluon_2tev_reco = (TH1D*) gluonFracFile->Get("pp2_gFrac_recoMC");
+  gluon_5tev_reco = (TH1D*) gluonFracFile->Get("pPb5_gFrac_recoMC");
+  gluon_7tev_reco = (TH1D*) gluonFracFile->Get("pp7_gFrac_recoMC");
+  gluon_2tev_gen = (TH1D*) gluonFracFile->Get("pp2_gFrac_genMC");
+  gluon_5tev_gen = (TH1D*) gluonFracFile->Get("pPb5_gFrac_genMC");
+  gluon_7tev_gen = (TH1D*) gluonFracFile->Get("pp7_gFrac_genMC");
 }
