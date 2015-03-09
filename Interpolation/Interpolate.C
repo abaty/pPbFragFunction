@@ -149,7 +149,7 @@ void makeFF()
   }
 
    
-  //MC reco interpolation
+  //MCgen interpolation
   for(int i = 0; i < FF_Bins; i++)
   {
     pp5TeV_interp_genMC[i] = new TH1D(Form("pp5TeV_interp_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),";p_{T trk};#frac{1}{N_{jet}} #frac{dN_{trk}}{dp_{t trk}}",trkBins,yAxis);

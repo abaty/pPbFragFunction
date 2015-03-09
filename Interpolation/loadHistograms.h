@@ -102,7 +102,7 @@ void loadHistos()
   TFile * spectraFilePbp5 = new TFile("tempRootFiles/processed_2015_03_09__05_54_36/Pbp5_3_0_15.root","read");
   TFile * spectraFilepp7 = new TFile("tempRootFiles/processed_2015_03_09__05_54_36/pp7_3_0_15.root","read");
   TFile * MCFilepp2 = new TFile("tempRootFiles/processed_2015_03_09__05_54_36/pp2MC_3_0_15.root","read");
-  TFile * MCFilepPb5 = new TFile("tempRootFiles/processed_2015_03_09__05_54_36/pPb5_3_0_15.root","read");
+  TFile * MCFilepPb5 = new TFile("tempRootFiles/processed_2015_03_09__05_54_36/pPb5MC_3_0_15.root","read");
   TFile * MCFilepp7 = new TFile("tempRootFiles/processed_2015_03_09__05_54_36/pp7MC_3_0_15.root","read");
 
   pp2_0_jet = (TH1D*) spectraFilepp2->Get("pp2_reco_jet");
