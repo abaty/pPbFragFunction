@@ -3,6 +3,12 @@ TH2D * h_track;
 TH2D * h_trackUE;
 TH2D * h_track_xi;
 TH2D * h_trackUE_xi;
+TH1D * h_jet_gen;
+TH2D * h_track_gen;
+TH2D * h_trackUE_gen;
+TH2D * h_track_xi_gen;
+TH2D * h_trackUE_xi_gen;
+
 
 TFile * inf, *infMix;
 TTree * track, *trackMix;
@@ -22,6 +28,11 @@ float trkDxyError1[maxTrack], trkDxyError1Mix[maxTrack];
 float trkDxy1[maxTrack], trkDxy1Mix[maxTrack];
 bool highPurity[maxTrack], highPurityMix[maxTrack];
 //float trkRmin[maxTrack], trkRminMix[maxTrack];
+int nParticle, nParticleMix;
+double pEta[2*maxTrack], pEtaMix[2*maxTrack];
+double pPhi[2*maxTrack], pPhiMix[2*maxTrack];
+double pPt[2*maxTrack], pPtMix[2*maxTrack];
+
 
 const int maxJet = 500;
 int nref, nrefMix;
@@ -30,6 +41,16 @@ float jtpt[maxJet], jtptMix[maxJet];
 float jteta[maxJet],jtetaMix[maxJet];
 float jtphi[maxJet],jtphiMix[maxJet];
 float chargedSum[maxJet],chargedSumMix[maxJet];
+double refpt[maxJet], refptMix[maxJet];
+double refeta[maxJet], refetaMix[maxJet];
+double refphi[maxJet], refphiMix[maxJet];
+int refparton_flavor[maxJet], refparton_flavorMix[maxJet];
+double genChargedSum[maxJet], genChargedSumMix[maxJet];
+float pthat, pthatMix;
+int ngen, ngenMix;
+double genpt[maxJet], genptMix[maxJet];
+double geneta[maxJet], genetaMix[maxJet];
+double genphi[maxJet], genphiMix[maxJet];
 
 int run, runMix;
 int event, eventMix;
@@ -40,6 +61,7 @@ float hiHFplusEta4, hiHFplusEta4Mix;
 float hiHFminusEta4, hiHFminusEta4Mix;
 float hiHFhitPlus, hiHFhitPlusMix;
 float hiHFhitMinus, hiHFhitMinusMix;
+float weight, weightMix;
 
 double lowJetPtBound;
 double upJetPtBound;
@@ -114,9 +136,26 @@ void getInputFile(const char * name, int isMC)
   evt->SetBranchAddress("evt",&event);
 
   if(isMC)
-  {
+  { 
+    track->SetBranchAddress("nParticle",&nParticle);
+    track->SetBranchAddress("pEta",&pEta);
+    track->SetBranchAddress("pPhi",&pPhi);
+    track->SetBranchAddress("pPt",&pPt);
+    
+    ak3PF->SetBranchAddress("refpt",&refpt);
+    ak3PF->SetBranchAddress("refeta",&refeta);
+    ak3PF->SetBranchAddress("refphi",&refphi);
+    ak3PF->SetBranchAddress("refparton_flavor",&refparton_flavor);
+    ak3PF->SetBranchAddress("genChargedSum",&genChargedSum);
+    ak3PF->SetBranchAddress("pthat",&pthat);
+    ak3PF->SetBranchAddress("ngen",&ngen);
+    ak3PF->SetBranchAddress("genpt",&genpt);
+    ak3PF->SetBranchAddress("geneta",&geneta);
+    ak3PF->SetBranchAddress("genphi",&genphi); 
 
+    evt->SetBranchAddress("weight",&weight);
   }
+  if(!isMC) weight = 1;
 
   return;
 }
@@ -170,9 +209,25 @@ void getInputFileMix(const char * name, int isMC)
 
   if(isMC)
   {
+    trackMix->SetBranchAddress("nParticle",&nParticleMix);
+    trackMix->SetBranchAddress("pEta",&pEtaMix);
+    trackMix->SetBranchAddress("pPhi",&pPhiMix);
+    trackMix->SetBranchAddress("pPt",&pPtMix);
+    
+    ak3PFMix->SetBranchAddress("refpt",&refptMix);
+    ak3PFMix->SetBranchAddress("refeta",&refetaMix);
+    ak3PFMix->SetBranchAddress("refphi",&refphiMix);
+    ak3PFMix->SetBranchAddress("refparton_flavor",&refparton_flavorMix);
+    ak3PFMix->SetBranchAddress("genChargedSum",&genChargedSumMix);
+    ak3PFMix->SetBranchAddress("pthat",&pthatMix);
+    ak3PFMix->SetBranchAddress("ngen",&ngenMix);
+    ak3PFMix->SetBranchAddress("genpt",&genptMix);
+    ak3PFMix->SetBranchAddress("geneta",&genetaMix);
+    ak3PFMix->SetBranchAddress("genphi",&genphiMix); 
 
+    evtMix->SetBranchAddress("weight",&weightMix);
   }
-
+  if(!isMC) weightMix = 1;
   return;
 }
 
