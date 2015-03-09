@@ -773,7 +773,6 @@
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A0768636-C23E-E311-B269-003048FE9C68.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A0C7A8A1-243F-E311-9ED5-02163E008CDB.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A20D43EB-1B3F-E311-BEC9-003048CEA05C.root
-/mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A266F5A6-133F-E311-8EB7-0025904B2012.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A29DF81A-ED3E-E311-81A5-02163E008EE4.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A2AE7B1A-D73E-E311-84AB-003048F01082.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A2C00C96-E03E-E311-AB9C-02163E00BCF8.root
@@ -792,7 +791,6 @@
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A6A1AA39-E23E-E311-830B-003048F0297C.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A6A83997-203F-E311-978C-003048F122C2.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A6DEE808-C53E-E311-BB58-02163E00A0F2.root
-/mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A6EBD1A3-E83E-E311-8938-003048F17C14.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A6EC0B2E-F13E-E311-9A2B-003048F1E130.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A814EE24-F83E-E311-A1CA-02163E00A104.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/A8309627-CD3E-E311-A7BC-02163E008DA9.root
@@ -1070,7 +1068,6 @@
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/E0652DA7-433F-E311-9BEA-02163E00BB6B.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/E0709171-CE3E-E311-B8C4-C860001BD964.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/E07AA7DB-F83E-E311-88C2-02163E008DB6.root
-/mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/E08B52F4-323F-E311-9AA8-002590494D20.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/E08D5F96-3B3F-E311-8CF5-003048F1C82C.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/E0909EC0-0B3F-E311-A794-003048FEB956.root
 /mnt/hadoop/cms/store/user/velicanu/pp_7TeV_Jet/E09FB7EE-DD3E-E311-9239-003048F1BFB6.root

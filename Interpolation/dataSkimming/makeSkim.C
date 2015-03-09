@@ -27,7 +27,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
 
 
   //event counters to check how many events we use/cut out
-  int totalEvents =0, afterRunCut = 0, afterNoiseCut = 0, afterHLTCut = 0;
+  int totalEvents =0, afterRunCut = 0, afterNoiseCut = 0, afterPCollCut = 0, afterHLTCut = 0;
   
   //date execution started for labeling output files
   TDatime * time = new TDatime();
@@ -62,7 +62,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   int totalEntriesForWeighting[7] = {0};
   if(strcmp(mode, "pp7")==0 && isMC)
   {
-    for(int f=4400; f<nFiles; f++)
+    for(int f=0; f<nFiles; f++)
     { 
       if(f%100 == 0) std::cout << "tabulating entries; file " << f << "/" << nFiles <<std::endl;
       int isGoodFile = openInFileFast(fileList[f].data(),mode,isMC);
@@ -104,7 +104,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     {
       totalEvents++;
       if(i%10000==0) std::cout <<"file: " << f << " event: " << i << "/" << nEntries << std::endl;
-      evtIn->GetEntry(i);
+      if(strcmp(mode,"pp7")!=0 || !isMC) evtIn->GetEntry(i);
       skimIn->GetEntry(i);
 
       //event and run selections (veto the other-going way as well as first 7 runs for misalignment)
@@ -117,6 +117,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
         afterNoiseCut++;
       }
       if(pPAcollisionEventSelectionPA == 0 && pcollisionEventSelection == 0) continue; 
+      afterPCollCut++;
  
       //trigger selection
       hltIn->GetEntry(i);
@@ -155,7 +156,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
 
       track->Fill();
       ak3PF->Fill();
-      if(strcmp(mode,"pp7")!=0 || !isMC) evt->Fill();
+      evt->Fill();
       fileSize++; 
       //open a new output file if the old one is "full"
       if(fileSize>=maxOutputFileSize)
@@ -175,6 +176,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   std::cout << "Total Events scanned: " << totalEvents << std::endl;
   std::cout << "Total Events after Run cuts " << afterRunCut << std::endl;
   std::cout << "Total Events after Noise cuts: " << afterNoiseCut << std::endl;
+  std::cout << "Total Events after PColl cut: " << afterPCollCut << std::endl;
   std::cout << "Total Events after HLT cuts: " << afterHLTCut << std::endl;
 }
 

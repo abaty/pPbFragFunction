@@ -77,9 +77,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   int startMixEvt = 0;
   int lastMixEvt = 1;
   //if(strcmp(mode, "Pbp5")==0) startMixEvt = 6743253;
-  if(typeUE==2) lastMixEvt = evtMix->GetEntries();
+  if(typeUE==2) lastMixEvt = trackMix->GetEntries();
 
-  int nEntry = evt->GetEntries();
+  int nEntry = track->GetEntries();
   //nEntry = 20000;
   for(int i=0; i<nEntry; i++)
   {
@@ -90,7 +90,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     if(typeUE==2)
     {
       int loopIter=0;
-      int maxIter = evtMix->GetEntries(); 
+      int maxIter = trackMix->GetEntries(); 
       while(true)
       {
         //preventing infinite loop
@@ -277,12 +277,14 @@ int main(int argc, const char* argv[])
   std::string  parsedTrigger;
   if(listOfFilesJets[job].find("pp2") != std::string::npos) parsedMode = "pp2";
   if(listOfFilesJets[job].find("pp7") != std::string::npos) parsedMode = "pp7";
-  if(listOfFilesJets[job].find("pPb5") != std::string::npos) parsedMode = "pPb5";
-  
+  if(listOfFilesJets[job].find("pPb5") != std::string::npos) parsedMode = "pPb5"; 
   if(listOfFilesJets[job].find("Pbp5") != std::string::npos) parsedMode = "Pbp5";
 
   if(listOfFilesJets[job].find("jet80_") != std::string::npos) parsedTrigger = "jet80";
   if(listOfFilesJets[job].find("jet40_") != std::string::npos) parsedTrigger = "jet40";
+  if(listOfFilesJets[job].find("jet30_") != std::string::npos) parsedTrigger = "jet30";
+  if(listOfFilesJets[job].find("jet60_") != std::string::npos) parsedTrigger = "jet60";
+  if(listOfFilesJets[job].find("jet110_") != std::string::npos) parsedTrigger = "jet110";
 
   std::cout << "Results of parsing input files for mode and trigger used:" << std::endl;
   std::cout << "Mode: " <<  parsedMode.data() << "  Trigger: " << parsedTrigger.data() << std::endl;

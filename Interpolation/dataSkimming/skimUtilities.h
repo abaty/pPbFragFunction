@@ -241,11 +241,11 @@ int openInFile(const char * name, const char * mode, int isMC)
     ak3PFIn->SetBranchAddress("geneta",&geneta);
     ak3PFIn->SetBranchAddress("genphi",&genphi); 
   }
-
+  /*
   if(!(trackIn->GetEntries() == ak3PFIn->GetEntries() &&
        trackIn->GetEntries() == evtIn->GetEntries() &&
        trackIn->GetEntries() == skimIn->GetEntries() &&
-       trackIn->GetEntries() == hltIn->GetEntries())) std::cout << "\n\nWarning, input files have missmatched number of entries!!!\n\n" << std::endl;
+       trackIn->GetEntries() == hltIn->GetEntries())) std::cout << "\n\nWarning, input files have missmatched number of entries!!!\n\n" << std::endl;*/
 
   return 1;
 }
