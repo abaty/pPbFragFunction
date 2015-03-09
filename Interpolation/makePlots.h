@@ -10,20 +10,6 @@
 #include "TAttAxis.h"
 #include "TLatex.h"
 
-// jet pt boundaries
-
-const int FF_Bins = 5;
-double FF_Bound[FF_Bins+1] = {60,80,100,120,140,200};
-
-TH1D * pp2TeV_data[FF_Bins];
-TH1D * pp7TeV_data[FF_Bins];
-TH1D * pPb5TeV_data[FF_Bins];
-TH1D * Pbp5TeV_data[FF_Bins];
-TH1D * pp5TeV_interp[FF_Bins];
-TH1D * pp5TeV_interp_swap[FF_Bins];
-TH1D * pPb_FF[FF_Bins];
-TH1D * Pbp_FF[FF_Bins];
-
 void makePlots()
 {
   TCanvas * c1 = new TCanvas("c1","c1",1200,600);

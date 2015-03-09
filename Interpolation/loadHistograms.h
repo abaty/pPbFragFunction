@@ -2,6 +2,35 @@
 #include "TH2D.h"
 #include "TH1D.h"
 
+
+// jet pt boundaries
+const int FF_Bins = 5;
+double FF_Bound[FF_Bins+1] = {60,80,100,120,140,200};
+
+//plotting histos
+TH1D * pp2TeV_data[FF_Bins];
+TH1D * pp7TeV_data[FF_Bins];
+TH1D * pPb5TeV_data[FF_Bins];
+TH1D * Pbp5TeV_data[FF_Bins];
+
+TH1D * pp2TeV_recoMC[FF_Bins];
+TH1D * pp7TeV_recoMC[FF_Bins];
+TH1D * pPb5TeV_recoMC[FF_Bins];
+TH1D * pp2TeV_genMC[FF_Bins];
+TH1D * pp7TeV_genMC[FF_Bins];
+TH1D * pPb5TeV_genMC[FF_Bins];
+
+TH1D * pp5TeV_interp[FF_Bins];
+TH1D * pp5TeV_interp_swap[FF_Bins];
+TH1D * pp5TeV_interp_recoMC[FF_Bins];
+TH1D * pp5TeV_interp_genMC[FF_Bins];
+
+TH1D * pPb_FF[FF_Bins];
+TH1D * Pbp_FF[FF_Bins];
+TH1D * pPb_FF_recoMC[FF_Bins];
+TH1D * pPb_FF_genMC[FF_Bins];
+
+//input histos
 TH1D * pp2_0_jet;
 TH2D * pp2_0_track;
 TH2D * pp2_0_trackUE;
@@ -44,23 +73,23 @@ TH2D * pPb5_1_trackUE_reco;
 TH2D * pPb5_1_track_xi_reco;
 TH2D * pPb5_1_trackUE_xi_reco;
 
-TH1D * pp2_1_jet_reco;
-TH2D * pp2_1_track_reco;
-TH2D * pp2_1_trackUE_reco;
-TH2D * pp2_1_track_xi_reco;
-TH2D * pp2_1_trackUE_xi_reco;
+TH1D * pp2_1_jet_gen;
+TH2D * pp2_1_track_gen;
+TH2D * pp2_1_trackUE_gen;
+TH2D * pp2_1_track_xi_gen;
+TH2D * pp2_1_trackUE_xi_gen;
 
-TH1D * pp7_1_jet_reco;
-TH2D * pp7_1_track_reco;
-TH2D * pp7_1_trackUE_reco;
-TH2D * pp7_1_track_xi_reco;
-TH2D * pp7_1_trackUE_xi_reco;
+TH1D * pp7_1_jet_gen;
+TH2D * pp7_1_track_gen;
+TH2D * pp7_1_trackUE_gen;
+TH2D * pp7_1_track_xi_gen;
+TH2D * pp7_1_trackUE_xi_gen;
 
-TH1D * pPb5_1_jet_reco;
-TH2D * pPb5_1_track_reco;
-TH2D * pPb5_1_trackUE_reco;
-TH2D * pPb5_1_track_xi_reco;
-TH2D * pPb5_1_trackUE_xi_reco;
+TH1D * pPb5_1_jet_gen;
+TH2D * pPb5_1_track_gen;
+TH2D * pPb5_1_trackUE_gen;
+TH2D * pPb5_1_track_xi_gen;
+TH2D * pPb5_1_trackUE_xi_gen;
 
 TH1D *root_histogram_gluon_2tev;
 TH1D *root_histogram_gluon_5tev;
