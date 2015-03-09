@@ -216,6 +216,53 @@ void getSpectra(int mode)
     trk     = Pbp5_0_track;
     trkUE   = Pbp5_0_trackUE;
   }
+  if(mode == 4)
+  {
+    jet     = pp2_1_jet_reco;
+    jet_pPb = pPb5_1_jet_reco;
+    trk     = pp2_1_track_reco;
+    trkUE   = pp2_1_trackUE_reco;
+  }
+
+  if(mode == 5)
+  {
+    jet     = pp7_1_jet_reco;
+    jet_pPb = pPb5_1_jet_reco;
+    trk     = pp7_1_track_reco;
+    trkUE   = pp7_1_trackUE_reco;
+  }
+
+  if(mode == 6)
+  {
+    jet     = pPb5_1_jet_reco;
+    jet_pPb = pPb5_1_jet_reco;
+    trk     = pPb5_1_track_reco;
+    trkUE   = pPb5_1_trackUE_reco;
+  }
+  if(mode == 7)
+  {
+    jet     = pp2_1_jet_gen;
+    jet_pPb = pPb5_1_jet_gen;
+    trk     = pp2_1_track_gen;
+    trkUE   = pp2_1_trackUE_gen;
+  }
+
+  if(mode == 8)
+  {
+    jet     = pp7_1_jet_gen;
+    jet_pPb = pPb5_1_jet_gen;
+    trk     = pp7_1_track_gen;
+    trkUE   = pp7_1_trackUE_gen;
+  }
+
+  if(mode == 9)
+  {
+    jet     = pPb5_1_jet_gen;
+    jet_pPb = pPb5_1_jet_gen;
+    trk     = pPb5_1_track_gen;
+    trkUE   = pPb5_1_trackUE_gen;
+  }
+
   return;
 }
 

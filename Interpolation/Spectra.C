@@ -203,9 +203,10 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     //GEN Particles here
     //starting jet loop Gen
     if(isMC)
-    {
+    {  
       for(int j=0; j<ngen; j++)
-      { 
+      {
+        std::cout << "here3 " << genpt[j] << " " << geneta[j]+boost<< " " <<std::endl;  
         if(TMath::Abs(geneta[j]+boost) < jetEtaMin || TMath::Abs(geneta[j]+boost) > jetEtaMax || genpt[j]<lowJetPtBound || genpt[j]>=upJetPtBound) continue;          
         h_jet_gen->Fill(genpt[j], weight);
      

@@ -29,9 +29,9 @@ float trkDxy1[maxTrack], trkDxy1Mix[maxTrack];
 bool highPurity[maxTrack], highPurityMix[maxTrack];
 //float trkRmin[maxTrack], trkRminMix[maxTrack];
 int nParticle, nParticleMix;
-double pEta[2*maxTrack], pEtaMix[2*maxTrack];
-double pPhi[2*maxTrack], pPhiMix[2*maxTrack];
-double pPt[2*maxTrack], pPtMix[2*maxTrack];
+float pEta[2*maxTrack], pEtaMix[2*maxTrack];
+float pPhi[2*maxTrack], pPhiMix[2*maxTrack];
+float pPt[2*maxTrack], pPtMix[2*maxTrack];
 
 
 const int maxJet = 500;
@@ -45,12 +45,12 @@ double refpt[maxJet], refptMix[maxJet];
 double refeta[maxJet], refetaMix[maxJet];
 double refphi[maxJet], refphiMix[maxJet];
 int refparton_flavor[maxJet], refparton_flavorMix[maxJet];
-double genChargedSum[maxJet], genChargedSumMix[maxJet];
+float genChargedSum[maxJet], genChargedSumMix[maxJet];
 float pthat, pthatMix;
 int ngen, ngenMix;
-double genpt[maxJet], genptMix[maxJet];
-double geneta[maxJet], genetaMix[maxJet];
-double genphi[maxJet], genphiMix[maxJet];
+float genpt[maxJet], genptMix[maxJet];
+float geneta[maxJet], genetaMix[maxJet];
+float genphi[maxJet], genphiMix[maxJet];
 
 int run, runMix;
 int event, eventMix;
