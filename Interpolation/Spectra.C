@@ -31,7 +31,7 @@ double getXi(double jet_pt, double jet_eta, double jet_phi, double track_pt, dou
 //modes are pp2,pp7,pPb5,Pbp5
 void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2", const char* trigger = "jet80", bool isMC = 0,int  jobNum = -1, int typeUE = 3, double jetEtaMin = 0, double jetEtaMax = 1.5)
 {
-  if(strcmp(mode,"pp2") && strcmp(mode,"pp7") && strcmp(mode,"pPb5") && strcmp(mode,"Pbp5"))
+  if(strcmp(mode,"pp2") && strcmp(mode,"pp7") && strcmp(mode,"pPb5") && strcmp(mode,"Pbp5") && strcmp(mode,"pp5"))
   {
     std::cout << "Invalid mode, modes are pp2, pp7, pPb5, Pbp5" << std::endl;
     return;
@@ -69,7 +69,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
 
   //boosting
   double boost = 0;
-  if(strcmp(mode,"pPb5") == 0) boost = pPbRapidity;
+  if(strcmp(mode,"pPb5") == 0 || strcmp(mode,"pp5") == 0) boost = pPbRapidity;
   else if(strcmp(mode,"Pbp5") == 0) boost = -pPbRapidity;
   std::cout << mode << " mode is specified; using a boost of: " << boost << std::endl;
 
@@ -206,7 +206,6 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     {  
       for(int j=0; j<ngen; j++)
       {
-        std::cout << "here3 " << genpt[j] << " " << geneta[j]+boost<< " " <<std::endl;  
         if(TMath::Abs(geneta[j]+boost) < jetEtaMin || TMath::Abs(geneta[j]+boost) > jetEtaMax || genpt[j]<lowJetPtBound || genpt[j]>=upJetPtBound) continue;          
         h_jet_gen->Fill(genpt[j], weight);
      
@@ -346,6 +345,7 @@ int main(int argc, const char* argv[])
   if(listOfFilesJets[job].find("pp7") != std::string::npos) parsedMode = "pp7";
   if(listOfFilesJets[job].find("pPb5") != std::string::npos) parsedMode = "pPb5"; 
   if(listOfFilesJets[job].find("Pbp5") != std::string::npos) parsedMode = "Pbp5";
+  if(listOfFilesJets[job].find("pp5") != std::string::npos) parsedMode = "pp5";
 
   if(listOfFilesJets[job].find("jet80_") != std::string::npos) parsedTrigger = "jet80";
   if(listOfFilesJets[job].find("jet40_") != std::string::npos) parsedTrigger = "jet40";

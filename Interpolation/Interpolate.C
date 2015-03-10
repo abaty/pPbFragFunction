@@ -50,6 +50,8 @@ void makeFF()
     pp2TeV_genMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),7);
     pp7TeV_genMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),8);
     pPb5TeV_genMC[i]= getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),9);    
+    pp5TeV_genMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),10); 
+    pp5TeV_recoMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),11); 
   }
    
   for(int i = 0; i < FF_Bins; i++)
@@ -65,29 +67,30 @@ void makeFF()
       double glu2 = 0;
       double glu5 = 0;
       double glu7 = 0;    
-      double glu2Err = 0;
-      double glu5Err = 0;
-      double glu7Err = 0;
+      //double glu2Err = 0;
+      //double glu5Err = 0;
+      //double glu7Err = 0;
 
       for(int j = jet->FindBin(FF_Bound[i]); j < jet->FindBin(FF_Bound[i+1]); j++)
       {
         double nJet = jet->GetBinContent(j);
-        double nJetErr = jet->GetBinError(j); 
+       //double nJetErr = jet->GetBinError(j); 
 
         glu2 += gluon_2tev_reco->GetBinContent(j)*nJet;
         glu5 += gluon_5tev_reco->GetBinContent(j)*nJet;
         glu7 += gluon_7tev_reco->GetBinContent(j)*nJet;
-        glu2Err += TMath::Power(gluon_2tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_2tev_reco->GetBinContent(j)*nJetErr,2);
-        glu5Err += TMath::Power(gluon_5tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_5tev_reco->GetBinContent(j)*nJetErr,2);
-        glu7Err += TMath::Power(gluon_7tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_7tev_reco->GetBinContent(j)*nJetErr,2);
+        //glu2Err += TMath::Power(gluon_2tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_2tev_reco->GetBinContent(j)*nJetErr,2);
+        //glu5Err += TMath::Power(gluon_5tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_5tev_reco->GetBinContent(j)*nJetErr,2);
+        //glu7Err += TMath::Power(gluon_7tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_7tev_reco->GetBinContent(j)*nJetErr,2);
       }
-      glu2Err = TMath::Power(glu2Err,0.5);
-      glu5Err = TMath::Power(glu5Err,0.5);
-      glu7Err = TMath::Power(glu7Err,0.5);   
+      //glu2Err = TMath::Power(glu2Err,0.5);
+      //glu5Err = TMath::Power(glu5Err,0.5);
+      //glu7Err = TMath::Power(glu7Err,0.5);   
  
       double average = ((glu5 - glu7)*pp2TeV_data[i]->GetBinContent(t)+(glu2-glu5)*pp7TeV_data[i]->GetBinContent(t))/(glu2-glu7);
-      double error = getInterpolationError(glu2,glu2Err,glu5,glu5Err,glu7,glu7Err,pp2TeV_data[i]->GetBinContent(t),pp2TeV_data[i]->GetBinError(t),pp7TeV_data[i]->GetBinContent(t),pp7TeV_data[i]->GetBinError(t));
-      //double error = TMath::Power(TMath::Power((glu5 - glu7)*pp2TeV_data[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power((glu2-glu5)*pp7TeV_data[i]->GetBinError(t)/(glu2-glu7),2),0.5);
+      //double error = getInterpolationError(glu2,glu2Err,glu5,glu5Err,glu7,glu7Err,pp2TeV_data[i]->GetBinContent(t),pp2TeV_data[i]->GetBinError(t),pp7TeV_data[i]->GetBinContent(t),pp7TeV_data[i]->GetBinError(t));
+      double error = TMath::Power(TMath::Power((glu5 - glu7)*pp2TeV_data[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power((glu2-glu5)*pp7TeV_data[i]->GetBinError(t)/(glu2-glu7),2),0.5);
+      
       pp5TeV_interp[i]->SetBinContent(t, average);
       pp5TeV_interp[i]->SetBinError(t, error);
     }
@@ -218,6 +221,9 @@ void makeFF()
     pp5TeV_interp_swap[i]->Write();
     pp5TeV_interp_recoMC[i]->Write();
     pp5TeV_interp_genMC[i]->Write();
+
+    pp5TeV_genMC[i]->Write();
+    pp5TeV_recoMC[i]->Write();
 
     pPb_FF[i]->Write();
     Pbp_FF[i]->Write();   
@@ -351,7 +357,22 @@ void getSpectra(int mode)
     trk     = pPb5_1_track_gen;
     trkUE   = pPb5_1_trackUE_gen;
   }
+  
+  if(mode == 10)
+  {
+    jet     = pp5_1_jet_gen;
+    jet_pPb = pp5_1_jet_gen;
+    trk     = pp5_1_track_gen;
+    trkUE   = pp5_1_trackUE_gen;
+  }
 
+  if(mode == 11)
+  {
+    jet     = pp5_1_jet_reco;
+    jet_pPb = pp5_1_jet_reco;
+    trk     = pp5_1_track_reco;
+    trkUE   = pp5_1_trackUE_reco;
+  }
   return;
 }
 

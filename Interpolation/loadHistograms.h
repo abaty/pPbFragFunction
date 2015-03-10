@@ -25,6 +25,9 @@ TH1D * pp5TeV_interp_swap[FF_Bins];
 TH1D * pp5TeV_interp_recoMC[FF_Bins];
 TH1D * pp5TeV_interp_genMC[FF_Bins];
 
+TH1D * pp5TeV_recoMC[FF_Bins];
+TH1D * pp5TeV_genMC[FF_Bins];
+
 TH1D * pPb_FF[FF_Bins];
 TH1D * Pbp_FF[FF_Bins];
 TH1D * pPb_FF_recoMC[FF_Bins];
@@ -91,6 +94,18 @@ TH2D * pPb5_1_trackUE_gen;
 TH2D * pPb5_1_track_xi_gen;
 TH2D * pPb5_1_trackUE_xi_gen;
 
+TH1D * pp5_1_jet_reco;
+TH2D * pp5_1_track_reco;
+TH2D * pp5_1_trackUE_reco;
+TH2D * pp5_1_track_xi_reco;
+TH2D * pp5_1_trackUE_xi_reco;
+
+TH1D * pp5_1_jet_gen;
+TH2D * pp5_1_track_gen;
+TH2D * pp5_1_trackUE_gen;
+TH2D * pp5_1_track_xi_gen;
+TH2D * pp5_1_trackUE_xi_gen;
+
 TH1D *gluon_2tev_reco;
 TH1D *gluon_5tev_reco;
 TH1D *gluon_7tev_reco;
@@ -107,6 +122,7 @@ void loadHistos()
   TFile * MCFilepp2 = new TFile("tempRootFiles/processed_2015_03_09__05_54_36/pp2MC_3_0_15.root","read");
   TFile * MCFilepPb5 = new TFile("tempRootFiles/processed_2015_03_09__05_54_36/pPb5MC_3_0_15.root","read");
   TFile * MCFilepp7 = new TFile("tempRootFiles/processed_2015_03_09__05_54_36/pp7MC_3_0_15.root","read");
+  TFile * MCFilepp5 = new TFile("tempRootFiles/processed_2015_03_09__05_54_36/pp5MC_3_0_15.root","read");
 
   pp2_0_jet = (TH1D*) spectraFilepp2->Get("pp2_reco_jet");
   pp2_0_track = (TH2D*) spectraFilepp2->Get("pp2_reco_track");
@@ -150,6 +166,12 @@ void loadHistos()
   pPb5_1_track_xi_reco = (TH2D*) MCFilepPb5->Get("pPb5_reco_track_xi");
   pPb5_1_trackUE_xi_reco = (TH2D*)MCFilepPb5->Get("pPb5_reco_trackUE_xi");
 
+  pp5_1_jet_reco = (TH1D*) MCFilepp5->Get("pp5_reco_jet");
+  pp5_1_track_reco = (TH2D*) MCFilepp5->Get("pp5_reco_track");
+  pp5_1_trackUE_reco = (TH2D*) MCFilepp5->Get("pp5_reco_trackUE");
+  pp5_1_track_xi_reco = (TH2D*) MCFilepp5->Get("pp5_reco_track_xi");
+  pp5_1_trackUE_xi_reco = (TH2D*) MCFilepp5->Get("pp5_reco_trackUE_xi");
+
   pp2_1_jet_gen = (TH1D*) MCFilepp2->Get("pp2_gen_jet");
   pp2_1_track_gen = (TH2D*) MCFilepp2->Get("pp2_gen_track");
   pp2_1_trackUE_gen = (TH2D*) MCFilepp2->Get("pp2_gen_trackUE");
@@ -167,6 +189,12 @@ void loadHistos()
   pPb5_1_trackUE_gen = (TH2D*) MCFilepPb5->Get("pPb5_gen_trackUE");
   pPb5_1_track_xi_gen = (TH2D*) MCFilepPb5->Get("pPb5_gen_track_xi");
   pPb5_1_trackUE_xi_gen = (TH2D*)MCFilepPb5->Get("pPb5_gen_trackUE_xi");
+
+  pp5_1_jet_gen = (TH1D*) MCFilepp5->Get("pp5_gen_jet");
+  pp5_1_track_gen = (TH2D*) MCFilepp5->Get("pp5_gen_track");
+  pp5_1_trackUE_gen = (TH2D*) MCFilepp5->Get("pp5_gen_trackUE");
+  pp5_1_track_xi_gen = (TH2D*) MCFilepp5->Get("pp5_gen_track_xi");
+  pp5_1_trackUE_xi_gen = (TH2D*) MCFilepp5->Get("pp5_gen_trackUE_xi");
 
   TFile * gluonFracFile = new TFile("gluonFracs.root","read");
   gluon_2tev_reco = (TH1D*) gluonFracFile->Get("pp2_gFrac_recoMC");

@@ -68,12 +68,12 @@ double upJetPtBound;
 
 void setJetPtRange(const char * mode, const char* trigger)
 {
-  if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp2")==0) && strcmp(trigger,"jet80")==0)
+  if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp2")==0 || strcmp(mode,"pp5")==0) && strcmp(trigger,"jet80")==0)
   {
     lowJetPtBound = 100; 
     upJetPtBound  = 200;
   }
-  if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp2")==0) && strcmp(trigger,"jet40")==0)
+  if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp2")==0 || strcmp(mode,"pp5")==0) && strcmp(trigger,"jet40")==0)
   {
     lowJetPtBound = 60;
     upJetPtBound  = 100;

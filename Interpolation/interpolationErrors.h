@@ -13,7 +13,7 @@ double getInterpolationError(double x, double dx, double y, double dy, double z,
   double errorDueToX  = TMath::Power((p2-p7)*(z-y)*dx/((x-z)*(x-z)),2);
   double errorDueToY  = TMath::Power((p2-p7)*dy/(x-z),2);
   double errorDueToZ  = TMath::Power((p2-p7)*(x-y)*dz/((x-z)*(x-z)),2);
-  double total = TMath::Power(errorDueToP2 + errorDueToP7 + errorDueToX + errorDueToY + errorDueToZ,0,5);
+  double total = TMath::Power(errorDueToP2 + errorDueToP7 + errorDueToX + errorDueToY + errorDueToZ,0.5);
 
   return total;
 }

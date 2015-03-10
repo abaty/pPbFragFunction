@@ -9,7 +9,7 @@
 
 void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC = 0)
 {
-  if(!(strcmp(mode,"pp2")==0 || strcmp(mode,"pp7")==0 || strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0))
+  if(!(strcmp(mode,"pp2")==0 || strcmp(mode,"pp7")==0 || strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0 || strcmp(mode,"pPbv25")==0))
   {
     std::cout << "invalid mode, terminating execution" << std::endl;
     return;
@@ -44,7 +44,9 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   {
     if(strcmp("pp2",mode)==0) fileList = readInputFileList("pp2MCFiles.txt");
     if(strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0) fileList = readInputFileList("pPbMCFiles.txt");
+    if(strcmp("pPbv25",mode)==0) fileList = readInputFileList("pPbMC2Files.txt");
     if(strcmp("pp7",mode)==0) fileList = readInputFileList("pp7MCFiles.txt");
+    if(strcmp("pp5",mode)==0) fileList = readInputFileList("pp5MCFiles.txt");
   }
   else 
   {
@@ -121,13 +123,16 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
  
       //trigger selection
       hltIn->GetEntry(i);
-      if(strcmp(trigger,"jet80") == 0 && HLT_PAJet80_NoJetID_v1 == 0) continue;
-      if(strcmp(trigger,"jet40") == 0 && HLT_PAJet40_NoJetID_v1 == 0) continue;
-      if(strcmp(trigger,"MB") == 0 && HLT_PAZeroBiasPixel_SingleTrack_v1 == 0) continue;
-      if(strcmp(trigger,"jet30") == 0 && HLT_Jet30 == 0 ) continue;
-      if(strcmp(trigger,"jet60") == 0 && HLT_Jet60 == 0 ) continue;
-      if(strcmp(trigger,"jet110") == 0 && HLT_Jet110 == 0 ) continue;
-      afterHLTCut++;
+      if(strcmp(mode,"pp5")!=0)
+      {
+        if(strcmp(trigger,"jet80") == 0 && HLT_PAJet80_NoJetID_v1 == 0) continue;
+        if(strcmp(trigger,"jet40") == 0 && HLT_PAJet40_NoJetID_v1 == 0) continue;
+        if(strcmp(trigger,"MB") == 0 && HLT_PAZeroBiasPixel_SingleTrack_v1 == 0) continue;
+        if(strcmp(trigger,"jet30") == 0 && HLT_Jet30 == 0 ) continue;
+        if(strcmp(trigger,"jet60") == 0 && HLT_Jet60 == 0 ) continue;
+        if(strcmp(trigger,"jet110") == 0 && HLT_Jet110 == 0 ) continue;
+        afterHLTCut++;
+      }
 
       //Filling Trees 
       trackIn->GetEntry(i);   
@@ -139,6 +144,11 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
         {
           if(pthat > pp2PthatBounds[f+2]) continue;
           weight = crossSection2[f]/(float)nEntries;
+        }
+        if(strcmp("pp5",mode)==0 || strcmp("pPbv25",mode)==0)
+        {
+          if(pthat > pp5PthatBounds[f+2]) continue;
+          weight = crossSectionpp5[f]/(float)nEntries;
         }
         if(strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0)
         {
