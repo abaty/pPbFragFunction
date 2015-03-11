@@ -8,7 +8,16 @@ TH2D * h_track_gen;
 TH2D * h_trackUE_gen;
 TH2D * h_track_xi_gen;
 TH2D * h_trackUE_xi_gen;
-
+TH1D * h_jet_Q;
+TH2D * h_track_Q;
+TH2D * h_trackUE_Q;
+TH2D * h_track_xi_Q;
+TH2D * h_trackUE_xi_Q;
+TH1D * h_jet_G;
+TH2D * h_track_G;
+TH2D * h_trackUE_G;
+TH2D * h_track_xi_G;
+TH2D * h_trackUE_xi_G;
 
 TFile * inf, *infMix;
 TTree * track, *trackMix;
