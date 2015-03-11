@@ -16,17 +16,24 @@ TH1D * Pbp5TeV_data[FF_Bins];
 TH1D * pp2TeV_recoMC[FF_Bins];
 TH1D * pp7TeV_recoMC[FF_Bins];
 TH1D * pPb5TeV_recoMC[FF_Bins];
+TH1D * pp5TeV_recoMC[FF_Bins];
 TH1D * pp2TeV_genMC[FF_Bins];
 TH1D * pp7TeV_genMC[FF_Bins];
 TH1D * pPb5TeV_genMC[FF_Bins];
+TH1D * pp5TeV_genMC[FF_Bins];
 
 TH1D * pp5TeV_interp[FF_Bins];
 TH1D * pp5TeV_interp_swap[FF_Bins];
 TH1D * pp5TeV_interp_recoMC[FF_Bins];
 TH1D * pp5TeV_interp_genMC[FF_Bins];
-
-TH1D * pp5TeV_recoMC[FF_Bins];
-TH1D * pp5TeV_genMC[FF_Bins];
+TH1D * pp5TeV_Q_interp[FF_Bins];
+TH1D * pp5TeV_G_interp[FF_Bins];
+TH1D * pp5TeV_Q_interp_swap[FF_Bins];
+TH1D * pp5TeV_G_interp_swap[FF_Bins];
+TH1D * pp5TeV_Q_interp_recoMC[FF_Bins];
+TH1D * pp5TeV_G_interp_recoMC[FF_Bins];
+TH1D * pp5TeV_Q_interp_genMC[FF_Bins];
+TH1D * pp5TeV_G_interp_genMC[FF_Bins];
 
 TH1D * pPb_FF[FF_Bins];
 TH1D * Pbp_FF[FF_Bins];
