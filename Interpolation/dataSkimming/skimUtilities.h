@@ -18,6 +18,7 @@ TTree * evt;
 TFile * inf;
 TTree * trackIn;
 TTree * ak3PFIn;
+TTree * akPu3PFIn;
 TTree * skimIn;
 TTree * evtIn;
 TTree * hltIn;
@@ -160,6 +161,8 @@ int openInFile(const char * name, const char * mode, int isMC)
   skimIn = (TTree*)inf->Get("skimanalysis/HltTree");
   evtIn = (TTree*)inf->Get("hiEvtAnalyzer/HiTree");
   hltIn = (TTree*)inf->Get("hltanalysis/HltTree"); 
+  akPu3PFIn = (TTree*)inf->Get("akPu3PFJetAnalyzer/t");
+
  
   //Setting addresses
   trackIn->SetBranchAddress("nTrk",&nTrk); 
@@ -238,10 +241,21 @@ int openInFile(const char * name, const char * mode, int isMC)
     ak3PFIn->SetBranchAddress("refparton_flavor",&refparton_flavor);
     ak3PFIn->SetBranchAddress("genChargedSum",&genChargedSum);
     ak3PFIn->SetBranchAddress("pthat",&pthat);
-    ak3PFIn->SetBranchAddress("ngen",&ngen);
-    ak3PFIn->SetBranchAddress("genpt",&genpt);
-    ak3PFIn->SetBranchAddress("geneta",&geneta);
-    ak3PFIn->SetBranchAddress("genphi",&genphi); 
+    
+    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0))
+    {
+      akPu3PFIn->SetBranchAddress("ngen",&ngen);
+      akPu3PFIn->SetBranchAddress("genpt",&genpt);
+      akPu3PFIn->SetBranchAddress("geneta",&geneta);
+      akPu3PFIn->SetBranchAddress("genphi",&genphi); 
+    }
+    else
+    {
+      ak3PFIn->SetBranchAddress("ngen",&ngen);
+      ak3PFIn->SetBranchAddress("genpt",&genpt);
+      ak3PFIn->SetBranchAddress("geneta",&geneta);
+      ak3PFIn->SetBranchAddress("genphi",&genphi);
+    }
   }
   /*
   if(!(trackIn->GetEntries() == ak3PFIn->GetEntries() &&
@@ -280,6 +294,7 @@ void closeInFile(int isGoodFile = 1)
     delete trackIn;
     delete evtIn;
     delete ak3PFIn;
+    delete akPu3PFIn;
     delete skimIn;
     delete hltIn;
   }

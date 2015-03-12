@@ -266,7 +266,17 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     {  
       for(int j=0; j<ngen; j++)
       {
-        if(TMath::Abs(geneta[j]+boost) < jetEtaMin || TMath::Abs(geneta[j]+boost) > jetEtaMax || genpt[j]<lowJetPtBound || genpt[j]>=upJetPtBound) continue;          
+        if(TMath::Abs(geneta[j]+boost) < jetEtaMin || TMath::Abs(geneta[j]+boost) > jetEtaMax || genpt[j]<lowJetPtBound || genpt[j]>=upJetPtBound) continue;
+        
+        //getting jet flavor (a bit convoluted because genMatchedID is not filled in forest correctly)
+        /*bool isQ=false;
+        bool isG=false;
+        for(int j2=0; j2<nref; j2++)
+        {
+           if(TMath::Abs(refpt[j2] - genpt[j]) < 0.001 && TMath::Abs(refeta[j2] - geneta[j]) < 0.01 && refparton_flavor[j2]==21) isG = true;
+           if(TMath::Abs(refpt[j2] - genpt[j]) < 0.001 && TMath::Abs(refeta[j2] - geneta[j]) < 0.01 && refparton_flavor[j2]!=21 && TMath::Abs(refparton_flavor[j2])<901) isQ = true;
+        }*/
+          
         h_jet_gen->Fill(genpt[j], weight);
      
         for(int t=0; t<nParticle; t++)

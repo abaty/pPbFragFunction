@@ -11,4 +11,4 @@ hadd $now/pp7_3_0_15.root spectrapp7*_0_3_0_15.root
 hadd $now/pp2MC_3_0_15.root spectrapp2*_1_3_0_15.root
 hadd $now/pPb5MC_3_0_15.root spectrapPb5*_1_3_0_15.root
 hadd $now/pp7MC_3_0_15.root spectrapp7*_1_3_0_15.root
-
+hadd $now/pp5MC_3_0_15.root spectrapp5*_1_3_0_15.root
