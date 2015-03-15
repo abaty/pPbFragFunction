@@ -101,7 +101,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   if(typeUE==2) lastMixEvt = trackMix->GetEntries();
 
   int nEntry = track->GetEntries();
-  nEntry = 10;
+  //nEntry = 10;
   for(int i=0; i<nEntry; i++)
   {
     getInputEntry(i);
@@ -293,10 +293,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         bool isG=false;
         for(int j2=0; j2<nref; j2++)
         {
-           std::cout << refpt[j2] << " " << genpt[j] << " " << refeta[j2] << " " << geneta[j] << " " << refparton_flavor[j2] << std::endl;
            if(TMath::Abs(refpt[j2] - genpt[j])==0 && TMath::Abs(refeta[j2] - geneta[j])==0 && refparton_flavor[j2]==21) isG = true;
-           if(TMath::Abs(refpt[j2] - genpt[j])==0 && TMath::Abs(refeta[j2] - geneta[j])==0 && refparton_flavor[j2]!=21 && TMath::Abs(refparton_flavor[j2])<901) isQ = true;
-           std::cout << isQ << isG << std::endl;
+           if(TMath::Abs(refpt[j2] - genpt[j])==0 && TMath::Abs(refeta[j2] - geneta[j])==0 && refparton_flavor[j2]!=21 && TMath::Abs(refparton_flavor[j2])<901) isQ = true; 
            if(isQ || isG) break;
         }
           
