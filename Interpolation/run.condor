@@ -1,5 +1,6 @@
 Universe     = vanilla
 Initialdir   = dir_flag
+Requirements = blacklist_here
 Notification = Error
 Executable   = dir_flag/run.sh
 Arguments    = $(Process) arglist

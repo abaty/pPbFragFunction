@@ -2,6 +2,8 @@
 #include "TH2D.h"
 #include "TH1D.h"
 
+const char* filePath = "tempRootFiles/processed_2015_03_15__00_25_47";
+
 // jet pt boundaries
 const int FF_Bins = 5;
 double FF_Bound[FF_Bins+1] = {60,80,100,120,140,200};
@@ -178,14 +180,14 @@ TH1D *gluon_7tev_gen;
 
 void loadHistos()
 {
-  TFile * spectraFilepp2 = new TFile("tempRootFiles/processed_2015_03_12__20_27_41/pp2_3_0_15.root","read");
-  TFile * spectraFilepPb5 = new TFile("tempRootFiles/processed_2015_03_12__20_27_41/pPb5_3_0_15.root","read");
-  TFile * spectraFilePbp5 = new TFile("tempRootFiles/processed_2015_03_12__20_27_41/Pbp5_3_0_15.root","read");
-  TFile * spectraFilepp7 = new TFile("tempRootFiles/processed_2015_03_12__20_27_41/pp7_3_0_15.root","read");
-  TFile * MCFilepp2 = new TFile("tempRootFiles/processed_2015_03_12__20_27_41/pp2MC_3_0_15.root","read");
-  TFile * MCFilepPb5 = new TFile("tempRootFiles/processed_2015_03_12__20_27_41/pPb5MC_3_0_15.root","read");
-  TFile * MCFilepp7 = new TFile("tempRootFiles/processed_2015_03_12__20_27_41/pp7MC_3_0_15.root","read");
-  TFile * MCFilepp5 = new TFile("tempRootFiles/processed_2015_03_12__20_27_41/pp5MC_3_0_15.root","read");
+  TFile * spectraFilepp2 = new TFile(Form("%s/pp2_3_0_15.root",filePath),"read");
+  TFile * spectraFilepPb5 = new TFile(Form("%s/pPb5_3_0_15.root",filePath),"read");
+  TFile * spectraFilePbp5 = new TFile(Form("%s/Pbp5_3_0_15.root",filePath),"read");
+  TFile * spectraFilepp7 = new TFile(Form("%s/pp7_3_0_15.root",filePath),"read");
+  TFile * MCFilepp2 = new TFile(Form("%s/pp2MC_3_0_15.root",filePath),"read");
+  TFile * MCFilepPb5 = new TFile(Form("%s/pPb5MC_3_0_15.root",filePath),"read");
+  TFile * MCFilepp7 = new TFile(Form("%s/pp7MC_3_0_15.root",filePath),"read");
+  TFile * MCFilepp5 = new TFile(Form("%s/pp5MC_3_0_15.root",filePath),"read");
 
   pp2_0_jet = (TH1D*) spectraFilepp2->Get("pp2_reco_jet");
   pp2_0_track = (TH2D*) spectraFilepp2->Get("pp2_reco_track");
