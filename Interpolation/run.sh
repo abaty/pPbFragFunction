@@ -4,7 +4,7 @@ then
   exit 1
 fi
 
-sleep $((3 * $1))
+sleep $((1 * $1))
 
 echo | awk -v i=$1 '{print "./run.exe masterList.txt masterMBList.txt "i}' 
 echo | awk -v i=$1 '{print "./run.exe masterList.txt masterMBList.txt "i}' | bash
