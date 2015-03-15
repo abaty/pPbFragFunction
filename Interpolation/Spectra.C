@@ -9,6 +9,7 @@
 #include <cmath>
 #include "factorizedPtCorr.h"
 #include "SpectraFiles.h"
+#include "residualJEC.h"
 
 const double pPbRapidity = 0.4654094531;
 const int nJetBins = 120;
@@ -123,8 +124,17 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
 
     //starting jet loop Reco
     for(int j=0; j<nref; j++)
-    { 
-      if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax || jtpt[j]<lowJetPtBound || jtpt[j]>=upJetPtBound) continue;          
+    {
+      totalJetsHist->Fill(1);
+      if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax) continue;
+      totalJetsEtaCutHist->Fill(1);
+      if(chargedSum[j]/rawpt[j]<0.05 || chargedSum[j]/rawpt[j]>0.95) continue;
+      totalJetsChargeCutHist->Fill(1);
+
+    //residual JEC correction applied
+      jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
+      if(jtpt[j]<lowJetPtBound || jtpt[j]>=upJetPtBound) continue;      
+      totalJetsPtCutHist->Fill(1);    
       h_jet->Fill(jtpt[j],weight);
 
     //quark or gluon only contributions for MC
@@ -371,6 +381,10 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   h_trackUE_G->Write(Form("%s_reco_trackUE_G",mode));
   h_track_xi_G->Write(Form("%s_reco_track_xi_G",mode));
   h_trackUE_xi_G->Write(Form("%s_reco_trackUE_xi_G",mode));
+  totalJetsHist->Write();
+  totalJetsEtaCutHist->Write();
+  totalJetsChargeCutHist->Write();
+  totalJetsPtCutHist->Write();
 
   outf->Close();
 }
