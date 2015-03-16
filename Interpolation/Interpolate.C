@@ -93,30 +93,30 @@ void makeFF()
       double glu5 = 0;
       double glu7 = 0;
       double totalJets = 0;    
-      //double glu2Err = 0;
-      //double glu5Err = 0;
-      //double glu7Err = 0;
+      double glu2Err = 0;
+      double glu5Err = 0;
+      double glu7Err = 0;
 
       for(int j = jet->FindBin(FF_Bound[i]); j < jet->FindBin(FF_Bound[i+1]); j++)
       {
         double nJet = jet->GetBinContent(j);
-       //double nJetErr = jet->GetBinError(j); 
+        double nJetErr = jet->GetBinError(j); 
 
         glu2 += gluon_2tev_reco->GetBinContent(j)*nJet;
         glu5 += gluon_5tev_reco->GetBinContent(j)*nJet;
         glu7 += gluon_7tev_reco->GetBinContent(j)*nJet;
         totalJets += nJet;
-        //glu2Err += TMath::Power(gluon_2tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_2tev_reco->GetBinContent(j)*nJetErr,2);
-        //glu5Err += TMath::Power(gluon_5tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_5tev_reco->GetBinContent(j)*nJetErr,2);
-        //glu7Err += TMath::Power(gluon_7tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_7tev_reco->GetBinContent(j)*nJetErr,2);
+        glu2Err += TMath::Power(gluon_2tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_2tev_reco->GetBinContent(j)*nJetErr,2);
+        glu5Err += TMath::Power(gluon_5tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_5tev_reco->GetBinContent(j)*nJetErr,2);
+        glu7Err += TMath::Power(gluon_7tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_7tev_reco->GetBinContent(j)*nJetErr,2);
       }
-      //glu2Err = TMath::Power(glu2Err,0.5);
-      //glu5Err = TMath::Power(glu5Err,0.5);
-      //glu7Err = TMath::Power(glu7Err,0.5);   
+      glu2Err = TMath::Power(glu2Err,0.5);
+      glu5Err = TMath::Power(glu5Err,0.5);
+      glu7Err = TMath::Power(glu7Err,0.5);   
  
       double average = ((glu5 - glu7)*pp2TeV_data[i]->GetBinContent(t)+(glu2-glu5)*pp7TeV_data[i]->GetBinContent(t))/(glu2-glu7);
-      //double error = getInterpolationError(glu2,glu2Err,glu5,glu5Err,glu7,glu7Err,pp2TeV_data[i]->GetBinContent(t),pp2TeV_data[i]->GetBinError(t),pp7TeV_data[i]->GetBinContent(t),pp7TeV_data[i]->GetBinError(t));
-      double error = TMath::Power(TMath::Power((glu5 - glu7)*pp2TeV_data[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power((glu2-glu5)*pp7TeV_data[i]->GetBinError(t)/(glu2-glu7),2),0.5);
+      double error = getInterpolationError(glu2,glu2Err,glu5,glu5Err,glu7,glu7Err,pp2TeV_data[i]->GetBinContent(t),pp2TeV_data[i]->GetBinError(t),pp7TeV_data[i]->GetBinContent(t),pp7TeV_data[i]->GetBinError(t));
+      //double error = TMath::Power(TMath::Power((glu5 - glu7)*pp2TeV_data[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power((glu2-glu5)*pp7TeV_data[i]->GetBinError(t)/(glu2-glu7),2),0.5);
       double averageQ = (glu2*pp7TeV_data[i]->GetBinContent(t)-glu7*pp2TeV_data[i]->GetBinContent(t))/(glu2-glu7);
       double errorQ = TMath::Power(TMath::Power(glu2*pp7TeV_data[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power(glu7*pp2TeV_data[i]->GetBinError(t)/(glu2-glu7),2),0.5);
       double averageG = ((totalJets-glu7)*pp2TeV_data[i]->GetBinContent(t)-(totalJets-glu2)*pp7TeV_data[i]->GetBinContent(t))/(glu2-glu7);
@@ -148,19 +148,30 @@ void makeFF()
       double glu5 = 0;
       double glu7 = 0;    
       double totalJets = 0;
+      double glu2Err = 0;
+      double glu5Err = 0;
+      double glu7Err = 0;
     
       for(int j = jet->FindBin(FF_Bound[i]); j < jet->FindBin(FF_Bound[i+1]); j++)
       {
         double nJet = jet->GetBinContent(j); 
-
+        double nJetErr = jet->GetBinError(j);
+ 
         glu2 += gluon_2tev_reco->GetBinContent(j)*nJet;
         glu5 += gluon_5tev_reco->GetBinContent(j)*nJet;
         glu7 += gluon_7tev_reco->GetBinContent(j)*nJet;
         totalJets += nJet;
+        glu2Err += TMath::Power(gluon_2tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_2tev_reco->GetBinContent(j)*nJetErr,2);
+        glu5Err += TMath::Power(gluon_5tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_5tev_reco->GetBinContent(j)*nJetErr,2);
+        glu7Err += TMath::Power(gluon_7tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_7tev_reco->GetBinContent(j)*nJetErr,2);
       }
+      glu2Err = TMath::Power(glu2Err,0.5);
+      glu5Err = TMath::Power(glu5Err,0.5);
+      glu7Err = TMath::Power(glu7Err,0.5);   
     
       double average = ((glu5 - glu7)*pp2TeV_data[i]->GetBinContent(t)+(glu2-glu5)*pp7TeV_data[i]->GetBinContent(t))/(glu2-glu7);
-      double error = TMath::Power(TMath::Power((glu5 - glu7)*pp2TeV_data[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power((glu2-glu5)*pp7TeV_data[i]->GetBinError(t)/(glu2-glu7),2),0.5);
+      double error = getInterpolationError(glu2,glu2Err,glu5,glu5Err,glu7,glu7Err,pp2TeV_data[i]->GetBinContent(t),pp2TeV_data[i]->GetBinError(t),pp7TeV_data[i]->GetBinContent(t),pp7TeV_data[i]->GetBinError(t));
+      //double error = TMath::Power(TMath::Power((glu5 - glu7)*pp2TeV_data[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power((glu2-glu5)*pp7TeV_data[i]->GetBinError(t)/(glu2-glu7),2),0.5);
       double averageQ = (glu2*pp7TeV_data[i]->GetBinContent(t)-glu7*pp2TeV_data[i]->GetBinContent(t))/(glu2-glu7);
       double errorQ = TMath::Power(TMath::Power(glu2*pp7TeV_data[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power(glu7*pp2TeV_data[i]->GetBinError(t)/(glu2-glu7),2),0.5);
       double averageG = ((totalJets-glu7)*pp2TeV_data[i]->GetBinContent(t)-(totalJets-glu2)*pp7TeV_data[i]->GetBinContent(t))/(glu2-glu7);
@@ -191,19 +202,30 @@ void makeFF()
       double glu5 = 0;
       double glu7 = 0;    
       double totalJets = 0;
+      double glu2Err = 0;
+      double glu5Err = 0;
+      double glu7Err = 0;
     
       for(int j = jet->FindBin(FF_Bound[i]); j < jet->FindBin(FF_Bound[i+1]); j++)
       {
         double nJet = jet->GetBinContent(j); 
+        double nJetErr = jet->GetBinError(j); 
 
         glu2 += gluon_2tev_reco->GetBinContent(j)*nJet;
         glu5 += gluon_5tev_reco->GetBinContent(j)*nJet;
         glu7 += gluon_7tev_reco->GetBinContent(j)*nJet;
         totalJets += nJet;
+        glu2Err += TMath::Power(gluon_2tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_2tev_reco->GetBinContent(j)*nJetErr,2);
+        glu5Err += TMath::Power(gluon_5tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_5tev_reco->GetBinContent(j)*nJetErr,2);
+        glu7Err += TMath::Power(gluon_7tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_7tev_reco->GetBinContent(j)*nJetErr,2);
       }
+      glu2Err = TMath::Power(glu2Err,0.5);
+      glu5Err = TMath::Power(glu5Err,0.5);
+      glu7Err = TMath::Power(glu7Err,0.5);   
     
       double average = ((glu5 - glu7)*pp2TeV_recoMC[i]->GetBinContent(t)+(glu2-glu5)*pp7TeV_recoMC[i]->GetBinContent(t))/(glu2-glu7);
-      double error = TMath::Power(TMath::Power((glu5 - glu7)*pp2TeV_recoMC[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power((glu2-glu5)*pp7TeV_recoMC[i]->GetBinError(t)/(glu2-glu7),2),0.5);
+      double error = getInterpolationError(glu2,glu2Err,glu5,glu5Err,glu7,glu7Err,pp2TeV_recoMC[i]->GetBinContent(t),pp2TeV_recoMC[i]->GetBinError(t),pp7TeV_recoMC[i]->GetBinContent(t),pp7TeV_recoMC[i]->GetBinError(t));
+      //double error = TMath::Power(TMath::Power((glu5 - glu7)*pp2TeV_recoMC[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power((glu2-glu5)*pp7TeV_recoMC[i]->GetBinError(t)/(glu2-glu7),2),0.5);
       double averageQ = (glu2*pp7TeV_recoMC[i]->GetBinContent(t)-glu7*pp2TeV_recoMC[i]->GetBinContent(t))/(glu2-glu7);
       double errorQ = TMath::Power(TMath::Power(glu2*pp7TeV_recoMC[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power(glu7*pp2TeV_recoMC[i]->GetBinError(t)/(glu2-glu7),2),0.5);
       double averageG = ((totalJets-glu7)*pp2TeV_recoMC[i]->GetBinContent(t)-(totalJets-glu2)*pp7TeV_recoMC[i]->GetBinContent(t))/(glu2-glu7);
@@ -235,19 +257,30 @@ void makeFF()
       double glu5 = 0;
       double glu7 = 0;     
       double totalJets = 0;    
+      double glu2Err = 0;
+      double glu5Err = 0;
+      double glu7Err = 0;
 
       for(int j = jet->FindBin(FF_Bound[i]); j < jet->FindBin(FF_Bound[i+1]); j++)
       {
         double nJet = jet->GetBinContent(j); 
+        double nJetErr = jet->GetBinError(j); 
 
         glu2 += gluon_2tev_gen->GetBinContent(j)*nJet;
         glu5 += gluon_5tev_gen->GetBinContent(j)*nJet;
         glu7 += gluon_7tev_gen->GetBinContent(j)*nJet;
         totalJets += nJet;
+        glu2Err += TMath::Power(gluon_2tev_gen->GetBinError(j)*nJet,2)+ TMath::Power(gluon_2tev_gen->GetBinContent(j)*nJetErr,2);
+        glu5Err += TMath::Power(gluon_5tev_gen->GetBinError(j)*nJet,2)+ TMath::Power(gluon_5tev_gen->GetBinContent(j)*nJetErr,2);
+        glu7Err += TMath::Power(gluon_7tev_gen->GetBinError(j)*nJet,2)+ TMath::Power(gluon_7tev_gen->GetBinContent(j)*nJetErr,2);
       }
+      glu2Err = TMath::Power(glu2Err,0.5);
+      glu5Err = TMath::Power(glu5Err,0.5);
+      glu7Err = TMath::Power(glu7Err,0.5);   
     
       double average = ((glu5 - glu7)*pp2TeV_genMC[i]->GetBinContent(t)+(glu2-glu5)*pp7TeV_genMC[i]->GetBinContent(t))/(glu2-glu7);
-      double error = TMath::Power(TMath::Power((glu5 - glu7)*pp2TeV_genMC[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power((glu2-glu5)*pp7TeV_genMC[i]->GetBinError(t)/(glu2-glu7),2),0.5);
+      double error = getInterpolationError(glu2,glu2Err,glu5,glu5Err,glu7,glu7Err,pp2TeV_genMC[i]->GetBinContent(t),pp2TeV_genMC[i]->GetBinError(t),pp7TeV_genMC[i]->GetBinContent(t),pp7TeV_genMC[i]->GetBinError(t));
+      //double error = TMath::Power(TMath::Power((glu5 - glu7)*pp2TeV_genMC[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power((glu2-glu5)*pp7TeV_genMC[i]->GetBinError(t)/(glu2-glu7),2),0.5);
       double averageQ = (glu2*pp7TeV_genMC[i]->GetBinContent(t)-glu7*pp2TeV_genMC[i]->GetBinContent(t))/(glu2-glu7);
       double errorQ = TMath::Power(TMath::Power(glu2*pp7TeV_genMC[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power(glu7*pp2TeV_genMC[i]->GetBinError(t)/(glu2-glu7),2),0.5);
       double averageG = ((totalJets-glu7)*pp2TeV_genMC[i]->GetBinContent(t)-(totalJets-glu2)*pp7TeV_genMC[i]->GetBinContent(t))/(glu2-glu7);
