@@ -2,7 +2,7 @@
 #include "TH2D.h"
 #include "TH1D.h"
 
-const char* filePath = "tempRootFiles/processed_2015_03_15__17_07_41";
+const char* filePath = "tempRootFiles/processed_2015_03_15__21_28_03";
 
 // jet pt boundaries
 const int FF_Bins = 5;
@@ -13,6 +13,9 @@ TH1D * pp2TeV_data[FF_Bins];
 TH1D * pp7TeV_data[FF_Bins];
 TH1D * pPb5TeV_data[FF_Bins];
 TH1D * Pbp5TeV_data[FF_Bins];
+TH1D * fullStats_pPb5Pbp5TeV_data[FF_Bins];
+TH1D * fullStats_pp2TeV_data[FF_Bins];
+TH1D * fullStats_pp7TeV_data[FF_Bins];
 
 TH1D * pp2TeV_recoMC[FF_Bins];
 TH1D * pp7TeV_recoMC[FF_Bins];
@@ -82,6 +85,12 @@ TH2D * Pbp5_0_track;
 TH2D * Pbp5_0_trackUE;
 TH2D * Pbp5_0_track_xi;
 TH2D * Pbp5_0_trackUE_xi;
+
+TH1D * pPb5Pbp5_0_jet;
+TH2D * pPb5Pbp5_0_track;
+TH2D * pPb5Pbp5_0_trackUE;
+TH2D * pPb5Pbp5_0_track_xi;
+TH2D * pPb5Pbp5_0_trackUE_xi;
 
 TH1D * pp2_1_jet_reco;
 TH2D * pp2_1_track_reco;
@@ -264,6 +273,17 @@ void loadHistos()
   Pbp5_0_trackUE = (TH2D*) spectraFilePbp5->Get("Pbp5_reco_trackUE");
   Pbp5_0_track_xi = (TH2D*) spectraFilePbp5->Get("Pbp5_reco_track_xi");
   Pbp5_0_trackUE_xi = (TH2D*) spectraFilePbp5->Get("Pbp5_reco_trackUE_xi");
+
+  pPb5Pbp5_0_jet = (TH1D*)pPb5_0_jet->Clone("pPb5Pbp5_reco_jet");
+  pPb5Pbp5_0_track = (TH2D*)pPb5_0_track->Clone("pPb5Pbp5_reco_track");
+  pPb5Pbp5_0_trackUE = (TH2D*)pPb5_0_trackUE->Clone("pPb5Pbp5_reco_trackUE");
+  pPb5Pbp5_0_track_xi = (TH2D*)pPb5_0_track_xi->Clone("pPb5Pbp5_reco_track_xi");
+  pPb5Pbp5_0_trackUE_xi = (TH2D*)pPb5_0_trackUE_xi->Clone("pPb5Pbp5_reco_trackUE_xi");
+  pPb5Pbp5_0_jet->Add(Pbp5_0_jet);
+  pPb5Pbp5_0_track->Add(Pbp5_0_track);
+  pPb5Pbp5_0_trackUE->Add(Pbp5_0_trackUE);
+  pPb5Pbp5_0_track_xi->Add(Pbp5_0_track_xi);
+  pPb5Pbp5_0_trackUE_xi->Add(Pbp5_0_trackUE_xi);
 
   pp2_1_jet_reco = (TH1D*) MCFilepp2->Get("pp2_reco_jet");
   pp2_1_track_reco = (TH2D*) MCFilepp2->Get("pp2_reco_track");
