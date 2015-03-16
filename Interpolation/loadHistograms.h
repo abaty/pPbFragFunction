@@ -2,7 +2,7 @@
 #include "TH2D.h"
 #include "TH1D.h"
 
-const char* filePath = "tempRootFiles/processed_2015_03_15__15_56_14";
+const char* filePath = "tempRootFiles/processed_2015_03_15__17_07_41";
 
 // jet pt boundaries
 const int FF_Bins = 5;
@@ -31,6 +31,14 @@ TH1D * pp2TeV_genMC[FF_Bins];
 TH1D * pp7TeV_genMC[FF_Bins];
 TH1D * pPb5TeV_genMC[FF_Bins];
 TH1D * pp5TeV_genMC[FF_Bins];
+TH1D * pp2TeV_genMC_Q[FF_Bins];
+TH1D * pp7TeV_genMC_Q[FF_Bins];
+TH1D * pPb5TeV_genMC_Q[FF_Bins];
+TH1D * pp5TeV_genMC_Q[FF_Bins];
+TH1D * pp2TeV_genMC_G[FF_Bins];
+TH1D * pp7TeV_genMC_G[FF_Bins];
+TH1D * pPb5TeV_genMC_G[FF_Bins];
+TH1D * pp5TeV_genMC_G[FF_Bins];
 
 TH1D * pp5TeV_interp[FF_Bins];
 TH1D * pp5TeV_interp_swap[FF_Bins];
@@ -135,17 +143,50 @@ TH2D * pp2_1_trackUE_gen;
 TH2D * pp2_1_track_xi_gen;
 TH2D * pp2_1_trackUE_xi_gen;
 
+TH1D * pp2_1_jet_gen_Q;
+TH2D * pp2_1_track_gen_Q;
+TH2D * pp2_1_trackUE_gen_Q;
+TH2D * pp2_1_track_xi_gen_Q;
+TH2D * pp2_1_trackUE_xi_gen_Q;
+TH1D * pp2_1_jet_gen_G;
+TH2D * pp2_1_track_gen_G;
+TH2D * pp2_1_trackUE_gen_G;
+TH2D * pp2_1_track_xi_gen_G;
+TH2D * pp2_1_trackUE_xi_gen_G;
+
 TH1D * pp7_1_jet_gen;
 TH2D * pp7_1_track_gen;
 TH2D * pp7_1_trackUE_gen;
 TH2D * pp7_1_track_xi_gen;
 TH2D * pp7_1_trackUE_xi_gen;
 
+TH1D * pp7_1_jet_gen_Q;
+TH2D * pp7_1_track_gen_Q;
+TH2D * pp7_1_trackUE_gen_Q;
+TH2D * pp7_1_track_xi_gen_Q;
+TH2D * pp7_1_trackUE_xi_gen_Q;
+TH1D * pp7_1_jet_gen_G;
+TH2D * pp7_1_track_gen_G;
+TH2D * pp7_1_trackUE_gen_G;
+TH2D * pp7_1_track_xi_gen_G;
+TH2D * pp7_1_trackUE_xi_gen_G;
+
 TH1D * pPb5_1_jet_gen;
 TH2D * pPb5_1_track_gen;
 TH2D * pPb5_1_trackUE_gen;
 TH2D * pPb5_1_track_xi_gen;
 TH2D * pPb5_1_trackUE_xi_gen;
+
+TH1D * pPb5_1_jet_gen_Q;
+TH2D * pPb5_1_track_gen_Q;
+TH2D * pPb5_1_trackUE_gen_Q;
+TH2D * pPb5_1_track_xi_gen_Q;
+TH2D * pPb5_1_trackUE_xi_gen_Q;
+TH1D * pPb5_1_jet_gen_G;
+TH2D * pPb5_1_track_gen_G;
+TH2D * pPb5_1_trackUE_gen_G;
+TH2D * pPb5_1_track_xi_gen_G;
+TH2D * pPb5_1_trackUE_xi_gen_G;
 
 TH1D * pp5_1_jet_reco;
 TH2D * pp5_1_track_reco;
@@ -170,6 +211,17 @@ TH2D * pp5_1_track_gen;
 TH2D * pp5_1_trackUE_gen;
 TH2D * pp5_1_track_xi_gen;
 TH2D * pp5_1_trackUE_xi_gen;
+
+TH1D * pp5_1_jet_gen_Q;
+TH2D * pp5_1_track_gen_Q;
+TH2D * pp5_1_trackUE_gen_Q;
+TH2D * pp5_1_track_xi_gen_Q;
+TH2D * pp5_1_trackUE_xi_gen_Q;
+TH1D * pp5_1_jet_gen_G;
+TH2D * pp5_1_track_gen_G;
+TH2D * pp5_1_trackUE_gen_G;
+TH2D * pp5_1_track_xi_gen_G;
+TH2D * pp5_1_trackUE_xi_gen_G;
 
 TH1D *gluon_2tev_reco;
 TH1D *gluon_5tev_reco;
@@ -291,23 +343,67 @@ void loadHistos()
   pp2_1_track_xi_gen = (TH2D*) MCFilepp2->Get("pp2_gen_track_xi");
   pp2_1_trackUE_xi_gen = (TH2D*) MCFilepp2->Get("pp2_gen_trackUE_xi");
 
+  pp2_1_jet_gen_Q = (TH1D*) MCFilepp2->Get("pp2_gen_jet_Q");
+  pp2_1_track_gen_Q = (TH2D*) MCFilepp2->Get("pp2_gen_track_Q");
+  pp2_1_trackUE_gen_Q = (TH2D*) MCFilepp2->Get("pp2_gen_trackUE_Q");
+  pp2_1_track_xi_gen_Q = (TH2D*) MCFilepp2->Get("pp2_gen_track_xi_Q");
+  pp2_1_trackUE_xi_gen_Q = (TH2D*) MCFilepp2->Get("pp2_gen_trackUE_xi_Q");
+  pp2_1_jet_gen_G = (TH1D*) MCFilepp2->Get("pp2_gen_jet_G");
+  pp2_1_track_gen_G = (TH2D*) MCFilepp2->Get("pp2_gen_track_G");
+  pp2_1_trackUE_gen_G = (TH2D*) MCFilepp2->Get("pp2_gen_trackUE_G");
+  pp2_1_track_xi_gen_G = (TH2D*) MCFilepp2->Get("pp2_gen_track_xi_G");
+  pp2_1_trackUE_xi_gen_G = (TH2D*) MCFilepp2->Get("pp2_gen_trackUE_xi_G");
+
   pp7_1_jet_gen = (TH1D*) MCFilepp7->Get("pp7_gen_jet");
   pp7_1_track_gen = (TH2D*) MCFilepp7->Get("pp7_gen_track");
   pp7_1_trackUE_gen = (TH2D*) MCFilepp7->Get("pp7_gen_trackUE");
   pp7_1_track_xi_gen = (TH2D*) MCFilepp7->Get("pp7_gen_track_xi");
   pp7_1_trackUE_xi_gen = (TH2D*) MCFilepp7->Get("pp7_gen_trackUE_xi");
+ 
+  pp7_1_jet_gen_Q = (TH1D*) MCFilepp7->Get("pp7_gen_jet_Q");
+  pp7_1_track_gen_Q = (TH2D*) MCFilepp7->Get("pp7_gen_track_Q");
+  pp7_1_trackUE_gen_Q = (TH2D*) MCFilepp7->Get("pp7_gen_trackUE_Q");
+  pp7_1_track_xi_gen_Q = (TH2D*) MCFilepp7->Get("pp7_gen_track_xi_Q");
+  pp7_1_trackUE_xi_gen_Q = (TH2D*) MCFilepp7->Get("pp7_gen_trackUE_xi_Q"); 
+  pp7_1_jet_gen_G = (TH1D*) MCFilepp7->Get("pp7_gen_jet_G");
+  pp7_1_track_gen_G = (TH2D*) MCFilepp7->Get("pp7_gen_track_G");
+  pp7_1_trackUE_gen_G = (TH2D*) MCFilepp7->Get("pp7_gen_trackUE_G");
+  pp7_1_track_xi_gen_G = (TH2D*) MCFilepp7->Get("pp7_gen_track_xi_G");
+  pp7_1_trackUE_xi_gen_G = (TH2D*) MCFilepp7->Get("pp7_gen_trackUE_xi_G");
 
   pPb5_1_jet_gen = (TH1D*) MCFilepPb5->Get("pPb5_gen_jet");
   pPb5_1_track_gen = (TH2D*) MCFilepPb5->Get("pPb5_gen_track");
   pPb5_1_trackUE_gen = (TH2D*) MCFilepPb5->Get("pPb5_gen_trackUE");
   pPb5_1_track_xi_gen = (TH2D*) MCFilepPb5->Get("pPb5_gen_track_xi");
   pPb5_1_trackUE_xi_gen = (TH2D*)MCFilepPb5->Get("pPb5_gen_trackUE_xi");
+ 
+  pPb5_1_jet_gen_Q = (TH1D*) MCFilepPb5->Get("pPb5_gen_jet_Q");
+  pPb5_1_track_gen_Q = (TH2D*) MCFilepPb5->Get("pPb5_gen_track_Q");
+  pPb5_1_trackUE_gen_Q = (TH2D*) MCFilepPb5->Get("pPb5_gen_trackUE_Q");
+  pPb5_1_track_xi_gen_Q = (TH2D*) MCFilepPb5->Get("pPb5_gen_track_xi_Q");
+  pPb5_1_trackUE_xi_gen_Q = (TH2D*)MCFilepPb5->Get("pPb5_gen_trackUE_xi_Q");
+  pPb5_1_jet_gen_G = (TH1D*) MCFilepPb5->Get("pPb5_gen_jet_G");
+  pPb5_1_track_gen_G = (TH2D*) MCFilepPb5->Get("pPb5_gen_track_G");
+  pPb5_1_trackUE_gen_G = (TH2D*) MCFilepPb5->Get("pPb5_gen_trackUE_G");
+  pPb5_1_track_xi_gen_G= (TH2D*) MCFilepPb5->Get("pPb5_gen_track_xi_G");
+  pPb5_1_trackUE_xi_gen_G = (TH2D*)MCFilepPb5->Get("pPb5_gen_trackUE_xi_G");
 
   pp5_1_jet_gen = (TH1D*) MCFilepp5->Get("pp5_gen_jet");
   pp5_1_track_gen = (TH2D*) MCFilepp5->Get("pp5_gen_track");
   pp5_1_trackUE_gen = (TH2D*) MCFilepp5->Get("pp5_gen_trackUE");
   pp5_1_track_xi_gen = (TH2D*) MCFilepp5->Get("pp5_gen_track_xi");
   pp5_1_trackUE_xi_gen = (TH2D*) MCFilepp5->Get("pp5_gen_trackUE_xi");
+
+  pp5_1_jet_gen_Q = (TH1D*) MCFilepp5->Get("pp5_gen_jet_Q");
+  pp5_1_track_gen_Q = (TH2D*) MCFilepp5->Get("pp5_gen_track_Q");
+  pp5_1_trackUE_gen_Q = (TH2D*) MCFilepp5->Get("pp5_gen_trackUE_Q");
+  pp5_1_track_xi_gen_Q = (TH2D*) MCFilepp5->Get("pp5_gen_track_xi_Q");
+  pp5_1_trackUE_xi_gen_Q = (TH2D*) MCFilepp5->Get("pp5_gen_trackUE_xi_Q");
+  pp5_1_jet_gen_G = (TH1D*) MCFilepp5->Get("pp5_gen_jet_G");
+  pp5_1_track_gen_G = (TH2D*) MCFilepp5->Get("pp5_gen_track_G");
+  pp5_1_trackUE_gen_G = (TH2D*) MCFilepp5->Get("pp5_gen_trackUE_G");
+  pp5_1_track_xi_gen_G = (TH2D*) MCFilepp5->Get("pp5_gen_track_xi_G");
+  pp5_1_trackUE_xi_gen_G = (TH2D*) MCFilepp5->Get("pp5_gen_trackUE_xi_G");
 
   TFile * gluonFracFile = new TFile("gluonFracs.root","read");
   gluon_2tev_reco = (TH1D*) gluonFracFile->Get("pp2_gFrac_recoMC");

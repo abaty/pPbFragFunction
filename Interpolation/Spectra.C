@@ -138,8 +138,6 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       totalJetsHist->Fill(1);
       if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax) continue;
       totalJetsEtaCutHist->Fill(1);
-      //if(chargedSum[j]/rawpt[j]<0.05 || chargedSum[j]/rawpt[j]>0.95) continue;
-      totalJetsChargeCutHist->Fill(1);
 
     //residual JEC correction applied
       jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
@@ -461,7 +459,6 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   h_trackUE_xi_gen_G->Write(Form("%s_gen_trackUE_xi_G",mode));
   totalJetsHist->Write();
   totalJetsEtaCutHist->Write();
-  totalJetsChargeCutHist->Write();
   totalJetsPtCutHist->Write();
 
   outf->Close();

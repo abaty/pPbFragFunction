@@ -242,7 +242,7 @@ int openInFile(const char * name, const char * mode, int isMC)
     ak3PFIn->SetBranchAddress("genChargedSum",&genChargedSum);
     ak3PFIn->SetBranchAddress("pthat",&pthat);
     
-    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0))
+    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) || strcmp(mode,"pp2")==0)
     {
       akPu3PFIn->SetBranchAddress("ngen",&ngen);
       akPu3PFIn->SetBranchAddress("genpt",&genpt);

@@ -52,6 +52,7 @@ void makeFF()
     pPb5TeV_genMC[i]= getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),9);    
     pp5TeV_genMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),10); 
     pp5TeV_recoMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),11);
+ 
     pp2TeV_recoMC_Q[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_recoMC_Q_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),12);
     pp2TeV_recoMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_recoMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),13);
     pp7TeV_recoMC_Q[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_recoMC_Q_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),14);
@@ -60,6 +61,15 @@ void makeFF()
     pPb5TeV_recoMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_recoMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),17);
     pp5TeV_recoMC_Q[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_recoMC_Q_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),18);
     pp5TeV_recoMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_recoMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),19);
+  
+    pp2TeV_genMC_Q[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_genMC_Q_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),20);
+    pp2TeV_genMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_genMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),21);
+    pp7TeV_genMC_Q[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_genMC_Q_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),22);
+    pp7TeV_genMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_genMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),23);
+    pPb5TeV_genMC_Q[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_genMC_Q_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),24);
+    pPb5TeV_genMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_genMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),25);
+    pp5TeV_genMC_Q[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_genMC_Q_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),26);
+    pp5TeV_genMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_genMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),27);
   }
    
   for(int i = 0; i < FF_Bins; i++)
@@ -282,7 +292,15 @@ void makeFF()
     pp2TeV_genMC[i]->Write();
     pp7TeV_genMC[i]->Write();
     pPb5TeV_genMC[i]->Write();
-    pp5TeV_genMC[i]->Write();
+    pp5TeV_genMC[i]->Write(); 
+    pp2TeV_genMC_Q[i]->Write();
+    pp2TeV_genMC_G[i]->Write();
+    pp7TeV_genMC_Q[i]->Write();
+    pp7TeV_genMC_G[i]->Write();
+    pPb5TeV_genMC_Q[i]->Write();
+    pPb5TeV_genMC_G[i]->Write();
+    pp5TeV_genMC_Q[i]->Write();
+    pp5TeV_genMC_G[i]->Write();
 
     pp5TeV_interp[i]->Write();
     pp5TeV_interp_swap[i]->Write();
@@ -504,6 +522,62 @@ void getSpectra(int mode)
     trkUE   = pp5_1_trackUE_reco_G;
   }
 
+  if(mode == 20)
+  {
+    jet     = pp2_1_jet_gen_Q;
+    jet_pPb = pPb5_1_jet_gen_Q;
+    trk     = pp2_1_track_gen_Q;
+    trkUE   = pp2_1_trackUE_gen_Q;
+  }
+  if(mode == 21)
+  {
+    jet     = pp2_1_jet_gen_G;
+    jet_pPb = pPb5_1_jet_gen_G;
+    trk     = pp2_1_track_gen_G;
+    trkUE   = pp2_1_trackUE_gen_G;
+  }
+  if(mode == 22)
+  {
+    jet     = pp7_1_jet_gen_Q;
+    jet_pPb = pPb5_1_jet_gen_Q;
+    trk     = pp7_1_track_gen_Q;
+    trkUE   = pp7_1_trackUE_gen_Q;
+  }
+  if(mode == 23)
+  {
+    jet     = pp7_1_jet_gen_G;
+    jet_pPb = pPb5_1_jet_gen_G;
+    trk     = pp7_1_track_gen_G;
+    trkUE   = pp7_1_trackUE_gen_G;
+  }
+  if(mode == 24)
+  {
+    jet     = pPb5_1_jet_gen_Q;
+    jet_pPb = pPb5_1_jet_gen_Q;
+    trk     = pPb5_1_track_gen_Q;
+    trkUE   = pPb5_1_trackUE_gen_Q;
+  }
+  if(mode == 25)
+  {
+    jet     = pPb5_1_jet_gen_G;
+    jet_pPb = pPb5_1_jet_gen_G;
+    trk     = pPb5_1_track_gen_G;
+    trkUE   = pPb5_1_trackUE_gen_G;
+  }
+  if(mode == 26)
+  {
+    jet     = pp5_1_jet_gen_Q;
+    jet_pPb = pp5_1_jet_gen_Q;
+    trk     = pp5_1_track_gen_Q;
+    trkUE   = pp5_1_trackUE_gen_Q;
+  }
+  if(mode == 27)
+  {
+    jet     = pp5_1_jet_reco_G;
+    jet_pPb = pp5_1_jet_reco_G;
+    trk     = pp5_1_track_reco_G;
+    trkUE   = pp5_1_trackUE_reco_G;
+  }
   return;
 }
 

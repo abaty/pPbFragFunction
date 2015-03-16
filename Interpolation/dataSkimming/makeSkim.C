@@ -137,7 +137,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
       //Filling Trees 
       trackIn->GetEntry(i);   
       ak3PFIn->GetEntry(i);
-      if(isMC && (strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0 || strcmp("pp5",mode)==0)) akPu3PFIn->GetEntry(i);
+      if(isMC && (strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0 || strcmp("pp5",mode)==0 || strcmp("pp2",mode)==0)) akPu3PFIn->GetEntry(i);
 
       if(isMC)
       {

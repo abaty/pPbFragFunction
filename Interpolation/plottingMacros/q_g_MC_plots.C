@@ -1,0 +1,116 @@
+#include "TFile.h"
+#include "TH1D.h"
+#include "TPad.h"
+#include "TCanvas.h"
+#include "plottingStyles.h"
+#include "TLatex.h"
+#include "TLegend.h"
+#include "TAttPad.h"
+#include "TAttText.h"
+
+TH1D* pp2Q[5];
+TH1D* pPb5Q[5];
+TH1D* pp7Q[5];
+TH1D* pp2G[5];
+TH1D* pPb5G[5];
+TH1D* pp7G[5];
+
+TLegend * leg1;
+TLegend * leg2;
+
+const int bins[6] = {60,80,100,120,140,200};
+
+void q_g_MC_plots()
+{
+  TCanvas * c1 = new TCanvas("c1","",1200,600);
+  c1->SetLeftMargin(0.2);
+  c1->Divide(5,2,0,0);
+  c1->cd(1);
+
+  TLatex * tlat = new TLatex(0.1,0.1,"test");
+  tlat->SetTextSize(0.06);
+
+  for(int i = 1; i<11; i++) c1->cd(i)->SetLogy();
+
+  const char * names[2] = {"genMC","recoMC"};
+  TFile * inf = TFile::Open("../FragmentationFunctionsUE3.root","read");
+  for(int m = 0; m<2;m++)
+  {
+    for(int i = 0; i<5; i++)
+    {
+      pp2Q[i] = (TH1D*)inf->Get(Form("pp2TeV_%s_Q_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
+      pPb5Q[i] = (TH1D*)inf->Get(Form("pPb5TeV_%s_Q_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
+      pp7Q[i] = (TH1D*)inf->Get(Form("pp7TeV_%s_Q_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
+      pp2G[i] = (TH1D*)inf->Get(Form("pp2TeV_%s_G_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
+      pPb5G[i] = (TH1D*)inf->Get(Form("pPb5TeV_%s_G_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
+      pp7G[i] = (TH1D*)inf->Get(Form("pp7TeV_%s_G_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
+      setColors(pp2Q[i],0,0);
+      setColors(pPb5Q[i],1,0);
+      setColors(pp7Q[i],2,0);
+      setColors(pp2G[i],0,0);
+      setColors(pPb5G[i],1,0);
+      setColors(pp7G[i],2,0);
+      pp2Q[i]->GetXaxis()->SetRangeUser(10,100);
+      pp2G[i]->GetXaxis()->SetRangeUser(10,100);
+      pp2Q[i]->SetMaximum(1);
+      pp2G[i]->SetMaximum(1);
+      pp2Q[i]->SetMinimum(0.0000001);
+      pp2G[i]->SetMinimum(0.0000001);
+      if(i!=0)
+      {
+        pp2Q[i]->GetYaxis()->SetTitleSize(0);
+        pp2G[i]->GetYaxis()->SetTitleSize(0);
+        pp2Q[i]->GetYaxis()->SetLabelSize(0);
+        pp2G[i]->GetYaxis()->SetLabelSize(0);
+      }
+      else
+      {
+        pp2Q[i]->GetYaxis()->SetTitleOffset(1.8);
+        pp2G[i]->GetYaxis()->SetTitleOffset(1.8);
+      }
+    }
+    
+    if(m==0)
+    {
+      leg1 = new TLegend(0.03,0.2,.97,0.5);
+      leg1->AddEntry(pp2Q[0],"2.76 TeV PYTHIA Gen","p");
+      leg1->AddEntry(pPb5Q[0],"5.02 TeV PYTHIA+HYJET Gen","p");
+      leg1->AddEntry(pp7Q[0],"7 TeV PYTHIA Gen","p");
+      leg1->SetTextSize(0.05);
+    }
+    if(m==1)
+    {
+      leg2 = new TLegend(0.03,0.2,0.97,0.5);
+      leg2->AddEntry(pp2Q[0],"2.76 TeV PYTHIA Reco","p");
+      leg2->AddEntry(pPb5Q[0],"5.02 TeV PYTHIA+HYJET Reco","p");
+      leg2->AddEntry(pp7Q[0],"7 TeV PYTHIA Reco","p");
+      leg2->SetTextSize(0.05);
+    } 
+
+    for(int i=1; i<6; i++)
+    {
+      c1->cd(i);
+      pp2Q[i-1]->Draw();
+      pPb5Q[i-1]->Draw("same");
+      pp7Q[i-1]->Draw("same");
+      
+      tlat->DrawLatex(20,0.000001,"Quarks");
+      tlat->DrawLatex(20,0.0000002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)bins[i-1],(int)bins[i]));
+    
+      if(m==0 && i==5) leg1->Draw();
+      if(m==1 && i==5) leg2->Draw();
+    }
+    for(int i=1; i<6; i++)
+    {
+      c1->cd(i+5);
+      pp2G[i-1]->Draw();
+      pPb5G[i-1]->Draw("same");
+      pp7G[i-1]->Draw("same");
+      tlat->DrawLatex(20,0.0000002,"Gluons");
+    }
+    c1->SaveAs(Form("../plots/MC_Q_G_FFs_%s.png",names[m]));
+    c1->SaveAs(Form("../plots/MC_Q_G_FFs_%s.pdf",names[m]));
+    //c1->Clear(); 
+  }
+  return;
+}
