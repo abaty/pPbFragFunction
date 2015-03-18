@@ -408,6 +408,70 @@ TH1D* getFF_pp(double jetPt_low, double jetPt_high, const char* histTitle, int m
   return FF;
 }
 
+TH1D** getInterpolation(double jetPt_low, double jetPt_high, const char* histTitle, int ReweightMode, TH1D * hist2, TH1D * hist7)
+{
+  TH1D * tmp_interp = new TH1D(Form("%s_%d_%d",histTitle,(int)jetPt_low,(int)jetPt_high),";p_{T trk};#frac{1}{N_{jet}} #frac{dN_{trk}}{dp_{t trk}}",trkBins,yAxis);
+  TH1D * tmp_Q_interp = new TH1D(Form("%s_Q_%d_%d",histTitle,(int)jetPt_low,(int)jetPt_high),";p_{T trk};#frac{1}{N_{jet}} #frac{dN_{trk}}{dp_{t trk}}",trkBins,yAxis);
+  TH1D * tmp_G_interp = new TH1D(Form("%s_G_%d_%d",histTitle,(int)jetPt_low,(int)jetPt_high),";p_{T trk};#frac{1}{N_{jet}} #frac{dN_{trk}}{dp_{t trk}}",trkBins,yAxis);    
+
+  //setting jet spectrum to 5TeV for use in the interpolation weighting (only "jet" is used)
+  getSpectra(ReweightMode);
+    
+  for(int t = 1; t < trkBins+1; t++)
+  {
+    //number of gluon jets for 2/5/7 MC (proportional to the jet fraction because jet spectra are all reweighted to 5TeV)
+    double glu2 = 0;
+    double glu5 = 0;
+    double glu7 = 0;
+    double totalJets = 0;    
+    double glu2Err = 0;
+    double glu5Err = 0;
+    double glu7Err = 0;
+
+    for(int j = jet->FindBin(jetPt_low); j < jet->FindBin(jetPt_high); j++)
+    {
+      double nJet = jet->GetBinContent(j);
+      double nJetErr = jet->GetBinError(j); 
+
+      glu2 += gluon_2tev_reco->GetBinContent(j)*nJet;
+      glu5 += gluon_5tev_reco->GetBinContent(j)*nJet;
+      glu7 += gluon_7tev_reco->GetBinContent(j)*nJet;
+      totalJets += nJet;
+      glu2Err += TMath::Power(gluon_2tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_2tev_reco->GetBinContent(j)*nJetErr,2);
+      glu5Err += TMath::Power(gluon_5tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_5tev_reco->GetBinContent(j)*nJetErr,2);
+      glu7Err += TMath::Power(gluon_7tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_7tev_reco->GetBinContent(j)*nJetErr,2);
+    }
+    glu2Err = TMath::Power(glu2Err,0.5);
+    glu5Err = TMath::Power(glu5Err,0.5);
+    glu7Err = TMath::Power(glu7Err,0.5);   
+ 
+    double average = ((glu5 - glu7)*hist2->GetBinContent(t)+(glu2-glu5)*hist7->GetBinContent(t))/(glu2-glu7);
+    double error = getInterpolationError(glu2,glu2Err,glu5,glu5Err,glu7,glu7Err,hist2->GetBinContent(t),hist2->GetBinError(t),hist7->GetBinContent(t),hist7->GetBinError(t));
+    //double error = TMath::Power(TMath::Power((glu5 - glu7)*pp2TeV_data[i]->GetBinError(t)/(glu2-glu7),2)+TMath::Power((glu2-glu5)*pp7TeV_data[i]->GetBinError(t)/(glu2-glu7),2),0.5);
+    double averageQ = (glu2*hist7->GetBinContent(t)-glu7*hist2->GetBinContent(t))/(glu2-glu7);
+    double errorQ = TMath::Power(TMath::Power(glu2*hist7->GetBinError(t)/(glu2-glu7),2)+TMath::Power(glu7*hist2->GetBinError(t)/(glu2-glu7),2),0.5);
+    double averageG = ((totalJets-glu7)*hist2->GetBinContent(t)-(totalJets-glu2)*hist7->GetBinContent(t))/(glu2-glu7);
+    double errorG = TMath::Power(TMath::Power((totalJets-glu7)*hist2->GetBinError(t)/(glu2-glu7),2)+TMath::Power((totalJets-glu2)*hist7->GetBinError(t)/(glu2-glu7),2),0.5);     
+ 
+    tmp_interp->SetBinContent(t, average);
+    tmp_interp->SetBinError(t, error);
+    tmp_Q_interp->SetBinContent(t, averageQ);
+    tmp_Q_interp->SetBinError(t, errorQ);
+    tmp_G_interp->SetBinContent(t, averageG);
+    tmp_G_interp->SetBinError(t, errorG);
+  }
+
+  TH1D** outputArray = new TH1D*[3];
+  outputArray[0]=tmp_interp;
+  outputArray[1]=tmp_Q_interp;
+  outputArray[2]=tmp_G_interp;
+  return outputArray;
+}
+
+
+
+
+
 //tells the getFF_pp exactly which spectra to use in which jetPt range
 //Numbers here in the if statements are hard-coded for triggers atm
 //to do: combine the spectra before so I can remove this step
