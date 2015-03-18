@@ -8,14 +8,25 @@ const char* filePath = "tempRootFiles/processed_2015_03_15__21_28_03";
 const int FF_Bins = 5;
 double FF_Bound[FF_Bins+1] = {60,80,100,120,140,200};
 
+//interpolation histos
+TH1D ** pPb5TeV_data_interp[FF_Bins];
+TH1D ** Pbp5TeV_data_interp[FF_Bins];
+TH1D ** pPb5Pb5TeV_data_interp[FF_Bins];
+TH1D ** pPb5TeV_recoMC_interp[FF_Bins];
+TH1D ** pPb5TeV_genMC_interp[FF_Bins];
+
 //plotting histos
 TH1D * pp2TeV_data[FF_Bins];
 TH1D * pp7TeV_data[FF_Bins];
 TH1D * pPb5TeV_data[FF_Bins];
+
+TH1D * pp2TeV_reverse_data[FF_Bins];
+TH1D * pp7TeV_reverse_data[FF_Bins];
 TH1D * Pbp5TeV_data[FF_Bins];
-TH1D * fullStats_pPb5Pbp5TeV_data[FF_Bins];
-TH1D * fullStats_pp2TeV_data[FF_Bins];
-TH1D * fullStats_pp7TeV_data[FF_Bins];
+
+TH1D * pPb5Pbp5TeV_fulldata[FF_Bins];
+TH1D * pp2TeV_fulldata[FF_Bins];
+TH1D * pp7TeV_fulldata[FF_Bins];
 
 TH1D * pp2TeV_recoMC[FF_Bins];
 TH1D * pp7TeV_recoMC[FF_Bins];
@@ -43,23 +54,11 @@ TH1D * pp7TeV_genMC_G[FF_Bins];
 TH1D * pPb5TeV_genMC_G[FF_Bins];
 TH1D * pp5TeV_genMC_G[FF_Bins];
 
-TH1D * pp5TeV_interp[FF_Bins];
-TH1D * pp5TeV_interp_swap[FF_Bins];
-TH1D * pp5TeV_interp_recoMC[FF_Bins];
-TH1D * pp5TeV_interp_genMC[FF_Bins];
-TH1D * pp5TeV_Q_interp[FF_Bins];
-TH1D * pp5TeV_G_interp[FF_Bins];
-TH1D * pp5TeV_Q_interp_swap[FF_Bins];
-TH1D * pp5TeV_G_interp_swap[FF_Bins];
-TH1D * pp5TeV_Q_interp_recoMC[FF_Bins];
-TH1D * pp5TeV_G_interp_recoMC[FF_Bins];
-TH1D * pp5TeV_Q_interp_genMC[FF_Bins];
-TH1D * pp5TeV_G_interp_genMC[FF_Bins];
-
 TH1D * pPb_FF[FF_Bins];
 TH1D * Pbp_FF[FF_Bins];
 TH1D * pPb_FF_recoMC[FF_Bins];
 TH1D * pPb_FF_genMC[FF_Bins];
+TH1D * pPbPbp_FF[FF_Bins];
 
 //input histos
 TH1D * pp2_0_jet;

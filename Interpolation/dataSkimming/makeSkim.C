@@ -111,7 +111,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
       //event and run selections (veto the other-going way as well as first 7 runs for misalignment)
       if(isMC == 0)
       {
-        if(strcmp(mode,"pPb5") == 0 && (run<210676 || run>=211313)) continue;
+        if(strcmp(mode,"pPb5") == 0 && (run>=211313)) continue;
         if(strcmp(mode,"Pbp5") == 0 && run<211313) continue;
         afterRunCut++;
         if(pHBHENoiseFilter == 0) continue;

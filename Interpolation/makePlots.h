@@ -51,11 +51,11 @@ void makePlots()
       pPb5TeV_data[i-1]->SetMaximum(10);
       pPb5TeV_data[i-1]->SetMinimum(0.00001);
 
-      pp5TeV_interp[i-1]->SetMarkerSize(0.8);
-      pp5TeV_interp[i-1]->SetLineWidth(1);
+      pPb5TeV_data_interp[i-1][0]->SetMarkerSize(0.8);
+      pPb5TeV_data_interp[i-1][0]->SetLineWidth(1);
 
       pPb5TeV_data[i-1]->Draw();
-      pp5TeV_interp[i-1]->Draw("same"); 
+      pPb5TeV_data_interp[i-1][0]->Draw("same"); 
 
       tlat->DrawLatex(0.6,0.00002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i-1],(int)FF_Bound[i]));
     }
@@ -86,7 +86,7 @@ void makePlots()
   c1->cd(1);
   TLegend * leg = new TLegend(0.3,0.2,0.9,0.3);
   leg->AddEntry(pPb5TeV_data[1],"pPb 5TeV data");
-  leg->AddEntry(pp5TeV_interp[1],"pp 5TeV interpolation");
+  leg->AddEntry(pPb5TeV_data_interp[1][0],"pp 5TeV interpolation");
   leg->Draw();
 
   c1->SaveAs("plots/pPb_FFs_UE3.png");
@@ -128,11 +128,11 @@ void makePlots()
       Pbp5TeV_data[i-1]->SetMaximum(10);
       Pbp5TeV_data[i-1]->SetMinimum(0.00001);
 
-      pp5TeV_interp_swap[i-1]->SetMarkerSize(0.8);
-      pp5TeV_interp_swap[i-1]->SetLineWidth(1);
+      Pbp5TeV_data_interp[i-1][0]->SetMarkerSize(0.8);
+      Pbp5TeV_data_interp[i-1][0]->SetLineWidth(1);
 
       Pbp5TeV_data[i-1]->Draw();
-      pp5TeV_interp_swap[i-1]->Draw("same"); 
+      Pbp5TeV_data_interp[i-1][0]->Draw("same"); 
 
       tlat->DrawLatex(0.6,0.00002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i-1],(int)FF_Bound[i]));
     }
@@ -163,7 +163,7 @@ void makePlots()
   c2->cd(1);
   TLegend * leg2 = new TLegend(0.3,0.2,0.9,0.3);
   leg2->AddEntry(Pbp5TeV_data[1],"Pbp 5TeV data");
-  leg2->AddEntry(pp5TeV_interp_swap[1],"pp 5TeV interpolation");
+  leg2->AddEntry(Pbp5TeV_data_interp[1][0],"pp 5TeV interpolation");
   leg2->Draw();
 
   c2->SaveAs("plots/Pbp_FFs_UE3.png");
@@ -206,11 +206,11 @@ void makePlots()
       pPb5TeV_recoMC[i-1]->SetMaximum(10);
       pPb5TeV_recoMC[i-1]->SetMinimum(0.00001);
 
-      pp5TeV_interp_recoMC[i-1]->SetMarkerSize(0.8);
-      pp5TeV_interp_recoMC[i-1]->SetLineWidth(1);
+      pPb5TeV_recoMC_interp[i-1][0]->SetMarkerSize(0.8);
+      pPb5TeV_recoMC_interp[i-1][0]->SetLineWidth(1);
 
       pPb5TeV_recoMC[i-1]->Draw();
-      pp5TeV_interp_recoMC[i-1]->Draw("same"); 
+      pPb5TeV_recoMC_interp[i-1][0]->Draw("same"); 
 
       tlat->DrawLatex(0.6,0.00002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i-1],(int)FF_Bound[i]));
     }
@@ -241,7 +241,7 @@ void makePlots()
   c3->cd(1);
   TLegend * leg3 = new TLegend(0.3,0.2,0.9,0.3);
   leg3->AddEntry(pPb5TeV_recoMC[1],"5TeV PYTHIA+HIJING Reco");
-  leg3->AddEntry(pp5TeV_interp_recoMC[1],"PYTHIA Reco Interpolation");
+  leg3->AddEntry(pPb5TeV_recoMC_interp[1][0],"PYTHIA Reco Interpolation");
   leg3->Draw();
 
   c3->SaveAs("plots/pPb_FF_recoMC_UE3.png");
@@ -284,11 +284,11 @@ void makePlots()
       pPb5TeV_genMC[i-1]->SetMaximum(10);
       pPb5TeV_genMC[i-1]->SetMinimum(0.00001);
 
-      pp5TeV_interp_genMC[i-1]->SetMarkerSize(0.8);
-      pp5TeV_interp_genMC[i-1]->SetLineWidth(1);
+      pPb5TeV_genMC_interp[i-1][0]->SetMarkerSize(0.8);
+      pPb5TeV_genMC_interp[i-1][0]->SetLineWidth(1);
 
       pPb5TeV_genMC[i-1]->Draw();
-      pp5TeV_interp_genMC[i-1]->Draw("same"); 
+      pPb5TeV_genMC_interp[i-1][0]->Draw("same"); 
 
       tlat->DrawLatex(0.6,0.00002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i-1],(int)FF_Bound[i]));
     }
@@ -319,7 +319,7 @@ void makePlots()
   c4->cd(1);
   TLegend * leg4 = new TLegend(0.3,0.2,0.9,0.3);
   leg4->AddEntry(pPb5TeV_genMC[1],"5TeV PYTHIA+HIJING Gen");
-  leg4->AddEntry(pp5TeV_interp_genMC[1],"PYTHIA Gen Interpolation");
+  leg4->AddEntry(pPb5TeV_genMC_interp[1][0],"PYTHIA Gen Interpolation");
   leg4->Draw();
 
   c4->SaveAs("plots/pPb_FF_genMC_UE3.png");
