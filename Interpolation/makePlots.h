@@ -16,7 +16,7 @@ void makePlots()
   c1->SetLeftMargin(0.2);
   c1->Divide(5,2,0,0);
   
-  TLine * l = new TLine(0.5,1, pPb5TeV_data[1]->GetBinLowEdge(34),1);
+  TLine * l = new TLine(0.5,1, pPb5TeV_data[1]->GetBinLowEdge(40),1);
   l->SetLineWidth(1);
   l->SetLineStyle(2);
   l->SetLineColor(1);
@@ -39,7 +39,7 @@ void makePlots()
         pPb5TeV_data[i-1]->GetYaxis()->SetLabelSize(0);      
       }
 
-      pPb5TeV_data[i-1]->GetXaxis()->SetRange(1,33);
+      pPb5TeV_data[i-1]->GetXaxis()->SetRange(1,39);
       pPb5TeV_data[i-1]->GetYaxis()->SetTitleSize(0.06);
       
 
@@ -67,7 +67,7 @@ void makePlots()
         pPb_FF[i-6]->GetYaxis()->SetLabelSize(0);
       }
 
-      pPb_FF[i-6]->GetXaxis()->SetRange(1,33);
+      pPb_FF[i-6]->GetXaxis()->SetRange(1,39);
       pPb_FF[i-6]->GetXaxis()->SetTitleSize(0.06);
       pPb_FF[i-6]->GetXaxis()->SetTitle("p_{T}^{track} (GeV/c)");
       if(i==6) pPb_FF[i-6]->GetYaxis()->SetTitle("D_{pPb}/D_{pp}^{interp}"); 
@@ -89,15 +89,15 @@ void makePlots()
   leg->AddEntry(pPb5TeV_data_interp[1][0],"pp 5TeV interpolation");
   leg->Draw();
 
-  c1->SaveAs("plots/pPb_FFs_UE3.png");
-  c1->SaveAs("plots/pPb_FFs_UE3.pdf");
+  c1->SaveAs("plots//pPb_FFs_UE3.png");
+  c1->SaveAs("plots//pPb_FFs_UE3.pdf");
 
 //Pbp  
   TCanvas * c2 = new TCanvas("c2","c2",1200,600);
   c2->SetLeftMargin(0.2);
   c2->Divide(5,2,0,0);
   
-  TLine * l2 = new TLine(0.5,1, Pbp5TeV_data[1]->GetBinLowEdge(34),1);
+  TLine * l2 = new TLine(0.5,1, Pbp5TeV_data[1]->GetBinLowEdge(40),1);
   l2->SetLineWidth(1);
   l2->SetLineStyle(2);
   l2->SetLineColor(1);
@@ -117,7 +117,7 @@ void makePlots()
         Pbp5TeV_data[i-1]->GetYaxis()->SetLabelSize(0);      
       }
 
-      Pbp5TeV_data[i-1]->GetXaxis()->SetRange(1,33);
+      Pbp5TeV_data[i-1]->GetXaxis()->SetRange(1,39);
       Pbp5TeV_data[i-1]->GetYaxis()->SetTitleSize(0.06);     
 
       Pbp5TeV_data[i-1]->SetMarkerSize(0.8);
@@ -144,7 +144,7 @@ void makePlots()
         Pbp_FF[i-6]->GetYaxis()->SetLabelSize(0);
       }
 
-      Pbp_FF[i-6]->GetXaxis()->SetRange(1,33);
+      Pbp_FF[i-6]->GetXaxis()->SetRange(1,39);
       Pbp_FF[i-6]->GetXaxis()->SetTitleSize(0.06);
       Pbp_FF[i-6]->GetXaxis()->SetTitle("p_{T}^{track} (GeV/c)");
       if(i==6) Pbp_FF[i-6]->GetYaxis()->SetTitle("D_{pPb}/D_{pp}^{interp_swap}"); 
@@ -166,8 +166,8 @@ void makePlots()
   leg2->AddEntry(Pbp5TeV_data_interp[1][0],"pp 5TeV interpolation");
   leg2->Draw();
 
-  c2->SaveAs("plots/Pbp_FFs_UE3.png");
-  c2->SaveAs("plots/Pbp_FFs_UE3.pdf");
+  c2->SaveAs("plots//Pbp_FFs_UE3.png");
+  c2->SaveAs("plots//Pbp_FFs_UE3.pdf");
 
 
   //MC reco  
@@ -175,7 +175,7 @@ void makePlots()
   c3->SetLeftMargin(0.2);
   c3->Divide(5,2,0,0);
   
-  TLine * l3 = new TLine(0.5,1, pPb5TeV_recoMC[1]->GetBinLowEdge(34),1);
+  TLine * l3 = new TLine(0.5,1, pPb5TeV_recoMC[1]->GetBinLowEdge(40),1);
   l3->SetLineWidth(1);
   l3->SetLineStyle(2);
   l3->SetLineColor(1);
@@ -195,7 +195,7 @@ void makePlots()
         pPb5TeV_recoMC[i-1]->GetYaxis()->SetLabelSize(0);      
       }
 
-      pPb5TeV_recoMC[i-1]->GetXaxis()->SetRange(1,33);
+      pPb5TeV_recoMC[i-1]->GetXaxis()->SetRange(1,39);
       pPb5TeV_recoMC[i-1]->GetYaxis()->SetTitleSize(0.06);     
 
       pPb5TeV_recoMC[i-1]->SetMarkerSize(0.8);
@@ -222,7 +222,7 @@ void makePlots()
         pPb_FF_recoMC[i-6]->GetYaxis()->SetLabelSize(0);
       }
 
-      pPb_FF_recoMC[i-6]->GetXaxis()->SetRange(1,33);
+      pPb_FF_recoMC[i-6]->GetXaxis()->SetRange(1,39);
       pPb_FF_recoMC[i-6]->GetXaxis()->SetTitleSize(0.06);
       pPb_FF_recoMC[i-6]->GetXaxis()->SetTitle("p_{T}^{track} (GeV/c)");
       if(i==6) pPb_FF_recoMC[i-6]->GetYaxis()->SetTitle("D_{pPb}/D_{pp}"); 
@@ -244,8 +244,8 @@ void makePlots()
   leg3->AddEntry(pPb5TeV_recoMC_interp[1][0],"PYTHIA Reco Interpolation");
   leg3->Draw();
 
-  c3->SaveAs("plots/pPb_FF_recoMC_UE3.png");
-  c3->SaveAs("plots/pPb_FF_recoMC_UE3.pdf");
+  c3->SaveAs("plots//pPb_FF_recoMC_UE3.png");
+  c3->SaveAs("plots//pPb_FF_recoMC_UE3.pdf");
 
    
   //MC gen 
@@ -253,7 +253,7 @@ void makePlots()
   c4->SetLeftMargin(0.2);
   c4->Divide(5,2,0,0);
   
-  TLine * l4 = new TLine(0.5,1, pPb5TeV_genMC[1]->GetBinLowEdge(34),1);
+  TLine * l4 = new TLine(0.5,1, pPb5TeV_genMC[1]->GetBinLowEdge(40),1);
   l4->SetLineWidth(1);
   l4->SetLineStyle(2);
   l4->SetLineColor(1);
@@ -273,7 +273,7 @@ void makePlots()
         pPb5TeV_genMC[i-1]->GetYaxis()->SetLabelSize(0);      
       }
 
-      pPb5TeV_genMC[i-1]->GetXaxis()->SetRange(1,33);
+      pPb5TeV_genMC[i-1]->GetXaxis()->SetRange(1,39);
       pPb5TeV_genMC[i-1]->GetYaxis()->SetTitleSize(0.06);     
 
       pPb5TeV_genMC[i-1]->SetMarkerSize(0.8);
@@ -300,7 +300,7 @@ void makePlots()
         pPb_FF_genMC[i-6]->GetYaxis()->SetLabelSize(0);
       }
 
-      pPb_FF_genMC[i-6]->GetXaxis()->SetRange(1,33);
+      pPb_FF_genMC[i-6]->GetXaxis()->SetRange(1,39);
       pPb_FF_genMC[i-6]->GetXaxis()->SetTitleSize(0.06);
       pPb_FF_genMC[i-6]->GetXaxis()->SetTitle("p_{T}^{track} (GeV/c)");
       if(i==6) pPb_FF_genMC[i-6]->GetYaxis()->SetTitle("D_{pPb}/D_{pp}"); 
@@ -322,7 +322,85 @@ void makePlots()
   leg4->AddEntry(pPb5TeV_genMC_interp[1][0],"PYTHIA Gen Interpolation");
   leg4->Draw();
 
-  c4->SaveAs("plots/pPb_FF_genMC_UE3.png");
-  c4->SaveAs("plots/pPb_FF_genMC_UE3.pdf"); 
+  c4->SaveAs("plots//pPb_FF_genMC_UE3.png");
+  c4->SaveAs("plots//pPb_FF_genMC_UE3.pdf"); 
+
+//combined total plot
+
+  TCanvas * c5 = new TCanvas("c5","c5",1200,600);
+  c5->SetLeftMargin(0.2);
+  c5->Divide(5,2,0,0);
+  
+  TLine * l5 = new TLine(0.5,1, pPb5Pbp5TeV_fulldata[1]->GetBinLowEdge(40),1);
+  l5->SetLineWidth(1);
+  l5->SetLineStyle(2);
+  l5->SetLineColor(1);
+
+  for(int i=1; i<11; i++)
+  {
+    c5->cd(i);
+    c5->cd(i)->SetLogx();
+
+    if(i<6)
+    {
+      c5->cd(i)->SetLogy();
+
+      if(i!=1)
+      {
+        pPb5Pbp5TeV_fulldata[i-1]->GetYaxis()->SetTitle("");
+        pPb5Pbp5TeV_fulldata[i-1]->GetYaxis()->SetLabelSize(0);      
+      }
+
+      pPb5Pbp5TeV_fulldata[i-1]->GetXaxis()->SetRange(1,39);
+      pPb5Pbp5TeV_fulldata[i-1]->GetYaxis()->SetTitleSize(0.06);     
+
+      pPb5Pbp5TeV_fulldata[i-1]->SetMarkerSize(0.8);
+      pPb5Pbp5TeV_fulldata[i-1]->SetLineWidth(1);
+      pPb5Pbp5TeV_fulldata[i-1]->SetMarkerStyle(21);
+      pPb5Pbp5TeV_fulldata[i-1]->SetMarkerColor(kRed+1);
+      pPb5Pbp5TeV_fulldata[i-1]->SetLineColor(kRed+1);
+      pPb5Pbp5TeV_fulldata[i-1]->SetMaximum(10);
+      pPb5Pbp5TeV_fulldata[i-1]->SetMinimum(0.00001);
+
+      pPb5Pb5TeV_data_interp[i-1][0]->SetMarkerSize(0.8);
+      pPb5Pb5TeV_data_interp[i-1][0]->SetLineWidth(1);
+
+      pPb5Pbp5TeV_fulldata[i-1]->Draw();
+      pPb5Pb5TeV_data_interp[i-1][0]->Draw("same"); 
+
+      tlat->DrawLatex(0.6,0.00002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i-1],(int)FF_Bound[i]));
+    }
+    else
+    {
+      if(i!=6)
+      {
+        pPbPbp_FF[i-6]->GetYaxis()->SetTitle("");
+        pPbPbp_FF[i-6]->GetYaxis()->SetLabelSize(0);
+      }
+
+      pPbPbp_FF[i-6]->GetXaxis()->SetRange(1,39);
+      pPbPbp_FF[i-6]->GetXaxis()->SetTitleSize(0.06);
+      pPbPbp_FF[i-6]->GetXaxis()->SetTitle("p_{T}^{track} (GeV/c)");
+      if(i==6) pPbPbp_FF[i-6]->GetYaxis()->SetTitle("D_{pPb}/D_{pp}^{interp}"); 
+      pPbPbp_FF[i-6]->GetXaxis()->SetTitleOffset(1.2);
+      pPbPbp_FF[i-6]->GetYaxis()->SetTitleSize(0.06);
+
+      pPbPbp_FF[i-6]->SetMaximum(2);
+      pPbPbp_FF[i-6]->SetMinimum(0);
+      pPbPbp_FF[i-6]->SetMarkerSize(1);
+      pPbPbp_FF[i-6]->SetLineWidth(1);
+
+      pPbPbp_FF[i-6]->Draw();
+      l5->Draw("same");
+    }
+  }
+  c5->cd(1);
+  TLegend * leg5 = new TLegend(0.3,0.2,0.9,0.3);
+  leg5->AddEntry(pPb5Pbp5TeV_fulldata[1],"pPb+Pbp 5.02TeV data");
+  leg5->AddEntry(pPb5Pb5TeV_data_interp[1][0],"pp 5.02TeV interpolation");
+  leg5->Draw();
+
+  c5->SaveAs("plots//pPbPbp_FFs_UE3.png");
+  c5->SaveAs("plots//pPbPbp_FFs_UE3.pdf");
 }
  
