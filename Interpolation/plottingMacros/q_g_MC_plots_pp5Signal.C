@@ -43,10 +43,10 @@ void q_g_MC_plots()
     for(int i = 0; i<5; i++)
     {
       pp2Q[i] = (TH1D*)inf->Get(Form("pp2TeV_%s_Q_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
-      pPb5Q[i] = (TH1D*)inf->Get(Form("pPb5TeV_%s_Q_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
+      pPb5Q[i] = (TH1D*)inf->Get(Form("pp5TeV_%s_Q_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
       pp7Q[i] = (TH1D*)inf->Get(Form("pp7TeV_%s_Q_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
       pp2G[i] = (TH1D*)inf->Get(Form("pp2TeV_%s_G_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
-      pPb5G[i] = (TH1D*)inf->Get(Form("pPb5TeV_%s_G_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
+      pPb5G[i] = (TH1D*)inf->Get(Form("pp5TeV_%s_G_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
       pp7G[i] = (TH1D*)inf->Get(Form("pp7TeV_%s_G_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
       setColors(pp2Q[i],0,0);
       setColors(pPb5Q[i],1,0);
@@ -78,7 +78,7 @@ void q_g_MC_plots()
     {
       leg1 = new TLegend(0.03,0.2,.97,0.5);
       leg1->AddEntry(pp2Q[0],"2.76 TeV PYTHIA Gen","p");
-      leg1->AddEntry(pPb5Q[0],"5.02 TeV PYTHIA+HIJING Gen","p");
+      leg1->AddEntry(pPb5Q[0],"5.02 TeV PYTHIA Gen","p");
       leg1->AddEntry(pp7Q[0],"7 TeV PYTHIA Gen","p");
       leg1->SetTextSize(0.05);
     }
@@ -86,7 +86,7 @@ void q_g_MC_plots()
     {
       leg2 = new TLegend(0.03,0.2,0.97,0.5);
       leg2->AddEntry(pp2Q[0],"2.76 TeV PYTHIA Reco","p");
-      leg2->AddEntry(pPb5Q[0],"5.02 TeV PYTHIA+HIJING Reco","p");
+      leg2->AddEntry(pPb5Q[0],"5.02 TeV PYTHIA Reco","p");
       leg2->AddEntry(pp7Q[0],"7 TeV PYTHIA Reco","p");
       leg2->SetTextSize(0.05);
     } 
@@ -112,8 +112,8 @@ void q_g_MC_plots()
       pp7G[i-1]->Draw("same");
       tlat->DrawLatex(1,0.0000002,"Gluons");
     }
-    c1->SaveAs(Form("../plots/MC_Q_G_FFs_%s.png",names[m]));
-    c1->SaveAs(Form("../plots/MC_Q_G_FFs_%s.pdf",names[m]));
+    c1->SaveAs(Form("../plots/MC_Q_G_FFs_SIGNALONLY%s.png",names[m]));
+    c1->SaveAs(Form("../plots/MC_Q_G_FFs_SIGNALONLY%s.pdf",names[m]));
     //c1->Clear(); 
   }
 
@@ -167,7 +167,7 @@ void q_g_MC_plots()
       leg3->AddEntry(pp2Q[0],"2.76 TeV PYTHIA Gen","p");
       leg3->AddEntry(pp7Q[0],"7 TeV PYTHIA Gen","p");
       leg3->AddEntry((TObject*)0,"Divided by 5.02 TeV","");
-      leg3->AddEntry((TObject*)0,"PYTHIA+HIJING Gen","");
+      leg3->AddEntry((TObject*)0,"PYTHIA Gen","");
       leg3->SetTextSize(0.05);
     }
     if(m==1)
@@ -176,7 +176,7 @@ void q_g_MC_plots()
       leg4->AddEntry(pp2Q[0],"2.76 TeV PYTHIA Reco","p");
       leg4->AddEntry(pp7Q[0],"7 TeV PYTHIA Reco","p");
       leg4->AddEntry((TObject*)0,"Divided by 5.02 TeV","");
-      leg4->AddEntry((TObject*)0,"PYTHIA+HIJING Reco","");
+      leg4->AddEntry((TObject*)0,"PYTHIA Reco","");
       leg4->SetTextSize(0.05);
     } 
 
@@ -203,8 +203,8 @@ void q_g_MC_plots()
       pp7G[i-1]->Draw("same");
       tlat->DrawLatex(1,0.4,"Gluons");
     }
-    c2->SaveAs(Form("../plots/MC_Q_G_FFs_Ratio_%s.png",names[m]));
-    c2->SaveAs(Form("../plots/MC_Q_G_FFs_Ratio_%s.pdf",names[m]));
+    c2->SaveAs(Form("../plots/MC_Q_G_FFs_Ratio_SIGNALONLY%s.png",names[m]));
+    c2->SaveAs(Form("../plots/MC_Q_G_FFs_Ratio_SIGNALONLY%s.pdf",names[m]));
     //c2->Clear(); 
   }
   return;
