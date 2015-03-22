@@ -39,7 +39,7 @@ double getCorrectedJetPt(const char * mode, bool isMC, double jetpt, double jete
   correction = correction*residualJEC_pt->Eval(jetpt);  
   if(isMC)
   {
-    correction = correction*(1+residualJEC_MCsmear->Eval(jetpt)*gaus->GetRandom());
+    correction = 1+residualJEC_MCsmear->Eval(jetpt)*gaus->GetRandom();
   }
   return correction*jetpt;
 }
