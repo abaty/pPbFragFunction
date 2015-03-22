@@ -236,18 +236,15 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           if(std::isfinite(trkCorr))
           {
             h_trackUE->Fill(jtpt[j],trkPt[t],trkCorr*weight); 
-            //need to fix xi UE calculation when you have time
             h_trackUE_xi->Fill(jtpt[j],getXi(jtpt[j],-1*(jteta[j]+boost),jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
             if(isG)
             {
               h_trackUE_G->Fill(jtpt[j],trkPt[t],trkCorr*weight);
-            //need to fix xi UE calculation when you have time
               h_trackUE_xi_G->Fill(jtpt[j],getXi(jtpt[j],-1*(jteta[j]+boost),jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
             }
             if(isQ)
             {
               h_trackUE_Q->Fill(jtpt[j],trkPt[t],trkCorr*weight);
-            //need to fix xi UE calculation when you have time
               h_trackUE_xi_Q->Fill(jtpt[j],getXi(jtpt[j],-1*(jteta[j]+boost),jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
             } 
           }
@@ -320,7 +317,6 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             if(typeUE==1 && getdR2(-1*(jteta[j]+boost),jtphi[j],pEta[t]+boost,pPhi[t]) < 0.3*0.3)
             {
               h_trackUE_rJgT->Fill(jtpt[j],pPt[t],weight); 
-              //need to fix xi UE calculation when you have time
               h_trackUE_xi_rJgT->Fill(jtpt[j],getXi(jtpt[j],-1*(jteta[j]+boost),jtphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
             }
           }
@@ -413,19 +409,16 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           if(typeUE==1 && getdR2(-1*(geneta[j]+boost),genphi[j],pEta[t]+boost,pPhi[t]) < 0.3*0.3)
           {
             h_trackUE_gen->Fill(genpt[j],pPt[t],weight); 
-            //need to fix xi UE calculation when you have time
             h_trackUE_xi_gen->Fill(genpt[j],getXi(genpt[j],-1*(geneta[j]+boost),genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
 
             if(isQ)
             {
               h_trackUE_gen_Q->Fill(genpt[j],pPt[t],weight);
-            //need to fix xi UE calculation when you have time
               h_trackUE_xi_gen_Q->Fill(genpt[j],getXi(genpt[j],-1*(geneta[j]+boost),genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
             }
             if(isG)
             {
               h_trackUE_gen_G->Fill(genpt[j],pPt[t],weight);
-            //need to fix xi UE calculation when you have time
               h_trackUE_xi_gen_G->Fill(genpt[j],getXi(genpt[j],-1*(geneta[j]+boost),genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
             }
           }
@@ -506,7 +499,6 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             if(std::isfinite(trkCorr))
             {
               h_trackUE_gJrT->Fill(genpt[j],trkPt[t],trkCorr*weight); 
-              //need to fix xi UE calculation when you have time
               h_trackUE_xi_gJrT->Fill(genpt[j],getXi(genpt[j],-1*(geneta[j]+boost),genphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight); 
             }
           }
