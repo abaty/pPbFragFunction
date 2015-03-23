@@ -18,7 +18,7 @@
 
 //forward declarations
 TH1D* getFF_pp(double jetPt_low, double jetPt_high, const char* histTitle, int mode = 0);
-TH1D** getInterpolation(double jetPt_low, double jetPt_high, const char* histTitle, int ReweightMode, TH1D * hist2, TH1D * hist7);
+TH1D** getInterpolation(double jetPt_low, double jetPt_high, const char* histTitle, int ReweightMode, TH1D * hist2, TH1D * hist7, int doGenGluFrac=0);
 void getSpectra(int mode);
 
 TH1D * jet;
@@ -45,21 +45,35 @@ void makeFF()
     pp2TeV_data[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),0);
     pp7TeV_data[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),1);
     pPb5TeV_data[i]= getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),2);
+
     //Pbpdirection
-    pp2TeV_reverse_data[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_reverese_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),31);
+    pp2TeV_reverse_data[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_reverse_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),31);
     pp7TeV_reverse_data[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_reverse_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),32);
     Pbp5TeV_data[i]= getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("Pbp5TeV_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),3);
     
-    //MC
+    //Reco MC
     pp2TeV_recoMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),4);
     pp7TeV_recoMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),5);
     pPb5TeV_recoMC[i]= getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),6);
+    pp5TeV_recoMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),11);
+    
+    //Gen MC
     pp2TeV_genMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),7);
     pp7TeV_genMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),8);
     pPb5TeV_genMC[i]= getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),9);    
     pp5TeV_genMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),10); 
-    pp5TeV_recoMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),11);
-    //reco MC Q/G sutdy
+
+    //Reco Gen Combinations
+    pp2TeV_rJgTMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_rJgTMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),33);
+    pp7TeV_rJgTMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_rJgTMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),34);
+    pPb5TeV_rJgTMC[i]= getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_rJgTMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),35);
+    pp5TeV_rJgTMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_rJgTMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),36);
+    pp2TeV_gJrTMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_gJrTMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),37);
+    pp7TeV_gJrTMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_gJrTMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),38);
+    pPb5TeV_gJrTMC[i]= getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_gJrTMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),39);
+    pp5TeV_gJrTMC[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_gJrTMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),40); 
+
+    //reco MC Q/G study
     pp2TeV_recoMC_Q[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_recoMC_Q_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),12);
     pp2TeV_recoMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_recoMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),13);
     pp7TeV_recoMC_Q[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_recoMC_Q_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),14);
@@ -68,6 +82,7 @@ void makeFF()
     pPb5TeV_recoMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_recoMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),17);
     pp5TeV_recoMC_Q[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_recoMC_Q_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),18);
     pp5TeV_recoMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_recoMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),19);
+
     //gen MC Q/G study
     pp2TeV_genMC_Q[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_genMC_Q_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),20);
     pp2TeV_genMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_genMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),21);
@@ -77,16 +92,20 @@ void makeFF()
     pPb5TeV_genMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5TeV_genMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),25);
     pp5TeV_genMC_Q[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_genMC_Q_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),26);
     pp5TeV_genMC_G[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp5TeV_genMC_G_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),27);
+
     //full data set
     pPb5Pbp5TeV_fulldata[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pPb5Pbp5TeV_fulldata_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),28);
     pp2TeV_fulldata[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_fulldata_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),29);
     pp7TeV_fulldata[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_fulldata_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),30);
+
     //interpolations
-    pPb5TeV_data_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_data_interp",2,pp2TeV_data[i],pp7TeV_data[i]);
-    Pbp5TeV_data_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"Pbp5TeV_data_interp",3,pp2TeV_reverse_data[i],pp7TeV_reverse_data[i]);
-    pPb5Pb5TeV_data_interp[i] = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5Pbp5TeV_data_interp",28,pp2TeV_fulldata[i],pp7TeV_fulldata[i]);
-    pPb5TeV_recoMC_interp[i]  = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_recoMC_interp",6,pp2TeV_recoMC[i],pp7TeV_recoMC[i]);
-    pPb5TeV_genMC_interp[i]   = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_genMC_interp",9,pp2TeV_genMC[i],pp7TeV_genMC[i]);
+    pPb5TeV_data_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_data_interp",2,pp2TeV_data[i],pp7TeV_data[i],0);
+    Pbp5TeV_data_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"Pbp5TeV_data_interp",3,pp2TeV_reverse_data[i],pp7TeV_reverse_data[i],0);
+    pPb5Pb5TeV_data_interp[i] = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5Pbp5TeV_data_interp",28,pp2TeV_fulldata[i],pp7TeV_fulldata[i],0);
+    pPb5TeV_recoMC_interp[i]  = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_recoMC_interp",6,pp2TeV_recoMC[i],pp7TeV_recoMC[i],0);
+    pPb5TeV_genMC_interp[i]   = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_genMC_interp",9,pp2TeV_genMC[i],pp7TeV_genMC[i],1);
+    pPb5TeV_rJgTMC_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_rJgTMC_interp",35,pp2TeV_rJgTMC[i],pp7TeV_rJgTMC[i],0);
+    pPb5TeV_gJrTMC_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_gJrTMC_interp",39,pp2TeV_gJrTMC[i],pp7TeV_gJrTMC[i],1);
   }
  
   for(int i = 0; i < FF_Bins; i++)
@@ -101,6 +120,10 @@ void makeFF()
     pPb_FF_genMC[i]->Divide(pPb5TeV_genMC_interp[i][0]);
     pPbPbp_FF[i] = (TH1D*) pPb5Pbp5TeV_fulldata[i]->Clone(Form("pPbPbp_FF_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
     pPbPbp_FF[i]->Divide(pPb5Pb5TeV_data_interp[i][0]); 
+    pPb_FF_rJgTMC[i] = (TH1D*) pPb5TeV_rJgTMC[i]->Clone(Form("pPb_FF_rJgTMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+    pPb_FF_rJgTMC[i]->Divide(pPb5TeV_rJgTMC_interp[i][0]);
+    pPb_FF_gJrTMC[i] = (TH1D*) pPb5TeV_gJrTMC[i]->Clone(Form("pPb_FF_gJrTMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+    pPb_FF_gJrTMC[i]->Divide(pPb5TeV_gJrTMC_interp[i][0]);
   }
  
   TFile * outfile = new TFile("FragmentationFunctionsUE3.root","recreate");
@@ -119,7 +142,17 @@ void makeFF()
     pp2TeV_recoMC[i]->Write();
     pp7TeV_recoMC[i]->Write();
     pPb5TeV_recoMC[i]->Write();
-    pp5TeV_recoMC[i]->Write(); 
+    pp5TeV_recoMC[i]->Write();
+
+    pp2TeV_rJgTMC[i]->Write();
+    pp7TeV_rJgTMC[i]->Write();
+    pPb5TeV_rJgTMC[i]->Write();
+    pp5TeV_rJgTMC[i]->Write();
+    pp2TeV_gJrTMC[i]->Write();
+    pp7TeV_gJrTMC[i]->Write();
+    pPb5TeV_gJrTMC[i]->Write();
+    pp5TeV_gJrTMC[i]->Write();
+ 
     pp2TeV_recoMC_Q[i]->Write();
     pp2TeV_recoMC_G[i]->Write();
     pp7TeV_recoMC_Q[i]->Write();
@@ -149,6 +182,8 @@ void makeFF()
       pPb5Pb5TeV_data_interp[i][indx]->Write();
       pPb5TeV_recoMC_interp[i][indx]->Write();
       pPb5TeV_genMC_interp[i][indx]->Write();
+      pPb5TeV_rJgTMC_interp[i][indx]->Write();
+      pPb5TeV_gJrTMC_interp[i][indx]->Write();
     } 
 
     pPb_FF[i]->Write();
@@ -156,6 +191,8 @@ void makeFF()
     pPbPbp_FF[i]->Write(); 
     pPb_FF_recoMC[i]->Write();
     pPb_FF_genMC[i]->Write();
+    pPb_FF_rJgTMC[i]->Write();
+    pPb_FF_gJrTMC[i]->Write();
   }
   //handing it over to a plotting macro
   makePlots();  
@@ -198,7 +235,7 @@ TH1D* getFF_pp(double jetPt_low, double jetPt_high, const char* histTitle, int m
   return FF;
 }
 
-TH1D** getInterpolation(double jetPt_low, double jetPt_high, const char* histTitle, int ReweightMode, TH1D * hist2, TH1D * hist7)
+TH1D** getInterpolation(double jetPt_low, double jetPt_high, const char* histTitle, int ReweightMode, TH1D * hist2, TH1D * hist7, int doGenGluFrac)
 {
   TH1D * tmp_interp = new TH1D(Form("%s_%d_%d",histTitle,(int)jetPt_low,(int)jetPt_high),";p_{T trk};#frac{1}{N_{jet}} #frac{dN_{trk}}{dp_{t trk}}",trkBins,yAxis);
   TH1D * tmp_Q_interp = new TH1D(Form("%s_Q_%d_%d",histTitle,(int)jetPt_low,(int)jetPt_high),";p_{T trk};#frac{1}{N_{jet}} #frac{dN_{trk}}{dp_{t trk}}",trkBins,yAxis);
@@ -223,13 +260,25 @@ TH1D** getInterpolation(double jetPt_low, double jetPt_high, const char* histTit
       double nJet = jet->GetBinContent(j);
       double nJetErr = jet->GetBinError(j); 
 
-      glu2 += gluon_2tev_reco->GetBinContent(j)*nJet;
-      glu5 += gluon_5tev_reco->GetBinContent(j)*nJet;
-      glu7 += gluon_7tev_reco->GetBinContent(j)*nJet;
+      if(doGenGluFrac==0)
+      {
+        glu2 += gluon_2tev_reco->GetBinContent(j)*nJet;
+        glu5 += gluon_5tev_reco->GetBinContent(j)*nJet;
+        glu7 += gluon_7tev_reco->GetBinContent(j)*nJet;
+        glu2Err += TMath::Power(gluon_2tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_2tev_reco->GetBinContent(j)*nJetErr,2);
+        glu5Err += TMath::Power(gluon_5tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_5tev_reco->GetBinContent(j)*nJetErr,2);
+        glu7Err += TMath::Power(gluon_7tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_7tev_reco->GetBinContent(j)*nJetErr,2);
+      }
+      else
+      {
+        glu2 += gluon_2tev_gen->GetBinContent(j)*nJet;
+        glu5 += gluon_5tev_gen->GetBinContent(j)*nJet;
+        glu7 += gluon_7tev_gen->GetBinContent(j)*nJet;
+        glu2Err += TMath::Power(gluon_2tev_gen->GetBinError(j)*nJet,2)+ TMath::Power(gluon_2tev_gen->GetBinContent(j)*nJetErr,2);
+        glu5Err += TMath::Power(gluon_5tev_gen->GetBinError(j)*nJet,2)+ TMath::Power(gluon_5tev_gen->GetBinContent(j)*nJetErr,2);
+        glu7Err += TMath::Power(gluon_7tev_gen->GetBinError(j)*nJet,2)+ TMath::Power(gluon_7tev_gen->GetBinContent(j)*nJetErr,2);
+      }
       totalJets += nJet;
-      glu2Err += TMath::Power(gluon_2tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_2tev_reco->GetBinContent(j)*nJetErr,2);
-      glu5Err += TMath::Power(gluon_5tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_5tev_reco->GetBinContent(j)*nJetErr,2);
-      glu7Err += TMath::Power(gluon_7tev_reco->GetBinError(j)*nJet,2)+ TMath::Power(gluon_7tev_reco->GetBinContent(j)*nJetErr,2);
     }
     glu2Err = TMath::Power(glu2Err,0.5);
     glu5Err = TMath::Power(glu5Err,0.5);
@@ -505,7 +554,62 @@ void getSpectra(int mode)
     trk     = pp7_0_track;
     trkUE   = pp7_0_trackUE;
   }
-
+  if(mode == 33)
+  {
+    jet     = pp2_1_jet_reco;
+    jet_pPb = pPb5_1_jet_reco;
+    trk     = pp2_1_track_rJgT;
+    trkUE   = pp2_1_trackUE_rJgT;
+  } 
+  if(mode == 34)
+  {
+    jet     = pp7_1_jet_reco;
+    jet_pPb = pPb5_1_jet_reco;
+    trk     = pp7_1_track_rJgT;
+    trkUE   = pp7_1_trackUE_rJgT;
+  } 
+  if(mode == 35)
+  {
+    jet     = pPb5_1_jet_reco;
+    jet_pPb = pPb5_1_jet_reco;
+    trk     = pPb5_1_track_rJgT;
+    trkUE   = pPb5_1_trackUE_rJgT;
+  } 
+  if(mode == 36)
+  {
+    jet     = pp5_1_jet_reco;
+    jet_pPb = pp5_1_jet_reco;
+    trk     = pp5_1_track_rJgT;
+    trkUE   = pp5_1_trackUE_rJgT;
+  }
+  if(mode == 37)
+  {
+    jet     = pp2_1_jet_gen;
+    jet_pPb = pPb5_1_jet_gen;
+    trk     = pp2_1_track_gJrT;
+    trkUE   = pp2_1_trackUE_gJrT;
+  } 
+  if(mode == 38)
+  {
+    jet     = pp7_1_jet_gen;
+    jet_pPb = pPb5_1_jet_gen;
+    trk     = pp7_1_track_gJrT;
+    trkUE   = pp7_1_trackUE_gJrT;
+  } 
+  if(mode == 39)
+  {
+    jet     = pPb5_1_jet_gen;
+    jet_pPb = pPb5_1_jet_gen;
+    trk     = pPb5_1_track_gJrT;
+    trkUE   = pPb5_1_trackUE_gJrT;
+  } 
+  if(mode == 40)
+  {
+    jet     = pp5_1_jet_gen;
+    jet_pPb = pp5_1_jet_gen;
+    trk     = pp5_1_track_gJrT;
+    trkUE   = pp5_1_trackUE_gJrT;
+  }
   return;
 }
 

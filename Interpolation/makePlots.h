@@ -42,8 +42,6 @@ void makePlots()
       pPb5TeV_data[i-1]->GetXaxis()->SetRange(1,39);
       pPb5TeV_data[i-1]->GetYaxis()->SetTitleSize(0.06);
       
-
-      pPb5TeV_data[i-1]->SetMarkerSize(0.8);
       pPb5TeV_data[i-1]->SetLineWidth(1);
       pPb5TeV_data[i-1]->SetMarkerStyle(21);
       pPb5TeV_data[i-1]->SetMarkerColor(kRed+1);
@@ -402,5 +400,161 @@ void makePlots()
 
   c5->SaveAs("plots//pPbPbp_FFs_UE3.png");
   c5->SaveAs("plots//pPbPbp_FFs_UE3.pdf");
+
+  //MC reco jet gen track
+  TCanvas * c6 = new TCanvas("c6","c6",1200,600);
+  c6->SetLeftMargin(0.2);
+  c6->Divide(5,2,0,0);
+  
+  TLine * l6 = new TLine(0.5,1, pPb5TeV_rJgTMC[1]->GetBinLowEdge(40),1);
+  l6->SetLineWidth(1);
+  l6->SetLineStyle(2);
+  l6->SetLineColor(1);
+
+  for(int i=1; i<11; i++)
+  {
+    c6->cd(i);
+    c6->cd(i)->SetLogx();
+
+    if(i<6)
+    {
+      c6->cd(i)->SetLogy();
+
+      if(i!=1)
+      {
+        pPb5TeV_rJgTMC[i-1]->GetYaxis()->SetTitle("");
+        pPb5TeV_rJgTMC[i-1]->GetYaxis()->SetLabelSize(0);      
+      }
+
+      pPb5TeV_rJgTMC[i-1]->GetXaxis()->SetRange(1,39);
+      pPb5TeV_rJgTMC[i-1]->GetYaxis()->SetTitleSize(0.06);     
+
+      pPb5TeV_rJgTMC[i-1]->SetMarkerSize(0.8);
+      pPb5TeV_rJgTMC[i-1]->SetLineWidth(1);
+      pPb5TeV_rJgTMC[i-1]->SetMarkerStyle(21);
+      pPb5TeV_rJgTMC[i-1]->SetMarkerColor(kRed+1);
+      pPb5TeV_rJgTMC[i-1]->SetLineColor(kRed+1);
+      pPb5TeV_rJgTMC[i-1]->SetMaximum(10);
+      pPb5TeV_rJgTMC[i-1]->SetMinimum(0.00001);
+
+      pPb5TeV_rJgTMC_interp[i-1][0]->SetMarkerSize(0.8);
+      pPb5TeV_rJgTMC_interp[i-1][0]->SetLineWidth(1);
+
+      pPb5TeV_rJgTMC[i-1]->Draw();
+      pPb5TeV_rJgTMC_interp[i-1][0]->Draw("same"); 
+
+      tlat->DrawLatex(0.6,0.00002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i-1],(int)FF_Bound[i]));
+    }
+    else
+    {
+      if(i!=6)
+      {
+        pPb_FF_rJgTMC[i-6]->GetYaxis()->SetTitle("");
+        pPb_FF_rJgTMC[i-6]->GetYaxis()->SetLabelSize(0);
+      }
+
+      pPb_FF_rJgTMC[i-6]->GetXaxis()->SetRange(1,39);
+      pPb_FF_rJgTMC[i-6]->GetXaxis()->SetTitleSize(0.06);
+      pPb_FF_rJgTMC[i-6]->GetXaxis()->SetTitle("p_{T}^{track} (GeV/c)");
+      if(i==6) pPb_FF_rJgTMC[i-6]->GetYaxis()->SetTitle("D_{pPb}/D_{pp}"); 
+      pPb_FF_rJgTMC[i-6]->GetXaxis()->SetTitleOffset(1.2);
+      pPb_FF_rJgTMC[i-6]->GetYaxis()->SetTitleSize(0.06);
+
+      pPb_FF_rJgTMC[i-6]->SetMaximum(2);
+      pPb_FF_rJgTMC[i-6]->SetMinimum(0);
+      pPb_FF_rJgTMC[i-6]->SetMarkerSize(1);
+      pPb_FF_rJgTMC[i-6]->SetLineWidth(1);
+
+      pPb_FF_rJgTMC[i-6]->Draw();
+      l6->Draw("same");
+    }
+  }
+  c6->cd(1);
+  TLegend * leg6 = new TLegend(0.3,0.2,0.9,0.3);
+  leg6->AddEntry(pPb5TeV_rJgTMC[1],"5 TeV PYTHIA+HIJING");
+  leg6->AddEntry(pPb5TeV_rJgTMC_interp[1][0],"PYTHIA Interpolation");
+  leg6->AddEntry((TObject*)0,"Reco Jets, Gen Tracks","");
+  leg6->Draw();
+
+  c6->SaveAs("plots//pPb_FF_rJgTMC_UE3.png");
+  c6->SaveAs("plots//pPb_FF_rJgTMC_UE3.pdf");
+
+
+  //MC gen jet reco track
+  TCanvas * c7 = new TCanvas("c7","c7",1200,600);
+  c7->SetLeftMargin(0.2);
+  c7->Divide(5,2,0,0);
+  
+  TLine * l7 = new TLine(0.5,1, pPb5TeV_gJrTMC[1]->GetBinLowEdge(40),1);
+  l7->SetLineWidth(1);
+  l7->SetLineStyle(2);
+  l7->SetLineColor(1);
+
+  for(int i=1; i<11; i++)
+  {
+    c7->cd(i);
+    c7->cd(i)->SetLogx();
+
+    if(i<6)
+    {
+      c7->cd(i)->SetLogy();
+
+      if(i!=1)
+      {
+        pPb5TeV_gJrTMC[i-1]->GetYaxis()->SetTitle("");
+        pPb5TeV_gJrTMC[i-1]->GetYaxis()->SetLabelSize(0);      
+      }
+
+      pPb5TeV_gJrTMC[i-1]->GetXaxis()->SetRange(1,39);
+      pPb5TeV_gJrTMC[i-1]->GetYaxis()->SetTitleSize(0.06);     
+
+      pPb5TeV_gJrTMC[i-1]->SetMarkerSize(0.8);
+      pPb5TeV_gJrTMC[i-1]->SetLineWidth(1);
+      pPb5TeV_gJrTMC[i-1]->SetMarkerStyle(21);
+      pPb5TeV_gJrTMC[i-1]->SetMarkerColor(kRed+1);
+      pPb5TeV_gJrTMC[i-1]->SetLineColor(kRed+1);
+      pPb5TeV_gJrTMC[i-1]->SetMaximum(10);
+      pPb5TeV_gJrTMC[i-1]->SetMinimum(0.00001);
+
+      pPb5TeV_gJrTMC_interp[i-1][0]->SetMarkerSize(0.8);
+      pPb5TeV_gJrTMC_interp[i-1][0]->SetLineWidth(1);
+
+      pPb5TeV_gJrTMC[i-1]->Draw();
+      pPb5TeV_gJrTMC_interp[i-1][0]->Draw("same"); 
+
+      tlat->DrawLatex(0.6,0.00002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i-1],(int)FF_Bound[i]));
+    }
+    else
+    {
+      if(i!=6)
+      {
+        pPb_FF_gJrTMC[i-6]->GetYaxis()->SetTitle("");
+        pPb_FF_gJrTMC[i-6]->GetYaxis()->SetLabelSize(0);
+      }
+
+      pPb_FF_gJrTMC[i-6]->GetXaxis()->SetRange(1,39);
+      pPb_FF_gJrTMC[i-6]->GetXaxis()->SetTitleSize(0.06);
+      pPb_FF_gJrTMC[i-6]->GetXaxis()->SetTitle("p_{T}^{track} (GeV/c)");
+      if(i==6) pPb_FF_gJrTMC[i-6]->GetYaxis()->SetTitle("D_{pPb}/D_{pp}"); 
+      pPb_FF_gJrTMC[i-6]->GetXaxis()->SetTitleOffset(1.2);
+      pPb_FF_gJrTMC[i-6]->GetYaxis()->SetTitleSize(0.06);
+
+      pPb_FF_gJrTMC[i-6]->SetMaximum(2);
+      pPb_FF_gJrTMC[i-6]->SetMinimum(0);
+      pPb_FF_gJrTMC[i-6]->SetMarkerSize(1);
+      pPb_FF_gJrTMC[i-6]->SetLineWidth(1);
+
+      pPb_FF_gJrTMC[i-6]->Draw();
+      l7->Draw("same");
+    }
+  }
+  c7->cd(1);
+  TLegend * leg7 = new TLegend(0.3,0.2,0.9,0.3);
+  leg7->AddEntry(pPb5TeV_gJrTMC[1],"5 TeV PYTHIA+HIJING");
+  leg7->AddEntry(pPb5TeV_gJrTMC_interp[1][0],"PYTHIA Interpolation");
+  leg7->AddEntry((TObject*)0,"Gen Jets, Reco Tracks","");
+  leg7->Draw();
+
+  c7->SaveAs("plots//pPb_FF_gJrTMC_UE3.png");
+  c7->SaveAs("plots//pPb_FF_gJrTMC_UE3.pdf");
 }
- 
