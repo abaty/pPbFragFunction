@@ -128,7 +128,7 @@ void interpEvaluation()
       setColors(ratio2,2,0);
       if(i==0)
       {
-        ratio1->GetYaxis()->SetTitle("FF_{pPb}/FF_{pp}");
+        ratio1->GetYaxis()->SetTitle("FF_{interpolation}/FF_{pp}");
       }
       ratio1->Draw();
       ratio2->Draw("same");

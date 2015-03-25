@@ -10,6 +10,7 @@
 #include "factorizedPtCorr.h"
 #include "SpectraFiles.h"
 #include "residualJEC.h"
+#include "jetSmearing.h"
 
 const double pPbRapidity = 0.4654094531;
 const int nJetBins = 120;
@@ -158,6 +159,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
 
     //residual JEC correction applied
       jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
+      //jtpt[j] = getJERCorrected(mode,jtpt[j]);
       if(jtpt[j]<lowJetPtBound || jtpt[j]>=upJetPtBound) continue;      
       totalJetsPtCutHist->Fill(1);    
       h_jet->Fill(jtpt[j],weight);

@@ -13,6 +13,7 @@
 #include "TStyle.h"
 #include "loadHistograms.h"
 #include "makePlots.h"
+#include "plotGluonFraction1.C"
 #include "interpolationErrors.h"
 #include <iostream>
 
@@ -195,7 +196,8 @@ void makeFF()
     pPb_FF_gJrTMC[i]->Write();
   }
   //handing it over to a plotting macro
-  makePlots();  
+  makePlots(); 
+  plotGluonFraction(); 
 }
 
 TH1D* getFF_pp(double jetPt_low, double jetPt_high, const char* histTitle, int mode)

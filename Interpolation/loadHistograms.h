@@ -509,11 +509,31 @@ void loadHistos()
   pp5_1_track_xi_gen_G = (TH2D*) MCFilepp5->Get("pp5_gen_track_xi_G");
   pp5_1_trackUE_xi_gen_G = (TH2D*) MCFilepp5->Get("pp5_gen_trackUE_xi_G");
 
-  TFile * gluonFracFile = new TFile("gluonFracs.root","read");
-  gluon_2tev_reco = (TH1D*) gluonFracFile->Get("pp2_gFrac_recoMC");
-  gluon_5tev_reco = (TH1D*) gluonFracFile->Get("pPb5_gFrac_recoMC");
-  gluon_7tev_reco = (TH1D*) gluonFracFile->Get("pp7_gFrac_recoMC");
-  gluon_2tev_gen = (TH1D*) gluonFracFile->Get("pp2_gFrac_genMC");
-  gluon_5tev_gen = (TH1D*) gluonFracFile->Get("pPb5_gFrac_genMC");
-  gluon_7tev_gen = (TH1D*) gluonFracFile->Get("pp7_gFrac_genMC");
+//gluon fractions for interpolation
+  gluon_2tev_reco = (TH1D*)pp2_1_jet_reco_G->Clone("pp2_gFrac_recoMC");
+  gluon_5tev_reco = (TH1D*)pPb5_1_jet_reco_G->Clone("pPb5_gFrac_recoMC");
+  gluon_7tev_reco = (TH1D*)pp7_1_jet_reco_G->Clone("pp7_gFrac_recoMC");
+  gluon_2tev_gen = (TH1D*)pp2_1_jet_gen_G->Clone("pp2_gFrac_genMC");
+  gluon_5tev_gen = (TH1D*)pPb5_1_jet_gen_G->Clone("pPb5_gFrac_genMC");
+  gluon_7tev_gen = (TH1D*)pp7_1_jet_gen_G->Clone("pp7_gFrac_genMC");
+
+  TH1D * denom2 = (TH1D*)pp2_1_jet_reco_G->Clone("recoDenom2");
+  denom2->Add(pp2_1_jet_reco_Q);
+  TH1D * denom5 = (TH1D*)pPb5_1_jet_reco_G->Clone("recoDenom5");
+  denom5->Add(pPb5_1_jet_reco_Q);
+  TH1D * denom7 = (TH1D*)pp7_1_jet_reco_G->Clone("recoDenom7");
+  denom7->Add(pp7_1_jet_reco_Q);
+  TH1D * gendenom2 = (TH1D*)pp2_1_jet_gen_G->Clone("genDenom2");
+  gendenom2->Add(pp2_1_jet_gen_Q);
+  TH1D * gendenom5 = (TH1D*)pPb5_1_jet_gen_G->Clone("genDenom5");
+  gendenom5->Add(pPb5_1_jet_gen_Q);
+  TH1D * gendenom7 = (TH1D*)pp7_1_jet_gen_G->Clone("genDenom7");
+  gendenom7->Add(pp7_1_jet_gen_Q); 
+  
+  gluon_2tev_reco->Divide(denom2); 
+  gluon_5tev_reco->Divide(denom5); 
+  gluon_7tev_reco->Divide(denom7);
+  gluon_2tev_gen->Divide(gendenom2); 
+  gluon_5tev_gen->Divide(gendenom5); 
+  gluon_7tev_gen->Divide(gendenom7);
 }
