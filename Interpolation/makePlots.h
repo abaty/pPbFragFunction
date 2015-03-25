@@ -10,7 +10,7 @@
 #include "TAttAxis.h"
 #include "TLatex.h"
 
-void makePlots()
+void makePlots(const char * tag)
 {
   TCanvas * c1 = new TCanvas("c1","c1",1200,600);
   c1->SetLeftMargin(0.2);
@@ -87,8 +87,8 @@ void makePlots()
   leg->AddEntry(pPb5TeV_data_interp[1][0],"pp 5TeV interpolation");
   leg->Draw();
 
-  c1->SaveAs("plots//pPb_FFs_UE3.png");
-  c1->SaveAs("plots//pPb_FFs_UE3.pdf");
+  c1->SaveAs(Form("plots//pPb_FFs_UE3_%s.png",tag));
+  c1->SaveAs(Form("plots//pPb_FFs_UE3_%s.pdf",tag));
 
 //Pbp  
   TCanvas * c2 = new TCanvas("c2","c2",1200,600);
@@ -164,8 +164,8 @@ void makePlots()
   leg2->AddEntry(Pbp5TeV_data_interp[1][0],"pp 5TeV interpolation");
   leg2->Draw();
 
-  c2->SaveAs("plots//Pbp_FFs_UE3.png");
-  c2->SaveAs("plots//Pbp_FFs_UE3.pdf");
+  c2->SaveAs(Form("plots//Pbp_FFs_UE3_%s.png",tag));
+  c2->SaveAs(Form("plots//Pbp_FFs_UE3_%s.pdf",tag));
 
 
   //MC reco  
@@ -242,8 +242,8 @@ void makePlots()
   leg3->AddEntry(pPb5TeV_recoMC_interp[1][0],"PYTHIA Reco Interpolation");
   leg3->Draw();
 
-  c3->SaveAs("plots//pPb_FF_recoMC_UE3.png");
-  c3->SaveAs("plots//pPb_FF_recoMC_UE3.pdf");
+  c3->SaveAs(Form("plots//pPb_FF_recoMC_UE3_%s.png",tag));
+  c3->SaveAs(Form("plots//pPb_FF_recoMC_UE3_%s.pdf",tag));
 
    
   //MC gen 
@@ -320,8 +320,8 @@ void makePlots()
   leg4->AddEntry(pPb5TeV_genMC_interp[1][0],"PYTHIA Gen Interpolation");
   leg4->Draw();
 
-  c4->SaveAs("plots//pPb_FF_genMC_UE3.png");
-  c4->SaveAs("plots//pPb_FF_genMC_UE3.pdf"); 
+  c4->SaveAs(Form("plots//pPb_FF_genMC_UE3_%s.png",tag));
+  c4->SaveAs(Form("plots//pPb_FF_genMC_UE3_%s.pdf",tag)); 
 
 //combined total plot
 
@@ -398,8 +398,8 @@ void makePlots()
   leg5->AddEntry(pPb5Pb5TeV_data_interp[1][0],"pp 5.02TeV interpolation");
   leg5->Draw();
 
-  c5->SaveAs("plots//pPbPbp_FFs_UE3.png");
-  c5->SaveAs("plots//pPbPbp_FFs_UE3.pdf");
+  c5->SaveAs(Form("plots//pPbPbp_FFs_UE3_%s.png",tag));
+  c5->SaveAs(Form("plots//pPbPbp_FFs_UE3_%s.pdf",tag));
 
   //MC reco jet gen track
   TCanvas * c6 = new TCanvas("c6","c6",1200,600);
@@ -476,8 +476,8 @@ void makePlots()
   leg6->AddEntry((TObject*)0,"Reco Jets, Gen Tracks","");
   leg6->Draw();
 
-  c6->SaveAs("plots//pPb_FF_rJgTMC_UE3.png");
-  c6->SaveAs("plots//pPb_FF_rJgTMC_UE3.pdf");
+  c6->SaveAs(Form("plots//pPb_FF_rJgTMC_UE3_%s.png",tag));
+  c6->SaveAs(Form("plots//pPb_FF_rJgTMC_UE3_%s.pdf",tag));
 
 
   //MC gen jet reco track
@@ -555,6 +555,6 @@ void makePlots()
   leg7->AddEntry((TObject*)0,"Gen Jets, Reco Tracks","");
   leg7->Draw();
 
-  c7->SaveAs("plots//pPb_FF_gJrTMC_UE3.png");
-  c7->SaveAs("plots//pPb_FF_gJrTMC_UE3.pdf");
+  c7->SaveAs(Form("plots//pPb_FF_gJrTMC_UE3_%s.png",tag));
+  c7->SaveAs(Form("plots//pPb_FF_gJrTMC_UE3_%s.pdf",tag));
 }

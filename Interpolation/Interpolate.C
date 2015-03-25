@@ -32,7 +32,7 @@ const int trkBins = 39;
 double yAxis[trkBins+1] = {0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 3.2, 4, 4.8, 5.6, 6.4, 7.2, 9.6, 12, 14.4, 19.2, 24, 28.8, 35.2, 41.6, 48, 60.8, 73.6, 86.4, 103.6, 120.8, 138, 155.2, 172.4, 189.6, 206.8};
 
 //main execution starts here
-void makeFF()
+void makeFF(const char * outputTag = "")
 { 
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
@@ -127,7 +127,7 @@ void makeFF()
     pPb_FF_gJrTMC[i]->Divide(pPb5TeV_gJrTMC_interp[i][0]);
   }
  
-  TFile * outfile = new TFile("FragmentationFunctionsUE3.root","recreate");
+  TFile * outfile = new TFile(Form("FragmentationFunctions%sUE3.root",outputTag),"recreate");
   for(int i = 0; i < FF_Bins; i++)
   {
     pp2TeV_data[i]->Write();
@@ -196,8 +196,8 @@ void makeFF()
     pPb_FF_gJrTMC[i]->Write();
   }
   //handing it over to a plotting macro
-  makePlots(); 
-  plotGluonFraction(); 
+  makePlots(outputTag); 
+  plotGluonFraction(outputTag); 
 }
 
 TH1D* getFF_pp(double jetPt_low, double jetPt_high, const char* histTitle, int mode)

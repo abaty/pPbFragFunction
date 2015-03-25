@@ -8,7 +8,7 @@
 #include "TAxis.h"
 #include "TLegend.h"
 
-void plotGluonFraction()
+void plotGluonFraction(const char * tag)
 {
   TCanvas * cg1 = new TCanvas("cg1","",800,600);
   cg1->SetLeftMargin(0.2);
@@ -66,6 +66,6 @@ void plotGluonFraction()
   gleg->AddEntry(gluon_5tev_gen,"5.02 TeV gen PYTHIA+HIJING","l");
 
   gleg->Draw("same");
-  cg1->SaveAs("plots/GluonFractionsMC.png"); 
-  cg1->SaveAs("plots/GluonFractionsMC.pdf");
+  cg1->SaveAs(Form("plots/GluonFractionsMC_%s.png",tag)); 
+  cg1->SaveAs(Form("plots/GluonFractionsMC_%s.pdf",tag));
 }

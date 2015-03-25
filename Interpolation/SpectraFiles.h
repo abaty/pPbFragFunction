@@ -1,3 +1,6 @@
+const int variations = 10;
+const char * variationTag[variations]= {"","_pp2JESUP4","_pp2JESDOWN4","_pp7JESUP4","_pp7JESDOWN4","_pPb5JESUP4","_pPb5JESDOWN4","_pp2JER10","_pp7JER10","_pPb5JER10"};
+
 TH1D * h_jet;
 TH2D * h_track;
 TH2D * h_trackUE;

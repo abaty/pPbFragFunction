@@ -30,7 +30,7 @@ double getJERCorrected(const char * mode, double jetpt)
     isJER_Initialized = true;
   }
 
-  double res_pp2 = JER_pp2->GetBinContent(JER_pp2->FindBin(jetpt));
+  /*double res_pp2 = JER_pp2->GetBinContent(JER_pp2->FindBin(jetpt));
   double res_pp7 = JER_pp7->GetBinContent(JER_pp7->FindBin(jetpt));
   double res_pPb5 = JER_pPb5->GetBinContent(JER_pPb5->FindBin(jetpt));
 
@@ -40,5 +40,6 @@ double getJERCorrected(const char * mode, double jetpt)
   else if(strcmp("pp7",mode)==0) sigma2 = jetpt*jetpt*(max-res_pp7);
   else sigma2 = jetpt*jetpt*(max-res_pPb5);
 
-  return jetpt+TMath::Power(sigma2,0.5)*gaussJER->GetRandom();
+  return jetpt+TMath::Power(sigma2,0.5)*gaussJER->GetRandom();*/
+  return jetpt+jetpt*0.1*gaussJER->GetRandom();
 }
