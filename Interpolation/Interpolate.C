@@ -13,7 +13,7 @@
 #include "TStyle.h"
 #include "loadHistograms.h"
 #include "makePlots.h"
-#include "plotGluonFraction1.C"
+#include "plotGluonFraction.C"
 #include "interpolationErrors.h"
 #include <iostream>
 
