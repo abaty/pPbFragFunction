@@ -18,7 +18,8 @@ void Pbp_Comparison()
    
   const int bins[6] = {60,80,100,120,140,200};
 
-  TFile * infpPb = new TFile("../FragmentationFunctions.root","read"); 
+  TFile * infpPb = new TFile("../FragmentationFunctionsUE3.root","read"); 
+  //TFile * infMC = new TFile("../FragmentationFunctionsUE3MC.root","read");
 
   TH1D * pPbFF[5];
   TH1D * PbpFF[5];
@@ -26,6 +27,7 @@ void Pbp_Comparison()
   {
     pPbFF[i] = (TH1D*)infpPb->Get(Form("pPb5TeV_data_%d_%d",bins[i],bins[i+1]));
     PbpFF[i] = (TH1D*)infpPb->Get(Form("Pbp5TeV_data_%d_%d",bins[i],bins[i+1]));
+    //PbpFF[i] = (TH1D*)infMC->Get(Form("pPb5TeV_data_%d_%d",bins[i],bins[i+1]));
   }  
 
   TCanvas * c2 = new TCanvas("c2","",1500,600);
@@ -88,7 +90,8 @@ void Pbp_Comparison()
   TLegend * leg = new TLegend(0.2,0.1,0.5,0.5);
  // leg->AddEntry((TObject*)0, "140 < p_{t}^{jet} < 200 GeV/c", "");
   leg->AddEntry(pPbFF[0], "pPb FF", "p");
-  leg->AddEntry(PbpFF[0], "Pbp FF", "p");
+  //leg->AddEntry(PbpFF[0], "Pbp FF", "p");
+  leg->AddEntry(PbpFF[0],"pPb FF MC","p");
   leg->Draw();
 
   TLine * l = new TLine(0,1,220,1);
@@ -101,10 +104,15 @@ void Pbp_Comparison()
   PbpFF[i]->SetMaximum(1.5);
   PbpFF[i]->SetMinimum(0.5);
   PbpFF[i]->Divide(pPbFF[i]);
+  //pPbFF[i]->SetMaximum(1.5);
+  //pPbFF[i]->SetMinimum(0.5);
+  //pPbFF[i]->Divide(PbpFF[i]);
 
   PbpFF[i]->GetYaxis()->SetTitle("Pbp/pPb");
+  //pPbFF[i]->GetYaxis()->SetTitle("data/MC");
 
   PbpFF[i]->DrawCopy("e");
+  //pPbFF[i]->DrawCopy("e");
   l->Draw("same");
   }
   c2->SaveAs("Pbp_Comparison.png");

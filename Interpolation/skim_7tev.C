@@ -21,6 +21,8 @@ void skim2()
 
   TH1D * g7tev = new TH1D("g7tev","g7tev",nbinsFine,60,200);
   TH1D * t7tev = new TH1D("t7tev","t7tev",nbinsFine,60,200);
+  TH1D * g7tevgen = new TH1D("g7tev_gen","g7tev_gen",nbinsFine,60,200);
+  TH1D * t7tevgen = new TH1D("t7tev_gen","t7tev_gen",nbinsFine,60,200);
 
   int nEntries = h->GetEntries();
   for(int i = 1; i<nEntries; i++)
@@ -29,6 +31,7 @@ void skim2()
 
     for(int j =0; j < h->ak3PF.nref; j++)
     { 
+      //if(h->skim.pcollisionEventSelection !=1) continue;
       if(TMath::Abs(h->ak3PF.jteta[j]) > 1) continue;
       if(TMath::Abs(h->ak3PF.refparton_flavor[j]) < 901)
       { 
@@ -36,14 +39,20 @@ void skim2()
 
         t7tev->Fill(jtpt);
         if(h->ak3PF.refparton_flavor[j] == 21) g7tev->Fill(jtpt);
+        t7tevgen->Fill(h->ak3PF.refpt[j]);
+        if(h->ak3PF.refparton_flavor[j] == 21) g7tevgen->Fill(h->ak3PF.refpt[j]);
       }
     }
   }
   
-  TFile * fout = new TFile("gluonFracs.root","update");
+  TFile * fout = new TFile("gluonFracs1.root","update");
   TH1D *  gFrac7tev = (TH1D*) g7tev->Clone("gFrac7tev");
   gFrac7tev->Divide(t7tev);
   gFrac7tev->Write();
+
+  TH1D *  gFrac7tevgen = (TH1D*) g7tev->Clone("gFrac7tev_gen");
+  gFrac7tevgen->Divide(t7tevgen);
+  gFrac7tevgen->Write();
 
   return;
 }

@@ -52,6 +52,9 @@ void skim(int mode = 0)
 
   TH1D * g2tev = new TH1D("g2tev","g2tev",nbinsFine,60,200);
   TH1D * t2tev = new TH1D("t2tev","t2tev",nbinsFine,60,200);
+  TH1D * g2tevgen = new TH1D("g2tevgen","g2tevgen",nbinsFine,60,200);
+  TH1D * t2tevgen = new TH1D("t2tevgen","t2tevgen",nbinsFine,60,200);
+
   TH1D * pthatDistFine = new TH1D("pthatDistFine","pthatDistFine",nbinsFine,60,200);
 
   for(int file = 0; file<nbins; file++)
@@ -73,26 +76,38 @@ void skim(int mode = 0)
         {
           t2tev->Fill(h[file]->ak3PF.jtpt[j],crossSection[file]/(float)nEntries);
           if(h[file]->ak3PF.refparton_flavor[j] == 21) g2tev->Fill(h[file]->ak3PF.jtpt[j],crossSection[file]/(float)nEntries);
+          t2tevgen->Fill(h[file]->ak3PF.refpt[j],crossSection[file]/(float)nEntries);
+          if(h[file]->ak3PF.refparton_flavor[j] == 21) g2tevgen->Fill(h[file]->ak3PF.refpt[j],crossSection[file]/(float)nEntries);
         } 
       }    
     }
   }
 
-  TFile * fout = new TFile("gluonFracs.root","update");
+  TFile * fout = new TFile("gluonFracs1.root","update");
   TH1D * gFrac2tev;
   TH1D * gFrac5tev;
+  TH1D * gFrac2tevgen;
+  TH1D * gFrac5tevgen;
   
   if (mode == 0)
   {
-    gFrac2tev = (TH1D*) g2tev->Clone("gFrac2tev");
+    gFrac2tev = (TH1D*) g2tev->Clone("gFrac2tev_reco");
     gFrac2tev->Divide(t2tev);
     gFrac2tev->Write();
+    
+    gFrac2tevgen = (TH1D*) g2tevgen->Clone("gFrac2tev_gen");
+    gFrac2tevgen->Divide(t2tevgen);
+    gFrac2tevgen->Write();
   }
   else 
   {
-    gFrac5tev = (TH1D*) g2tev->Clone("gFrac5tev");
+    gFrac5tev = (TH1D*) g2tev->Clone("gFrac5tev_reco");
     gFrac5tev->Divide(t2tev);
     gFrac5tev->Write();
+
+    gFrac5tevgen = (TH1D*) g2tevgen->Clone("gFrac5tev_gen");
+    gFrac5tevgen->Divide(t2tevgen);
+    gFrac5tevgen->Write();
   }
   return;
 }
