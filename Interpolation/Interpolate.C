@@ -16,11 +16,13 @@
 #include "plotGluonFraction.C"
 #include "interpolationErrors.h"
 #include <iostream>
+#include <string>
 
 //forward declarations
 TH1D* getFF_pp(double jetPt_low, double jetPt_high, const char* histTitle, int mode = 0);
 TH1D** getInterpolation(double jetPt_low, double jetPt_high, const char* histTitle, int ReweightMode, TH1D * hist2, TH1D * hist7, int doGenGluFrac=0);
 void getSpectra(int mode);
+void Interpolate();
 
 TH1D * jet;
 TH2D * trk;
@@ -32,13 +34,13 @@ const int trkBins = 39;
 double yAxis[trkBins+1] = {0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 3.2, 4, 4.8, 5.6, 6.4, 7.2, 9.6, 12, 14.4, 19.2, 24, 28.8, 35.2, 41.6, 48, 60.8, 73.6, 86.4, 103.6, 120.8, 138, 155.2, 172.4, 189.6, 206.8};
 
 //main execution starts here
-void makeFF(const char * outputTag = "")
+void makeFF(int v)
 { 
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
 
   //initializing histograms for analysis
-  loadHistos();
+  loadHistos(v);
 
   for(int i = 0; i < FF_Bins; i++)
   {
@@ -127,7 +129,7 @@ void makeFF(const char * outputTag = "")
     pPb_FF_gJrTMC[i]->Divide(pPb5TeV_gJrTMC_interp[i][0]);
   }
  
-  TFile * outfile = new TFile(Form("FragmentationFunctions%sUE3.root",outputTag),"recreate");
+  TFile * outfile = new TFile(Form("FragmentationFunctions%sUE3.root",variationTag[v]),"recreate");
   for(int i = 0; i < FF_Bins; i++)
   {
     pp2TeV_data[i]->Write();
@@ -196,8 +198,8 @@ void makeFF(const char * outputTag = "")
     pPb_FF_gJrTMC[i]->Write();
   }
   //handing it over to a plotting macro
-  makePlots(outputTag); 
-  plotGluonFraction(outputTag); 
+  makePlots(variationTag[v]); 
+  plotGluonFraction(variationTag[v]); 
 }
 
 TH1D* getFF_pp(double jetPt_low, double jetPt_high, const char* histTitle, int mode)
@@ -307,6 +309,11 @@ TH1D** getInterpolation(double jetPt_low, double jetPt_high, const char* histTit
   outputArray[1]=tmp_Q_interp;
   outputArray[2]=tmp_G_interp;
   return outputArray;
+}
+
+void Interpolate()
+{
+  for(int v = 0; v<variations; v++) makeFF(v);
 }
 
 //tells the getFF_pp exactly which spectra to use in which jetPt range

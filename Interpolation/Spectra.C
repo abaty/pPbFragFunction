@@ -61,9 +61,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   //different nonzero variations are used for systematics checks, variation 0 is for the basic calculation
   for(int v = 0; v<variations; v++)
   {
-    if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==7)) continue;
-    if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8)) continue;
-    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9)) continue;
+    if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==7 || v==10 || v==13)) continue;
+    if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8 || v==11 || v==13)) continue;
+    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9 || v==12 || v==13)) continue;
 
     //reco
     h_jet = new TH1D("h_jet","",nJetBins,0,300); 
@@ -167,7 +167,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
         if(v==1 || v==3 || v==5)jtpt[j] = jtpt[j]*1.04;
         if(v==2 || v==4 || v==6)jtpt[j] = jtpt[j]*0.96;
-        if(v==7 || v==8 || v==9)jtpt[j] = getJERCorrected(mode,jtpt[j]);
+        if(v==7 || v==8 || v==9)jtpt[j] = getJERCorrected(mode,jtpt[j],0.1);
+        if(v==10 || v==11 || v==12)jtpt[j] = getJERCorrected(mode,jtpt[j],0.02);
         if(jtpt[j]<lowJetPtBound || jtpt[j]>=upJetPtBound) continue;      
         totalJetsPtCutHist->Fill(1);    
         h_jet->Fill(jtpt[j],weight);
@@ -197,7 +198,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           //Filling track spectrum in jet cone
           if(getdR2(jteta[j]+boost,jtphi[j],trkEta[t]+boost,trkPhi[t]) < 0.3*0.3)
           {
-            double trkCorr = factorizedPtCorr(getPtBin(trkPt[t], sType), 1, trkPt[t], trkPhi[t], trkEta[t], r_min, sType);          
+            double trkCorr = factorizedPtCorr(getPtBin(trkPt[t], sType), 1, trkPt[t], trkPhi[t], trkEta[t], r_min, sType);         
+            if(v==13) trkCorr=1; 
             if(std::isfinite(trkCorr))
             {
               h_track->Fill(jtpt[j],trkPt[t],trkCorr*weight);
@@ -222,6 +224,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           if(typeUE==0 && getdR2(jteta[j]+boost,jtphi[j]+rotationDirection*TMath::PiOver2(),trkEta[t]+boost,trkPhi[t]) < 0.3*0.3)
           {
             double trkCorr = factorizedPtCorr(getPtBin(trkPt[t], sType), 1, trkPt[t], trkPhi[t], trkEta[t], r_min, sType);
+            if(v==13) trkCorr=1;
             if(std::isfinite(trkCorr))
             {
               h_trackUE->Fill(jtpt[j],trkPt[t],trkCorr*weight);  
@@ -243,6 +246,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           if(typeUE==1 && getdR2(-1*(jteta[j]+boost),jtphi[j],trkEta[t]+boost,trkPhi[t]) < 0.3*0.3)
           {
             double trkCorr = factorizedPtCorr(getPtBin(trkPt[t], sType), 1, trkPt[t], trkPhi[t], trkEta[t], r_min, sType);
+            if(v==13) trkCorr=1;
             if(std::isfinite(trkCorr))
             {
               h_trackUE->Fill(jtpt[j],trkPt[t],trkCorr*weight); 
@@ -283,6 +287,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             if(getdR2(jteta[j]+boost,jtphi[j],trkEtaMix[t]+boost,trkPhiMix[t]) < 0.3*0.3)
             {
               double trkCorr = factorizedPtCorr(getPtBin(trkPtMix[t], sType), 1, trkPtMix[t], trkPhiMix[t], trkEtaMix[t], r_min, sType);
+              if(v==13) trkCorr=1;
               if(std::isfinite(trkCorr))
               {
                 h_trackUE->Fill(jtpt[j],trkPtMix[t],trkCorr*weight);
@@ -358,7 +363,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         {   
           if(v==1 || v==3 || v==5)genpt[j] = genpt[j]*1.04;
           if(v==2 || v==4 || v==6)genpt[j] = genpt[j]*0.96;
-          if(v==7 || v==8 || v==9)genpt[j] = getJERCorrected(mode,genpt[j]);
+          if(v==7 || v==8 || v==9)genpt[j] = getJERCorrected(mode,genpt[j],0.1);
+          if(v==10 || v==11 || v==12)genpt[j] = getJERCorrected(mode,genpt[j],0.02);
           if(TMath::Abs(geneta[j]+boost) < jetEtaMin || TMath::Abs(geneta[j]+boost) > jetEtaMax || genpt[j]<lowJetPtBound || genpt[j]>=upJetPtBound) continue;
           
           //getting jet flavor (a bit convoluted because genMatchedID is not filled in forest correctly)
@@ -483,7 +489,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             //Filling track spectrum in jet cone
             if(getdR2(geneta[j]+boost,genphi[j],trkEta[t]+boost,trkPhi[t]) < 0.3*0.3)
             {
-              double trkCorr = factorizedPtCorr(getPtBin(trkPt[t], sType), 1, trkPt[t], trkPhi[t], trkEta[t], r_min, sType);          
+              double trkCorr = factorizedPtCorr(getPtBin(trkPt[t], sType), 1, trkPt[t], trkPhi[t], trkEta[t], r_min, sType);
+              if(v==13) trkCorr=1;          
               if(std::isfinite(trkCorr))
               {
                 h_track_gJrT->Fill(genpt[j],trkPt[t],trkCorr*weight);
@@ -498,6 +505,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             if(typeUE==0 && getdR2(geneta[j]+boost,genphi[j]+rotationDirection*TMath::PiOver2(),trkEta[t]+boost,trkPhi[t]) < 0.3*0.3)
             {
               double trkCorr = factorizedPtCorr(getPtBin(trkPt[t], sType), 1, trkPt[t], trkPhi[t], trkEta[t], r_min, sType);
+              if(v==13) trkCorr=1;
               if(std::isfinite(trkCorr))
               {
                 h_trackUE_gJrT->Fill(genpt[j],trkPt[t],trkCorr*weight);  
@@ -509,6 +517,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             if(typeUE==1 && getdR2(-1*(geneta[j]+boost),genphi[j],trkEta[t]+boost,trkPhi[t]) < 0.3*0.3)
             {
               double trkCorr = factorizedPtCorr(getPtBin(trkPt[t], sType), 1, trkPt[t], trkPhi[t], trkEta[t], r_min, sType);
+              if(v==13) trkCorr=1;
               if(std::isfinite(trkCorr))
               {
                 h_trackUE_gJrT->Fill(genpt[j],trkPt[t],trkCorr*weight); 
@@ -539,6 +548,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
               if(getdR2(geneta[j]+boost,genphi[j],trkEtaMix[t]+boost,trkPhiMix[t]) < 0.3*0.3)
               {
                 double trkCorr = factorizedPtCorr(getPtBin(trkPtMix[t], sType), 1, trkPtMix[t], trkPhiMix[t], trkEtaMix[t], r_min, sType);
+                if(v==13) trkCorr=1;
                 if(std::isfinite(trkCorr))
                 {
                   h_trackUE_gJrT->Fill(genpt[j],trkPtMix[t],trkCorr*weight);

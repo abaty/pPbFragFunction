@@ -22,7 +22,7 @@ void initializeJER()
   return;
 }
 
-double getJERCorrected(const char * mode, double jetpt)
+double getJERCorrected(const char * mode, double jetpt, double percentage = 0.02)
 {
   if(!isJER_Initialized)
   {
@@ -41,5 +41,5 @@ double getJERCorrected(const char * mode, double jetpt)
   else sigma2 = jetpt*jetpt*(max-res_pPb5);
 
   return jetpt+TMath::Power(sigma2,0.5)*gaussJER->GetRandom();*/
-  return jetpt+jetpt*0.1*gaussJER->GetRandom();
+  return jetpt+jetpt*percentage*gaussJER->GetRandom();
 }
