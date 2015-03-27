@@ -15,6 +15,7 @@
 #include "makePlots.h"
 #include "plotGluonFraction.C"
 #include "interpolationErrors.h"
+#include "systematics.C"
 #include <iostream>
 #include <string>
 
@@ -30,8 +31,8 @@ TH2D * trkUE;
 TH1D * jet_pPb;
 
 //trk pt bins
-const int trkBins = 39;
-double yAxis[trkBins+1] = {0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 3.2, 4, 4.8, 5.6, 6.4, 7.2, 9.6, 12, 14.4, 19.2, 24, 28.8, 35.2, 41.6, 48, 60.8, 73.6, 86.4, 103.6, 120.8, 138, 155.2, 172.4, 189.6, 206.8};
+const int trkBins = 40;
+double yAxis[trkBins+1] = {0.5, 0.58, 0.67, 0.77, 0.89, 1.03, 1.19,1.38, 1.59, 1.84, 2.13, 2.46, 2.85, 3.29, 3.81, 4.40, 5.09, 5.88, 6.80, 7.87, 9.10, 10.52, 12.16, 14.06, 16.2, 18.8, 21.7, 25.13, 29.05, 33.58, 38.83, 44.89, 51.9, 60, 70, 80, 100, 120, 140, 160, 200};
 
 //main execution starts here
 void makeFF(int v)
@@ -109,6 +110,7 @@ void makeFF(int v)
     pPb5TeV_data_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_data_interp",2,pp2TeV_data[i],pp7TeV_data[i],0);
     Pbp5TeV_data_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"Pbp5TeV_data_interp",3,pp2TeV_reverse_data[i],pp7TeV_reverse_data[i],0);
     pPb5Pb5TeV_data_interp[i] = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5Pbp5TeV_data_interp",28,pp2TeV_fulldata[i],pp7TeV_fulldata[i],0);
+    pPb5Pb5TeV_data_interp_genGluFrac[i] = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5Pbp5TeV_data_interp_genGluFrac",28,pp2TeV_fulldata[i],pp7TeV_fulldata[i],1);
     pPb5TeV_recoMC_interp[i]  = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_recoMC_interp",6,pp2TeV_recoMC[i],pp7TeV_recoMC[i],0);
     pPb5TeV_genMC_interp[i]   = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_genMC_interp",9,pp2TeV_genMC[i],pp7TeV_genMC[i],1);
     pPb5TeV_rJgTMC_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_rJgTMC_interp",35,pp2TeV_rJgTMC[i],pp7TeV_rJgTMC[i],0);
@@ -127,6 +129,8 @@ void makeFF(int v)
     pPb_FF_genMC[i]->Divide(pPb5TeV_genMC_interp[i][0]);
     pPbPbp_FF[i] = (TH1D*) pPb5Pbp5TeV_fulldata[i]->Clone(Form("pPbPbp_FF_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
     pPbPbp_FF[i]->Divide(pPb5Pb5TeV_data_interp[i][0]); 
+    pPbPbp_FF_genGluFrac[i] = (TH1D*) pPb5Pbp5TeV_fulldata[i]->Clone(Form("pPbPbp_FF_genGluFrac_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+    pPbPbp_FF_genGluFrac[i]->Divide(pPb5Pb5TeV_data_interp_genGluFrac[i][0]); 
     pPb_FF_rJgTMC[i] = (TH1D*) pPb5TeV_rJgTMC[i]->Clone(Form("pPb_FF_rJgTMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
     pPb_FF_rJgTMC[i]->Divide(pPb5TeV_rJgTMC_interp[i][0]);
     pPb_FF_gJrTMC[i] = (TH1D*) pPb5TeV_gJrTMC[i]->Clone(Form("pPb_FF_gJrTMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
@@ -190,6 +194,7 @@ void makeFF(int v)
       pPb5TeV_data_interp[i][indx]->Write();
       Pbp5TeV_data_interp[i][indx]->Write();
       pPb5Pb5TeV_data_interp[i][indx]->Write();
+      pPb5Pb5TeV_data_interp_genGluFrac[i][indx]->Write();
       pPb5TeV_recoMC_interp[i][indx]->Write();
       pPb5TeV_genMC_interp[i][indx]->Write();
       pPb5TeV_rJgTMC_interp[i][indx]->Write();
@@ -199,6 +204,7 @@ void makeFF(int v)
     pPb_FF[i]->Write();
     Pbp_FF[i]->Write();  
     pPbPbp_FF[i]->Write(); 
+    pPbPbp_FF_genGluFrac[i]->Write(); 
     pPb_FF_recoMC[i]->Write();
     pPb_FF_genMC[i]->Write();
     pPb_FF_rJgTMC[i]->Write();
@@ -206,7 +212,8 @@ void makeFF(int v)
   }
   //handing it over to a plotting macro
   makePlots(variationTag[v]); 
-  plotGluonFraction(variationTag[v]); 
+  plotGluonFraction(variationTag[v]);
+  outfile->Close(); 
 }
 
 TH1D* getFF_pp(double jetPt_low, double jetPt_high, const char* histTitle, int mode)
@@ -216,7 +223,7 @@ TH1D* getFF_pp(double jetPt_low, double jetPt_high, const char* histTitle, int m
   getSpectra(mode);
 
   //looping over bins in Trk pt
-    for(int t = 1; t < trkBins+1; t++)
+    for(int t = 1; t < trk->GetYaxis()->FindBin(jetPt_high); t++)
     {
       double sum   = 0;
       double error = 0;
@@ -321,6 +328,7 @@ TH1D** getInterpolation(double jetPt_low, double jetPt_high, const char* histTit
 void Interpolate()
 {
   for(int v = 0; v<variations; v++) makeFF(v);
+  systematics();
 }
 
 //tells the getFF_pp exactly which spectra to use in which jetPt range
