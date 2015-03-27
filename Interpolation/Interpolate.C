@@ -31,8 +31,12 @@ TH2D * trkUE;
 TH1D * jet_pPb;
 
 //trk pt bins
-const int trkBins = 40;
-double yAxis[trkBins+1] = {0.5, 0.58, 0.67, 0.77, 0.89, 1.03, 1.19,1.38, 1.59, 1.84, 2.13, 2.46, 2.85, 3.29, 3.81, 4.40, 5.09, 5.88, 6.80, 7.87, 9.10, 10.52, 12.16, 14.06, 16.2, 18.8, 21.7, 25.13, 29.05, 33.58, 38.83, 44.89, 51.9, 60, 70, 80, 100, 120, 140, 160, 200};
+
+const int trkBins=22;
+const double yAxis[trkBins+1] = {0.5, 0.63, 0.77,  1.03,1.38, 1.84, 2.46, 3.29,  4.40, 5.88,  7.87,  10.52, 14.06,  18.8, 25.13,  33.58,  44.89,  60, 80, 100, 120, 140, 200};
+
+//const int trkBins = 40;
+//double yAxis[trkBins+1] = {0.5, 0.58, 0.67, 0.77, 0.89, 1.03, 1.19,1.38, 1.59, 1.84, 2.13, 2.46, 2.85, 3.29, 3.81, 4.40, 5.09, 5.88, 6.80, 7.87, 9.10, 10.52, 12.16, 14.06, 16.2, 18.8, 21.7, 25.13, 29.05, 33.58, 38.83, 44.89, 51.9, 60, 70, 80, 100, 120, 140, 160, 200};
 
 //main execution starts here
 void makeFF(int v)
@@ -327,7 +331,10 @@ TH1D** getInterpolation(double jetPt_low, double jetPt_high, const char* histTit
 
 void Interpolate()
 {
-  for(int v = 0; v<variations; v++) makeFF(v);
+  for(int v = 0; v<variations; v++) 
+  {
+    if(v!=7 && v!=8 && v!=9) makeFF(v);
+  }
   systematics();
 }
 

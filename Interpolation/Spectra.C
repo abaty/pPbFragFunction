@@ -14,8 +14,8 @@
 
 const double pPbRapidity = 0.4654094531;
 const int nJetBins = 120;
-const int ntrackBins=41;
-const double axis[ntrackBins] = {0.5, 0.58, 0.67, 0.77, 0.89, 1.03, 1.19,1.38, 1.59, 1.84, 2.13, 2.46, 2.85, 3.29, 3.81, 4.40, 5.09, 5.88, 6.80, 7.87, 9.10, 10.52, 12.16, 14.06, 16.2, 18.8, 21.7, 25.13, 29.05, 33.58, 38.83, 44.89, 51.9, 60, 70, 80, 100, 120, 140, 160, 200};
+const int ntrackBins=23;
+const double axis[ntrackBins] = {0.5, 0.63, 0.77,  1.03,1.38, 1.84, 2.46, 3.29,  4.40, 5.88,  7.87,  10.52, 14.06,  18.8, 25.13,  33.58,  44.89,  60, 80, 100, 120, 140, 200};
 
 
 //calculates dr^2 to avoid the slow TMath() Sqrt function
@@ -63,9 +63,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   //different nonzero variations are used for systematics checks, variation 0 is for the basic calculation
   for(int v = 0; v<variations; v++)
   {
-    if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==7 || v==10 || v==13 || v==14 || v==15)) continue;
-    if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8 || v==11 || v==13 || v==16 || v==17)) continue;
-    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9 || v==12 || v==13 || v==18 || v==19)) continue;
+    if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==10 || v==13 || v==14 || v==15)) continue;
+    if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==11 || v==13 || v==16 || v==17)) continue;
+    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==12 || v==13 || v==18 || v==19)) continue;
 
     //reco
     h_jet = new TH1D("h_jet","",nJetBins,0,300); 
