@@ -47,6 +47,13 @@ TH1D** getRatio(const char * mode = "pp2", int v=0)
       ratioArray[i]->SetName(Form("%s%s_Ratio%d",mode,variationTag[v],i));
       ratioArray[i]->SetDirectory(0);
     }
+    if(strcmp(mode,"interp")==0)
+    {
+      ratioArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_data_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+      ratioArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_data_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])));
+      ratioArray[i]->SetName(Form("%s%s_Ratio%d",mode,variationTag[v],i));
+      ratioArray[i]->SetDirectory(0);
+    }
   }  
   inf1->Close();
   inf2->Close();
@@ -119,8 +126,10 @@ void FFSystematics(const char * mode)
       //if empty bins
       if(JER[i]->GetBinContent(j)==0 || JESTotUP[i]->GetBinContent(j)==-1 || JESTotDOWN[i]->GetBinContent(j)==-1)
       {
-        TotUP[i]->SetBinContent(j,99999);
-        TotDOWN[i]->SetBinContent(j,99999);
+        TotUP[i]->SetBinContent(j,0);
+        TotDOWN[i]->SetBinContent(j,0);
+        TotUP[i]->SetBinError(j,0);
+        TotDOWN[i]->SetBinError(j,0);
       }
       else 
       {
@@ -139,9 +148,97 @@ void FFSystematics(const char * mode)
   output->Close();
 }
 
-void InterpolationSystematics()
+void InterpolationSystematics(const char * mode = "interp")
 {
+  //getting sources of error as ratios
+  TH1D** pp2JESUP;
+  TH1D** pp2JESDOWN;
+  TH1D** pp2JER; 
+  TH1D** pp7JESUP;
+  TH1D** pp7JESDOWN;
+  TH1D** pp7JER;
 
+  //estimating 5% tracking errors
+  double track = 0.05;
+  pp2JESUP = getRatio(mode,1);
+  pp2JESDOWN = getRatio(mode,2);
+  pp2JER = getRatio(mode,10);
+  pp7JESUP = getRatio(mode,3);
+  pp7JESDOWN = getRatio(mode,4);
+  pp7JER = getRatio(mode,11);
+
+  TFile * output = new TFile("SystematicsUE3.root","update");
+
+  TH1D* pp2JESTotUP[FF_Bins];
+  TH1D* pp2JESTotDOWN[FF_Bins];
+  TH1D* pp7JESTotUP[FF_Bins];
+  TH1D* pp7JESTotDOWN[FF_Bins];
+
+  for(int i = 0; i<FF_Bins; i++)
+  {
+    pp2JESTotUP[i] = (TH1D*)pp2JESUP[i]->Clone(Form("%s_pp2JESTotUP%d",mode,i));
+    pp2JESTotDOWN[i] = (TH1D*)pp2JESDOWN[i]->Clone(Form("%s_pp2JESTotDOWN%d",mode,i));
+    pp7JESTotUP[i] = (TH1D*)pp7JESUP[i]->Clone(Form("%s_pp7JESTotUP%d",mode,i));
+    pp7JESTotDOWN[i] = (TH1D*)pp7JESDOWN[i]->Clone(Form("%s_pp7JESTotDOWN%d",mode,i));
+
+    for(int j = 0; j<pp2JESTotUP[0]->GetSize(); j++)
+    {
+      if(pp2JESTotUP[i]->GetBinContent(j)<pp2JESDOWN[i]->GetBinContent(j)) pp2JESTotUP[i]->SetBinContent(j,pp2JESDOWN[i]->GetBinContent(j));
+      pp2JESTotUP[i]->SetBinContent(j,pp2JESTotUP[i]->GetBinContent(j)-1);
+      if(pp2JESTotUP[i]->GetBinContent(j)<0) pp2JESTotUP[i]->SetBinContent(j,0);
+
+      if(pp2JESTotDOWN[i]->GetBinContent(j)>pp2JESUP[i]->GetBinContent(j)) pp2JESTotDOWN[i]->SetBinContent(j,pp2JESUP[i]->GetBinContent(j));
+      pp2JESTotDOWN[i]->SetBinContent(j,pp2JESTotDOWN[i]->GetBinContent(j)-1);
+      if(pp2JESTotDOWN[i]->GetBinContent(j)>0) pp2JESTotDOWN[i]->SetBinContent(j,0);
+ 
+      if(pp7JESTotUP[i]->GetBinContent(j)<pp7JESDOWN[i]->GetBinContent(j)) pp7JESTotUP[i]->SetBinContent(j,pp7JESDOWN[i]->GetBinContent(j));
+      pp7JESTotUP[i]->SetBinContent(j,pp7JESTotUP[i]->GetBinContent(j)-1);
+      if(pp7JESTotUP[i]->GetBinContent(j)<0) pp7JESTotUP[i]->SetBinContent(j,0);
+
+      if(pp7JESTotDOWN[i]->GetBinContent(j)>pp7JESUP[i]->GetBinContent(j)) pp7JESTotDOWN[i]->SetBinContent(j,pp7JESUP[i]->GetBinContent(j));
+      pp7JESTotDOWN[i]->SetBinContent(j,pp7JESTotDOWN[i]->GetBinContent(j)-1);
+      if(pp7JESTotDOWN[i]->GetBinContent(j)>0) pp7JESTotDOWN[i]->SetBinContent(j,0);
+    }
+  }
+
+  //adding JES and JER together in quadrature
+  TH1D* TotUP[FF_Bins];
+  TH1D* TotDOWN[FF_Bins];
+  for(int i = 0; i<FF_Bins; i++)
+  {
+    TotUP[i] = (TH1D*)pp2JESTotUP[i]->Clone(Form("%s_TotUP%d",mode,i)); 
+    TotDOWN[i] = (TH1D*)pp2JESTotDOWN[i]->Clone(Form("%s_TotDOWN%d",mode,i));
+  
+    for(int j = 0; j<TotUP[0]->GetSize(); j++)
+    {
+      //if empty bins
+      if(pp2JER[i]->GetBinContent(j)==0 || pp2JESTotUP[i]->GetBinContent(j)==-1 || pp2JESTotDOWN[i]->GetBinContent(j)==-1 || pp7JER[i]->GetBinContent(j)==0 || pp7JESTotUP[i]->GetBinContent(j)==-1 || pp7JESTotDOWN[i]->GetBinContent(j)==-1)
+      {
+        TotUP[i]->SetBinContent(j,0);
+        TotDOWN[i]->SetBinContent(j,0);
+        TotUP[i]->SetBinError(j,0);
+        TotDOWN[i]->SetBinError(j,0);
+      }
+      else 
+      {
+        TotUP[i]->SetBinContent(j,TMath::Power(TMath::Power(TotUP[i]->GetBinContent(j),2)+TMath::Power(pp7JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(pp7JER[i]->GetBinContent(j)-1,2)+TMath::Power(pp2JER[i]->GetBinContent(j)-1,2)+track*track,0.5));
+        TotDOWN[i]->SetBinContent(j,TMath::Power(TMath::Power(TotDOWN[i]->GetBinContent(j),2)+TMath::Power(pp7JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(pp7JER[i]->GetBinContent(j)-1,2)+TMath::Power(pp2JER[i]->GetBinContent(j)-1,2)+track*track,0.5));
+      }
+    }
+    pp2JESUP[i]->Write();
+    pp2JESDOWN[i]->Write();
+    pp2JER[i]->Write(); 
+    pp7JESUP[i]->Write();
+    pp7JESDOWN[i]->Write();
+    pp7JER[i]->Write();
+    pp2JESTotUP[i]->Write();
+    pp2JESTotDOWN[i]->Write(); 
+    pp7JESTotUP[i]->Write();
+    pp7JESTotDOWN[i]->Write();
+    TotUP[i]->Write();
+    TotDOWN[i]->Write();
+  }
+  output->Close(); 
 }
 
 void RatioSystematics()
@@ -155,4 +252,5 @@ void systematics()
   FFSystematics("pPb5");
   FFSystematics("pp2");
   FFSystematics("pp7");
+  InterpolationSystematics();
 }
