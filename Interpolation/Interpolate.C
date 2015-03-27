@@ -101,6 +101,10 @@ void makeFF(int v)
     pp2TeV_fulldata[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_fulldata_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),29);
     pp7TeV_fulldata[i] = getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_fulldata_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),30);
 
+    //2 and 7 tev pp FF's with no reweighting
+    pp2TeV_data_NoReweight[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),41);
+    pp7TeV_data_NoReweight[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),42); 
+
     //interpolations
     pPb5TeV_data_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_data_interp",2,pp2TeV_data[i],pp7TeV_data[i],0);
     Pbp5TeV_data_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"Pbp5TeV_data_interp",3,pp2TeV_reverse_data[i],pp7TeV_reverse_data[i],0);
@@ -177,6 +181,9 @@ void makeFF(int v)
     pPb5TeV_genMC_G[i]->Write();
     pp5TeV_genMC_Q[i]->Write();
     pp5TeV_genMC_G[i]->Write();
+
+    pp2TeV_data_NoReweight[i]->Write();
+    pp7TeV_data_NoReweight[i]->Write();
 
     for(int indx = 0; indx<3; indx++)
     {
@@ -618,6 +625,20 @@ void getSpectra(int mode)
     jet_pPb = pp5_1_jet_gen;
     trk     = pp5_1_track_gJrT;
     trkUE   = pp5_1_trackUE_gJrT;
+  } 
+  if(mode == 41)
+  {
+    jet     = pp2_0_jet;
+    jet_pPb = pp2_0_jet;
+    trk     = pp2_0_track;
+    trkUE   = pp2_0_trackUE;
+  }
+  if(mode == 42)
+  {
+    jet     = pp7_0_jet;
+    jet_pPb = pp7_0_jet;
+    trk     = pp7_0_track;
+    trkUE   = pp7_0_trackUE;
   }
   return;
 }

@@ -3,8 +3,8 @@
 #include "TH1D.h"
 
 const char* filePath = "tempRootFiles/processed_2015_03_26__08_25_11";
-const int variations = 14;
-const char * variationTag[variations]= {"","_pp2JESUP4","_pp2JESDOWN4","_pp7JESUP4","_pp7JESDOWN4","_pPb5JESUP4","_pPb5JESDOWN4","_pp2JER10","_pp7JER10","_pPb5JER10","_pp2JER2","_pp7JER2","_pPb5JER2","_NoTrackCorr"};
+const int variations = 20;
+const char * variationTag[variations]= {"","_pp2JESUP4","_pp2JESDOWN4","_pp7JESUP4","_pp7JESDOWN4","_pPb5JESUP4","_pPb5JESDOWN4","_pp2JER10","_pp7JER10","_pPb5JER10","_pp2JER2","_pp7JER2","_pPb5JER2","_NoTrackCorr","_pp2JESUP1","_pp2JESDOWN1","_pp7JESUP1","_pp7JESDOWN1","_pPb5JESUP1","_pPb5JESDOWN1"};
 
 // jet pt boundaries
 const int FF_Bins = 5;
@@ -74,6 +74,9 @@ TH1D * pPb_FF_genMC[FF_Bins];
 TH1D * pPb_FF_rJgTMC[FF_Bins];
 TH1D * pPb_FF_gJrTMC[FF_Bins];
 TH1D * pPbPbp_FF[FF_Bins];
+
+TH1D * pp2TeV_data_NoReweight[FF_Bins];
+TH1D * pp7TeV_data_NoReweight[FF_Bins];
 
 //input histos
 TH1D * pp2_0_jet;
@@ -301,9 +304,9 @@ void loadHistos(int v)
   TFile * MCFilepp5 = new TFile(Form("%s/pp5MC_3_0_15.root",filePath),"read");
 
   std::string pp2Tag = "", pp7Tag = "", pPb5Tag = "";
-  if(v==1 || v==2 || v==7 || v==10 || v==13) pp2Tag = variationTag[v];
-  if(v==3 || v==4 || v==8 || v==11 || v==13) pp7Tag = variationTag[v];
-  if(v==5 || v==6 || v==9 || v==12 || v==13) pPb5Tag = variationTag[v];
+  if(v==1 || v==2 || v==7 || v==10 || v==13 || v==14 || v==15) pp2Tag = variationTag[v];
+  if(v==3 || v==4 || v==8 || v==11 || v==13 || v==16 || v==17) pp7Tag = variationTag[v];
+  if(v==5 || v==6 || v==9 || v==12 || v==13 || v==18 || v==19) pPb5Tag = variationTag[v];
 
 //2.76 pp
   pp2_0_jet = (TH1D*) spectraFilepp2->Get(Form("pp2_reco_jet%s",pp2Tag.data()));
