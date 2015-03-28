@@ -26,13 +26,12 @@ TBox* makeBox(double x1, double y1, double x2, double y2)
   box->SetLineWidth(1);
   box->SetLineStyle(1);
   box->SetFillStyle(1001);
-  box->SetFillColor(5);
+  box->SetFillColor(kOrange);
   return box;
 }
 
 void rawFFs()
-{
-  
+{ 
   TLatex * tlat = new TLatex(0.6,0.6,"test");
 
   TFile * inf1 = TFile::Open("../../FragmentationFunctionsUE3.root","read");
@@ -80,11 +79,11 @@ void rawFFs()
     }
   }
 
-  TCanvas * c = new TCanvas("rawFFs","rawFFs",1200,900);
+  TCanvas * c = new TCanvas("rawFFs","rawFFs",1200,600);
   c->SetLeftMargin(0.23);
-  c->Divide(5,3,0,0);
+  c->Divide(5,2,0,0);
 
-  for(int i = 0; i<15; i++)
+  for(int i = 0; i<10; i++)
   {
     c->cd(i+1)->SetLogx();
     c->cd(i+1)->SetLogy();
@@ -104,11 +103,7 @@ void rawFFs()
       hist[i]->SetMarkerStyle(24);
       hist[i]->SetMarkerSize(0.7);
     }
-    else
-    {
-      hist[i]->SetMarkerStyle(5);
-      hist[i]->SetMarkerSize(0.8);
-    }
+
     hist[i]->SetMarkerColor(1);
 
     if(i%5==0)
@@ -117,8 +112,14 @@ void rawFFs()
       hist[i]->GetYaxis()->SetTitleOffset(1.6);
       hist[i]->GetYaxis()->SetTitleSize(0.07);
       hist[i]->GetYaxis()->SetLabelOffset(0.003);
-      hist[i]->GetYaxis()->SetLabelSize(0.05);
+      hist[i]->GetYaxis()->SetLabelSize(0.06);
       hist[i]->GetYaxis()->SetNdivisions(505,true);
+      if(i==5)
+      {
+        hist[i]->GetYaxis()->SetLabelSize(0.054);
+        hist[i]->GetYaxis()->SetTitleSize(0.062);
+        hist[i]->GetYaxis()->SetTitleOffset(1.8);
+      }
 
       tlat->SetTextSize(0.058);
     } 
@@ -126,10 +127,9 @@ void rawFFs()
     {
       hist[i]->GetYaxis()->SetTitleSize(0);
       hist[i]->GetYaxis()->SetLabelSize(0);
-
       tlat->SetTextSize(0.07);
     } 
-    if(i>9)
+    if(i>4)
     {
       hist[i]->GetXaxis()->SetTitle("p_{T}^{trk} (GeV/c)");
       hist[i]->GetXaxis()->CenterTitle();
@@ -137,15 +137,14 @@ void rawFFs()
       hist[i]->GetXaxis()->SetLabelSize(0.07);
       hist[i]->GetXaxis()->SetTitleOffset(1.0);
       hist[i]->GetXaxis()->SetTitleSize(0.07);
-      if(i==10)
+      if(i==5)
       {
         hist[i]->GetXaxis()->SetLabelSize(0.058);
-        hist[i]->GetXaxis()->SetTitleSize(0.058);
-        hist[i]->GetXaxis()->SetTitleOffset(1.2);
-        hist[i]->GetXaxis()->SetLabelOffset(0.01);
+        hist[i]->GetXaxis()->SetTitleSize(0.055);
+        hist[i]->GetXaxis()->SetTitleOffset(1.24);
+        hist[i]->GetXaxis()->SetLabelOffset(0.012);
       }
     }
-
     
     hist[i]->Draw();
     for(int j=1; j<hist[i]->GetSize()-1; j++)
@@ -161,7 +160,7 @@ void rawFFs()
       TLegend * leg = new TLegend(0.28,0.3,0.8,0.6);
       leg->AddEntry(hist[0],"2.76 TeV pp","p");
       leg->AddEntry(hist[5],"7 TeV pp","p");
-      leg->AddEntry(hist[10],"5.02 TeV pPb","p");
+      //leg->AddEntry(hist[10],"5.02 TeV pPb","p");
       leg->SetTextSize(0.058);
       leg->SetBorderSize(0);
       leg->SetTextFont(tlat->GetTextFont());
