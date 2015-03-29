@@ -170,16 +170,31 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
 
   //estimating 5% tracking errors
   double track = 0.05;
-  
-  pp2JESUP = getRatio(mode,1);
-  pp2JESDOWN = getRatio(mode,2);
-  pp2JER = getRatio(mode,7);
-  pp7JESUP = getRatio(mode,3);
-  pp7JESDOWN = getRatio(mode,4);
-  pp7JER = getRatio(mode,8);
-  pPb5JESUP = getRatio(mode,5);
-  pPb5JESDOWN = getRatio(mode,6);
-  pPb5JER = getRatio(mode,9);
+ 
+  if(strcmp(mode,"interp")==0) 
+  {
+    pp2JESUP = getRatio(mode,1);
+    pp2JESDOWN = getRatio(mode,2);
+    pp2JER = getRatio(mode,7);
+    pp7JESUP = getRatio(mode,3);
+    pp7JESDOWN = getRatio(mode,4);
+    pp7JER = getRatio(mode,8);
+    pPb5JESUP = getRatio(mode,5);
+    pPb5JESDOWN = getRatio(mode,6);
+    pPb5JER = getRatio(mode,9);
+  }
+  else 
+  {
+    pp2JESUP = getRatio(mode,20);
+    pp2JESDOWN = getRatio(mode,21);
+    pp2JER = getRatio(mode,7);
+    pp7JESUP = getRatio(mode,22);
+    pp7JESDOWN = getRatio(mode,23);
+    pp7JER = getRatio(mode,8);
+    pPb5JESUP = getRatio(mode,24);
+    pPb5JESDOWN = getRatio(mode,25);
+    pPb5JER = getRatio(mode,9);
+  }
 
   TFile * output = new TFile("SystematicsUE3.root","update");
 
