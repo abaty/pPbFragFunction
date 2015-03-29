@@ -566,7 +566,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         }
       }
     }
-    TFile * outf = new TFile(Form("spectra%s%s_%d_%d_%d_%d_%d.root",mode,trigger,jobNum,(int)isMC,(int)typeUE,(int)(10*jetEtaMin),(int)(10*jetEtaMax)),"update");
+    TFile * outf = new TFile(Form("spectra%s%s_%d_%d_UE%d_%d_%d.root",mode,trigger,jobNum,(int)isMC,(int)typeUE,(int)(10*jetEtaMin),(int)(10*jetEtaMax)),"update");
     h_jet->SetDirectory(0);
     h_track->SetDirectory(0);
     h_trackUE->SetDirectory(0);

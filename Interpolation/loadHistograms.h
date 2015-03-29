@@ -2,7 +2,8 @@
 #include "TH2D.h"
 #include "TH1D.h"
 
-const char* filePath = "tempRootFiles/processed_2015_03_27__17_38_31";
+const char* filePath = "tempRootFiles/processed_2015_03_28__22_58_49";
+const int UEtype = 0;
 const int variations = 20;
 const char * variationTag[variations]= {"","_pp2JESUP4","_pp2JESDOWN4","_pp7JESUP4","_pp7JESDOWN4","_pPb5JESUP4","_pPb5JESDOWN4","_pp2JER10","_pp7JER10","_pPb5JER10","_pp2JER2","_pp7JER2","_pPb5JER2","_NoTrackCorr","_pp2JESUP1","_pp2JESDOWN1","_pp7JESUP1","_pp7JESDOWN1","_pPb5JESUP1","_pPb5JESDOWN1"};
 
@@ -296,14 +297,14 @@ TH1D *gluon_7tev_gen;
 
 void loadHistos(int v)
 {
-  TFile * spectraFilepp2 = new TFile(Form("%s/pp2_3_0_15.root",filePath),"read");
-  TFile * spectraFilepPb5 = new TFile(Form("%s/pPb5_3_0_15.root",filePath),"read");
-  TFile * spectraFilePbp5 = new TFile(Form("%s/Pbp5_3_0_15.root",filePath),"read");
-  TFile * spectraFilepp7 = new TFile(Form("%s/pp7_3_0_15.root",filePath),"read");
-  TFile * MCFilepp2 = new TFile(Form("%s/pp2MC_3_0_15.root",filePath),"read");
-  TFile * MCFilepPb5 = new TFile(Form("%s/pPb5MC_3_0_15.root",filePath),"read");
-  TFile * MCFilepp7 = new TFile(Form("%s/pp7MC_3_0_15.root",filePath),"read");
-  TFile * MCFilepp5 = new TFile(Form("%s/pp5MC_3_0_15.root",filePath),"read");
+  TFile * spectraFilepp2 = new TFile(Form("%s/pp2_UE%d_0_15.root",filePath,UEtype),"read");
+  TFile * spectraFilepPb5 = new TFile(Form("%s/pPb5_UE%d_0_15.root",filePath,UEtype),"read");
+  TFile * spectraFilePbp5 = new TFile(Form("%s/Pbp5_UE%d_0_15.root",filePath,UEtype),"read");
+  TFile * spectraFilepp7 = new TFile(Form("%s/pp7_UE%d_0_15.root",filePath,UEtype),"read");
+  TFile * MCFilepp2 = new TFile(Form("%s/pp2MC_UE%d_0_15.root",filePath,UEtype),"read");
+  TFile * MCFilepPb5 = new TFile(Form("%s/pPb5MC_UE%d_0_15.root",filePath,UEtype),"read");
+  TFile * MCFilepp7 = new TFile(Form("%s/pp7MC_UE%d_0_15.root",filePath,UEtype),"read");
+  TFile * MCFilepp5 = new TFile(Form("%s/pp5MC_UE%d_0_15.root",filePath,UEtype),"read");
 
   std::string pp2Tag = "", pp7Tag = "", pPb5Tag = "";
   if(v==1 || v==2 || v==7 || v==10 || v==13 || v==14 || v==15) pp2Tag = variationTag[v];

@@ -30,17 +30,17 @@ TBox* makeBox(double x1, double y1, double x2, double y2)
   return box;
 }
 
-void rawFFs()
-{ 
+void interpRatio()
+{  
   TLatex * tlat = new TLatex(0.6,0.6,"test");
 
   TFile * inf1 = TFile::Open("../../FragmentationFunctionsUE3.root","read");
   TH1D * hist[15];
   for(int i = 0; i<15; i++)
   {
-    if(i<5)       hist[i] = (TH1D*)inf1->Get(Form("pp2TeV_NoReweight_%d_%d",(int)FF_Bound[i%5],(int)FF_Bound[i%5+1]));
-    else if(i<10) hist[i] = (TH1D*)inf1->Get(Form("pp7TeV_NoReweight_%d_%d",(int)FF_Bound[i%5],(int)FF_Bound[i%5+1]));
-    else          hist[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d",(int)FF_Bound[i%5],(int)FF_Bound[i%5+1]));
+    if(i<5)       hist[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d",(int)FF_Bound[i%5],(int)FF_Bound[i%5+1]));
+    else if(i<10) hist[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_data_interp_%d_%d",(int)FF_Bound[i%5],(int)FF_Bound[i%5+1]));
+    else          hist[i] = (TH1D*)inf1->Get(Form("pPbPbp_FF_%d_%d",(int)FF_Bound[i%5],(int)FF_Bound[i%5+1]));
     hist[i]->SetDirectory(0);
   }
   inf1->Close();
@@ -51,19 +51,19 @@ void rawFFs()
   for(int i = 0; i<15; i++)
   {
     if(i<5)
-    {    
-      sysU[i] = (TH1D*)inf2->Get(Form("pp2TotUP%d",i%5));
-      sysD[i] = (TH1D*)inf2->Get(Form("pp2TotDOWN%d",i%5));
+    {     
+      sysU[i] = (TH1D*)inf2->Get(Form("pPb5TotUP%d",i%5));
+      sysD[i] = (TH1D*)inf2->Get(Form("pPb5TotDOWN%d",i%5));
     }   
     else if(i<10) 
     {
-      sysU[i] = (TH1D*)inf2->Get(Form("pp7TotUP%d",i%5));
-      sysD[i] = (TH1D*)inf2->Get(Form("pp7TotDOWN%d",i%5));
+      sysU[i] = (TH1D*)inf2->Get(Form("interp_TotUP%d",i%5));
+      sysD[i] = (TH1D*)inf2->Get(Form("interp_TotDOWN%d",i%5));
     }    
     else 
     { 
-      sysU[i] = (TH1D*)inf2->Get(Form("pPb5TotUP%d",i%5));
-      sysD[i] = (TH1D*)inf2->Get(Form("pPb5TotDOWN%d",i%5));
+      sysU[i] = (TH1D*)inf2->Get(Form("FFratio_TotUP%d",i%5));
+      sysD[i] = (TH1D*)inf2->Get(Form("FFratio_TotDOWN%d",i%5));
     }
     sysU[i]->SetDirectory(0);
     sysD[i]->SetDirectory(0);
@@ -79,18 +79,24 @@ void rawFFs()
     }
   }
 
-  TCanvas * c = new TCanvas("rawFFs","rawFFs",1200,600);
+  TCanvas * c = new TCanvas("rawFFs","rawFFs",1200,900);
   c->SetLeftMargin(0.23);
-  c->Divide(5,2,0,0);
+  c->Divide(5,3,0,0);
 
-  for(int i = 0; i<10; i++)
+  for(int i = 0; i<15; i++)
   {
     c->cd(i+1)->SetLogx();
-    c->cd(i+1)->SetLogy();
+    if(i<10) c->cd(i+1)->SetLogy();
 
     hist[i]->SetMaximum(5);
     hist[i]->SetMinimum(0.000003);
     
+    if(i>9)
+    {
+      hist[i]->SetMaximum(2);
+      hist[i]->SetMinimum(0.2);
+    }
+
     hist[i]->SetLineWidth(1);
     hist[i]->SetLineColor(1);
     if(i<5)
@@ -103,23 +109,21 @@ void rawFFs()
       hist[i]->SetMarkerStyle(24);
       hist[i]->SetMarkerSize(0.7);
     }
-
+    else
+    {
+      hist[i]->SetMarkerStyle(8);
+      hist[i]->SetMarkerSize(0.7);
+    }
     hist[i]->SetMarkerColor(1);
 
     if(i%5==0)
     {
       hist[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{dN^{trk}}{dp_{T}^{trk}} (GeV^{-1}c)");
+      if(i==10)hist[i]->GetYaxis()->SetTitle("FF_{pPb}/FF_{pp}^{interpolation}");
       hist[i]->GetYaxis()->SetTitleOffset(1.6);
       hist[i]->GetYaxis()->SetTitleSize(0.07);
       hist[i]->GetYaxis()->SetLabelOffset(0.003);
-      hist[i]->GetYaxis()->SetLabelSize(0.06);
-      hist[i]->GetYaxis()->SetNdivisions(505,true);
-      if(i==5)
-      {
-        hist[i]->GetYaxis()->SetLabelSize(0.054);
-        hist[i]->GetYaxis()->SetTitleSize(0.062);
-        hist[i]->GetYaxis()->SetTitleOffset(1.8);
-      }
+      hist[i]->GetYaxis()->SetLabelSize(0.05);
 
       tlat->SetTextSize(0.058);
     } 
@@ -127,9 +131,10 @@ void rawFFs()
     {
       hist[i]->GetYaxis()->SetTitleSize(0);
       hist[i]->GetYaxis()->SetLabelSize(0);
+
       tlat->SetTextSize(0.07);
     } 
-    if(i>4)
+    if(i>9)
     {
       hist[i]->GetXaxis()->SetTitle("p_{T}^{track} (GeV/c)");
       hist[i]->GetXaxis()->CenterTitle();
@@ -137,14 +142,15 @@ void rawFFs()
       hist[i]->GetXaxis()->SetLabelSize(0.07);
       hist[i]->GetXaxis()->SetTitleOffset(1.0);
       hist[i]->GetXaxis()->SetTitleSize(0.07);
-      if(i==5)
+      if(i==10)
       {
         hist[i]->GetXaxis()->SetLabelSize(0.058);
-        hist[i]->GetXaxis()->SetTitleSize(0.055);
-        hist[i]->GetXaxis()->SetTitleOffset(1.24);
-        hist[i]->GetXaxis()->SetLabelOffset(0.012);
+        hist[i]->GetXaxis()->SetTitleSize(0.058);
+        hist[i]->GetXaxis()->SetTitleOffset(1.2);
+        hist[i]->GetXaxis()->SetLabelOffset(0.01);
       }
     }
+
     
     hist[i]->Draw();
     for(int j=1; j<hist[i]->GetSize()-1; j++)
@@ -157,18 +163,27 @@ void rawFFs()
     if(i==3) tlat->DrawLatex(20,1,"|#eta_{CM}^{jet}|<1.5");
     if(i==4) tlat->DrawLatex(8,1,"CMS Preliminary");
 
+    if(i>9)
+    {
+      TLine * l = new TLine(0.5,1, hist[i]->GetBinLowEdge(40),1);
+      l->SetLineWidth(1);
+      l->SetLineStyle(3);
+      l->SetLineColor(1);
+      l->Draw("same");
+    }
+
     if(i==0)
     {
-      TLegend * leg = new TLegend(0.28,0.3,0.8,0.6);
-      leg->AddEntry(hist[0],"2.76 TeV pp","p");
-      leg->AddEntry(hist[5],"7 TeV pp","p");
-      //leg->AddEntry(hist[10],"5.02 TeV pPb","p");
+      TLegend * leg = new TLegend(0.28,0.2,0.8,0.5);
+      leg->AddEntry(hist[0],"5.02 TeV pPb","p");
+      leg->AddEntry(hist[5],"pp interpolation","p");
+      //leg->AddEntry(hist[10],"Fragmentation Function Ratio","p");
       leg->SetTextSize(0.058);
       leg->SetBorderSize(0);
       leg->SetTextFont(tlat->GetTextFont());
       leg->Draw();
     }
   }
-  c->SaveAs("../../plots/prettyRawFFs.png");
-  c->SaveAs("../../plots/prettyRawFFs.pdf");
+  c->SaveAs("../../plots/prettyInterpRatio.png");
+  c->SaveAs("../../plots/prettyInterpRatio.pdf");
 }

@@ -23,7 +23,7 @@ TLegend * leg4;
 
 const int bins[6] = {60,80,100,120,140,200};
 
-void q_g_MC_plots()
+void q_g_MC_plots_pp5Signal()
 {
   TCanvas * c1 = new TCanvas("c1","",1200,600);
   c1->SetLeftMargin(0.2);

@@ -35,7 +35,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
 
   //some parameters for  files
   //max output file size
-  const int maxOutputFileSize = 200000;
+  const int maxOutputFileSize = 50000;
   //if(isMC) 
 
 //setting up files 
