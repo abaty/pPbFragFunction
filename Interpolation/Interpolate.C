@@ -333,7 +333,7 @@ void Interpolate()
 {
   for(int v = 0; v<variations; v++) 
   {
-    if(v!=7 && v!=8 && v!=9) makeFF(v);
+    makeFF(v);
   }
   systematics();
 }
