@@ -93,8 +93,8 @@ void interpRatio()
     
     if(i>9)
     {
-      hist[i]->SetMaximum(2);
-      hist[i]->SetMinimum(0.2);
+      hist[i]->SetMaximum(2.3);
+      hist[i]->SetMinimum(0.5);
     }
 
     hist[i]->SetLineWidth(1);

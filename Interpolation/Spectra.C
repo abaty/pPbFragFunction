@@ -737,7 +737,7 @@ int main(int argc, const char* argv[])
   std::cout << "Results of parsing input files for mode and trigger used:" << std::endl;
   std::cout << "Mode: " <<  parsedMode.data() << "  Trigger: " << parsedTrigger.data() << "  Is MC:" << MCStatus << std::endl;
   
-  Spectra(listOfFilesJets[job].data(),listOfFilesMB[job].data(),parsedMode.data(),parsedTrigger.data(),MCStatus,job,3,0,1.5);
+  Spectra(listOfFilesJets[job].data(),listOfFilesMB[job].data(),parsedMode.data(),parsedTrigger.data(),MCStatus,job,0,0,1.5);
   return 0;
 }
 

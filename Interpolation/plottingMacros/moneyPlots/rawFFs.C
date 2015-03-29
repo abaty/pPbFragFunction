@@ -89,7 +89,7 @@ void rawFFs()
     c->cd(i+1)->SetLogy();
 
     hist[i]->SetMaximum(5);
-    hist[i]->SetMinimum(0.000003);
+    hist[i]->SetMinimum(0.00000008);
     
     hist[i]->SetLineWidth(1);
     hist[i]->SetLineColor(1);
@@ -152,7 +152,7 @@ void rawFFs()
       if(boxArray[i][j]->GetY2()!=0) boxArray[i][j]->Draw("l");
     }
     hist[i]->Draw("same");
-    if(i<5) tlat->DrawLatex(0.8,0.00001,Form("%d < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+    if(i<5) tlat->DrawLatex(0.8,0.0000007,Form("%d < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i],(int)FF_Bound[i+1]));
     if(i==2) tlat->DrawLatex(20,1,"ak3PF jets");
     if(i==3) tlat->DrawLatex(20,1,"|#eta_{CM}^{jet}|<1.5");
     if(i==4) tlat->DrawLatex(8,1,"CMS Preliminary");
