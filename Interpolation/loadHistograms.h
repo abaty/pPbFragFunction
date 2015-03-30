@@ -79,7 +79,16 @@ TH1D * pPbPbp_FF[FF_Bins];
 TH1D * pPbPbp_FF_genGluFrac[FF_Bins];
 
 TH1D * pp2TeV_data_NoReweight[FF_Bins];
+TH1D * pp2TeV_reco_NoReweight[FF_Bins];
+TH1D * pp2TeV_rJgT_NoReweight[FF_Bins];
+TH1D * pp2TeV_gJrT_NoReweight[FF_Bins];
+TH1D * pp2TeV_gen_NoReweight[FF_Bins];
+
 TH1D * pp7TeV_data_NoReweight[FF_Bins];
+TH1D * pp7TeV_reco_NoReweight[FF_Bins];
+TH1D * pp7TeV_rJgT_NoReweight[FF_Bins];
+TH1D * pp7TeV_gJrT_NoReweight[FF_Bins];
+TH1D * pp7TeV_gen_NoReweight[FF_Bins];
 
 //input histos
 TH1D * pp2_0_jet;

@@ -67,13 +67,98 @@ TH1D** getRatio(const char * mode = "pp2", int v=0)
   return ratioArray;
 }
 
+TH1D** getpPbPbpDiff(const char * mode = "pPb5", int v=0)
+{
+  TH1D** diffArray = new TH1D*[FF_Bins];
+
+  TFile * inf1 = TFile::Open(Form("FragmentationFunctions%sUE3.root",variationTag[v]),"read");
+  TFile * inf2 = TFile::Open("FragmentationFunctionsUE3.root","read");
+  for(int i =0; i<FF_Bins; i++)
+  {
+    if(strcmp(mode,"pPb5")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5TeV_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+      diffArray[i]->Add((TH1D*)inf1->Get(Form("Pbp5TeV_data_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])));
+      diffArray[i]->SetName(Form("%s%s_pPbPbpDiff%d",mode,variationTag[v],i));
+      diffArray[i]->SetDirectory(0);
+    }
+    if(strcmp(mode,"FFratio")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPb_FF_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+      diffArray[i]->Add((TH1D*)inf1->Get(Form("Pbp_FF_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])));
+      diffArray[i]->SetName(Form("%s%s_pPbPbpDiff%d",mode,variationTag[v],i));
+      diffArray[i]->SetDirectory(0);
+    }
+  }  
+  inf1->Close();
+  inf2->Close();
+  return diffArray;
+}
+
+TH1D** getMCDiff(const char * mode = "pPb5", int v=0)
+{
+  TH1D** diffArray = new TH1D*[FF_Bins];
+
+  TFile * inf1 = TFile::Open(Form("FragmentationFunctions%sUE3.root",variationTag[v]),"read");
+  TFile * inf2 = TFile::Open("FragmentationFunctionsUE3.root","read");
+  for(int i =0; i<FF_Bins; i++)
+  {   
+    if(strcmp(mode,"pp2")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pp2TeV_reco_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+      diffArray[i]->Add((TH1D*)inf1->Get(Form("pp2TeV_gen_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])));
+      diffArray[i]->SetName(Form("%s%s_MCDiff%d",mode,variationTag[v],i));
+      diffArray[i]->SetDirectory(0);
+    }
+    if(strcmp(mode,"pp7")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pp7TeV_reco_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+      diffArray[i]->Add((TH1D*)inf1->Get(Form("pp7TeV_gen_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])));
+      diffArray[i]->SetName(Form("%s%s_MCDiff%d",mode,variationTag[v],i));
+      diffArray[i]->SetDirectory(0);
+    }
+    if(strcmp(mode,"pPb5")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5TeV_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+      diffArray[i]->Add((TH1D*)inf1->Get(Form("pPb5TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])));
+      diffArray[i]->SetName(Form("%s%s_MCDiff%d",mode,variationTag[v],i));
+      diffArray[i]->SetDirectory(0);
+    }
+    if(strcmp(mode,"interp")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5TeV_recoMC_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+      diffArray[i]->Add((TH1D*)inf1->Get(Form("pPb5TeV_genMC_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])));
+      diffArray[i]->SetName(Form("%s%s_MCDiff%d",mode,variationTag[v],i));
+      diffArray[i]->SetDirectory(0);
+    }
+    if(strcmp(mode,"FFratio")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPb_FF_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+      diffArray[i]->Add((TH1D*)inf1->Get(Form("pPb_FF_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])));
+      diffArray[i]->SetName(Form("%s%s_MCDiff%d",mode,variationTag[v],i));
+      diffArray[i]->SetDirectory(0);
+    }
+  }  
+  inf1->Close();
+  inf2->Close();
+  return diffArray;
+}
+
 void FFSystematics(const char * mode)
 {
   //getting sources of error as ratios
    TH1D** JESUP;
    TH1D** JESDOWN;
    TH1D** JER;
-
+   TH1D** pPbPbpDiff;
+   TH1D** MCDiff;
    //estimating 5% tracking errors
    double track = 0.05;
 
@@ -82,18 +167,22 @@ void FFSystematics(const char * mode)
     JESUP = getRatio(mode,5);
     JESDOWN = getRatio(mode,6);
     JER = getRatio(mode,9);
+    pPbPbpDiff = getpPbPbpDiff(mode,0);
+    MCDiff = getMCDiff(mode,0);
   }
   if(strcmp(mode,"pp2")==0)
   {
     JESUP = getRatio(mode,1);
     JESDOWN = getRatio(mode,2);
     JER = getRatio(mode,7);
+    MCDiff = getMCDiff(mode,0);
   }
   if(strcmp(mode,"pp7")==0)
   {
     JESUP = getRatio(mode,3);
     JESDOWN = getRatio(mode,4);
     JER = getRatio(mode,8);
+    MCDiff = getMCDiff(mode,0);
   }
 
   TFile * output;
@@ -120,7 +209,7 @@ void FFSystematics(const char * mode)
     }
   }
 
-  //adding JES and JER together in quadrature
+  //adding all sources together in quadrature
   TH1D* TotUP[FF_Bins];
   TH1D* TotDOWN[FF_Bins];
   for(int i = 0; i<FF_Bins; i++)
@@ -140,13 +229,25 @@ void FFSystematics(const char * mode)
       }
       else 
       {
-        TotUP[i]->SetBinContent(j,TMath::Power(TMath::Power(TotUP[i]->GetBinContent(j),2)+TMath::Power(JER[i]->GetBinContent(j)-1,2)+track*track,0.5));
-        TotDOWN[i]->SetBinContent(j,TMath::Power(TMath::Power(TotDOWN[i]->GetBinContent(j),2)+TMath::Power(JER[i]->GetBinContent(j)-1,2)+track*track,0.5));
+        TotUP[i]->SetBinContent(j,TMath::Power(TotUP[i]->GetBinContent(j),2)+TMath::Power(JER[i]->GetBinContent(j)-1,2)+track*track);
+        TotDOWN[i]->SetBinContent(j,TMath::Power(TotDOWN[i]->GetBinContent(j),2)+TMath::Power(JER[i]->GetBinContent(j)-1,2)+track*track);
+        if(strcmp(mode,"pPb5")==0)
+        {
+          TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(pPbPbpDiff[i]->GetBinContent(j),2));
+          TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(pPbPbpDiff[i]->GetBinContent(j),2));
+        }
+        if(MCDiff[i]->GetBinContent(j)<0) TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
+        else if(MCDiff[i]->GetBinContent(j)>0) TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
+
+        TotUP[i]->SetBinContent(j,TMath::Power(TotUP[i]->GetBinContent(j),0.5));
+        TotDOWN[i]->SetBinContent(j,TMath::Power(TotDOWN[i]->GetBinContent(j),0.5));
       }
     } 
     JESUP[i]->Write();
     JESDOWN[i]->Write();
     JER[i]->Write();
+    if(strcmp(mode,"pPb5")==0) pPbPbpDiff[i]->Write();
+    MCDiff[i]->Write();
     JESTotUP[i]->Write();
     JESTotDOWN[i]->Write();
     TotUP[i]->Write();
@@ -167,6 +268,8 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
   TH1D** pPb5JESUP;
   TH1D** pPb5JESDOWN;
   TH1D** pPb5JER;
+  TH1D** pPbPbpDiff;
+  TH1D** MCDiff;
 
   //estimating 5% tracking errors
   double track = 0.05;
@@ -182,8 +285,9 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
     pPb5JESUP = getRatio(mode,5);
     pPb5JESDOWN = getRatio(mode,6);
     pPb5JER = getRatio(mode,9);
+    MCDiff = getMCDiff(mode,0);
   }
-  else 
+  else if(strcmp(mode,"FFratio")==0) 
   {
     pp2JESUP = getRatio(mode,20);
     pp2JESDOWN = getRatio(mode,21);
@@ -193,7 +297,9 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
     pp7JER = getRatio(mode,8);
     pPb5JESUP = getRatio(mode,24);
     pPb5JESDOWN = getRatio(mode,25);
-    pPb5JER = getRatio(mode,9);
+    pPb5JER = getRatio(mode,9); 
+    pPbPbpDiff = getpPbPbpDiff(mode,0);
+    MCDiff = getMCDiff(mode,0);
   }
 
   TFile * output = new TFile("SystematicsUE3.root","update");
@@ -242,7 +348,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
     }
   }
 
-  //adding JES and JER together in quadrature
+  //adding all sources in quadrature
   TH1D* TotUP[FF_Bins];
   TH1D* TotDOWN[FF_Bins];
   for(int i = 0; i<FF_Bins; i++)
@@ -262,8 +368,19 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
       }
       else 
       {
-        TotUP[i]->SetBinContent(j,TMath::Power(TMath::Power(TotUP[i]->GetBinContent(j),2)+TMath::Power(pp7JESTotUP[i]->GetBinContent(j),2)+TMath::Power(pPb5JESTotUP[i]->GetBinContent(j),2)+TMath::Power(pp7JER[i]->GetBinContent(j)-1,2)+TMath::Power(pp2JER[i]->GetBinContent(j)-1,2)+TMath::Power(pPb5JER[i]->GetBinContent(j)-1,2)+track*track,0.5));
-        TotDOWN[i]->SetBinContent(j,TMath::Power(TMath::Power(TotDOWN[i]->GetBinContent(j),2)+TMath::Power(pp7JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(pPb5JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(pp7JER[i]->GetBinContent(j)-1,2)+TMath::Power(pp2JER[i]->GetBinContent(j)-1,2)+TMath::Power(pPb5JER[i]->GetBinContent(j)-1,2)+track*track,0.5));
+        TotUP[i]->SetBinContent(j,TMath::Power(TotUP[i]->GetBinContent(j),2)+TMath::Power(pp7JESTotUP[i]->GetBinContent(j),2)+TMath::Power(pPb5JESTotUP[i]->GetBinContent(j),2)+TMath::Power(pp7JER[i]->GetBinContent(j)-1,2)+TMath::Power(pp2JER[i]->GetBinContent(j)-1,2)+TMath::Power(pPb5JER[i]->GetBinContent(j)-1,2)+track*track);
+        TotDOWN[i]->SetBinContent(j,TMath::Power(TotDOWN[i]->GetBinContent(j),2)+TMath::Power(pp7JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(pPb5JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(pp7JER[i]->GetBinContent(j)-1,2)+TMath::Power(pp2JER[i]->GetBinContent(j)-1,2)+TMath::Power(pPb5JER[i]->GetBinContent(j)-1,2)+track*track);
+
+        if(strcmp(mode,"FFratio")==0)
+        {
+          TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(pPbPbpDiff[i]->GetBinContent(j),2));
+          TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(pPbPbpDiff[i]->GetBinContent(j),2));
+        }
+        if(MCDiff[i]->GetBinContent(j)<0) TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
+        else if(MCDiff[i]->GetBinContent(j)>0) TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
+       
+        TotUP[i]->SetBinContent(j,TMath::Power(TotUP[i]->GetBinContent(j),0.5));
+        TotDOWN[i]->SetBinContent(j,TMath::Power(TotDOWN[i]->GetBinContent(j),0.5));
       }
     }
     pp2JESUP[i]->Write();
@@ -274,7 +391,9 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
     pp7JER[i]->Write();
     pPb5JESUP[i]->Write();
     pPb5JESDOWN[i]->Write();
-    pPb5JER[i]->Write(); 
+    pPb5JER[i]->Write();
+    if(strcmp(mode,"FFratio")==0) pPbPbpDiff[i]->Write(); 
+    MCDiff[i]->Write();
     pp2JESTotUP[i]->Write();
     pp2JESTotDOWN[i]->Write(); 
     pp7JESTotUP[i]->Write();

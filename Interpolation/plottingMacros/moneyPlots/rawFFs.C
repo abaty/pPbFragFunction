@@ -88,8 +88,8 @@ void rawFFs()
     c->cd(i+1)->SetLogx();
     c->cd(i+1)->SetLogy();
 
-    hist[i]->SetMaximum(5);
-    hist[i]->SetMinimum(0.00000008);
+    hist[i]->SetMaximum(4);
+    hist[i]->SetMinimum(0.00000015);
     
     hist[i]->SetLineWidth(1);
     hist[i]->SetLineColor(1);

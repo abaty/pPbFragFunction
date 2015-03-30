@@ -108,7 +108,16 @@ void makeFF(int v)
 
     //2 and 7 tev pp FF's with no reweighting
     pp2TeV_data_NoReweight[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),41);
+    pp2TeV_reco_NoReweight[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_reco_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),43);
+    pp2TeV_rJgT_NoReweight[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_rJgT_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),44);
+    pp2TeV_gJrT_NoReweight[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_gJrT_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),45);
+    pp2TeV_gen_NoReweight[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp2TeV_gen_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),46);
+
     pp7TeV_data_NoReweight[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),42); 
+    pp7TeV_reco_NoReweight[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_reco_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),47); 
+    pp7TeV_rJgT_NoReweight[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_rJgT_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),48); 
+    pp7TeV_gJrT_NoReweight[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_gJrT_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),49); 
+    pp7TeV_gen_NoReweight[i]=getFF_pp(FF_Bound[i],FF_Bound[i+1],Form("pp7TeV_gen_NoReweight_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]),50); 
 
     //interpolations
     pPb5TeV_data_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_data_interp",2,pp2TeV_data[i],pp7TeV_data[i],0);
@@ -191,7 +200,15 @@ void makeFF(int v)
     pp5TeV_genMC_G[i]->Write();
 
     pp2TeV_data_NoReweight[i]->Write();
+    pp2TeV_reco_NoReweight[i]->Write();
+    pp2TeV_rJgT_NoReweight[i]->Write();
+    pp2TeV_gJrT_NoReweight[i]->Write();
+    pp2TeV_gen_NoReweight[i]->Write();
     pp7TeV_data_NoReweight[i]->Write();
+    pp7TeV_reco_NoReweight[i]->Write();
+    pp7TeV_rJgT_NoReweight[i]->Write();
+    pp7TeV_gJrT_NoReweight[i]->Write();
+    pp7TeV_gen_NoReweight[i]->Write();
 
     for(int indx = 0; indx<3; indx++)
     {
@@ -654,6 +671,62 @@ void getSpectra(int mode)
     jet_pPb = pp7_0_jet;
     trk     = pp7_0_track;
     trkUE   = pp7_0_trackUE;
+  }
+  if(mode == 43)
+  {
+    jet     = pp2_1_jet_reco;
+    jet_pPb = pp2_1_jet_reco;
+    trk     = pp2_1_track_reco;
+    trkUE   = pp2_1_trackUE_reco;
+  }
+  if(mode == 44)
+  {
+    jet     = pp2_1_jet_reco;
+    jet_pPb = pp2_1_jet_reco;
+    trk     = pp2_1_track_rJgT;
+    trkUE   = pp2_1_trackUE_rJgT;
+  }
+  if(mode == 45)
+  {
+    jet     = pp2_1_jet_gen;
+    jet_pPb = pp2_1_jet_gen;
+    trk     = pp2_1_track_gJrT;
+    trkUE   = pp2_1_trackUE_gJrT;
+  }
+  if(mode == 46)
+  {
+    jet     = pp2_1_jet_gen;
+    jet_pPb = pp2_1_jet_gen;
+    trk     = pp2_1_track_gen;
+    trkUE   = pp2_1_trackUE_gen;
+  }
+  if(mode == 47)
+  {
+    jet     = pp7_1_jet_reco;
+    jet_pPb = pp7_1_jet_reco;
+    trk     = pp7_1_track_reco;
+    trkUE   = pp7_1_trackUE_reco;
+  }
+  if(mode == 48)
+  {
+    jet     = pp7_1_jet_reco;
+    jet_pPb = pp7_1_jet_reco;
+    trk     = pp7_1_track_rJgT;
+    trkUE   = pp7_1_trackUE_rJgT;
+  }
+  if(mode == 49)
+  {
+    jet     = pp7_1_jet_gen;
+    jet_pPb = pp7_1_jet_gen;
+    trk     = pp7_1_track_gJrT;
+    trkUE   = pp7_1_trackUE_gJrT;
+  }
+  if(mode == 50)
+  {
+    jet     = pp7_1_jet_gen;
+    jet_pPb = pp7_1_jet_gen;
+    trk     = pp7_1_track_gen;
+    trkUE   = pp7_1_trackUE_gen;
   }
   return;
 }
