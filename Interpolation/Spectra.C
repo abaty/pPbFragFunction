@@ -132,6 +132,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     for(int i=0; i<nEntry; i++)
     {
       getInputEntry(i);
+      //cutting out bad runs due to bad alignment
+      if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0) && !isMC && evt->run<210676) continue;
+     
       if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
          
       //finding a MB event to mix with if needed 
