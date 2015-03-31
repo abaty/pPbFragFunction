@@ -133,7 +133,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     {
       getInputEntry(i);
       //cutting out bad runs due to bad alignment
-      if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0) && !isMC && evt->run<210676) continue;
+      if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0) && !isMC && run<210676) continue;
      
       if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
          
@@ -659,23 +659,23 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       totalJetsHist->Write();
       totalJetsEtaCutHist->Write();
       totalJetsPtCutHist->Write();
-    }
-  
+    } 
     outf->Close();
   }
 }
 
 int main(int argc, const char* argv[])
 {
-  if(argc != 4)
+  if(argc != 5)
   {
-    std::cout << "Usage: Spectra <fileListJets> <fileListMB> <job>" << std::endl;
+    std::cout << "Usage: Spectra <fileListJets> <fileListMB> <job> <UEMode>" << std::endl;
     return 1;
   }
   
   std::string fList = argv[1];
   std::string fListMB = argv[2];
   int job = std::atoi(argv[3]);
+  int UEMode = std::atoi(argv[4]);
 
   /*if(job==0) job=27;
   else if(job==1) job=26;
@@ -740,7 +740,7 @@ int main(int argc, const char* argv[])
   std::cout << "Results of parsing input files for mode and trigger used:" << std::endl;
   std::cout << "Mode: " <<  parsedMode.data() << "  Trigger: " << parsedTrigger.data() << "  Is MC:" << MCStatus << std::endl;
   
-  Spectra(listOfFilesJets[job].data(),listOfFilesMB[job].data(),parsedMode.data(),parsedTrigger.data(),MCStatus,job,0,0,1.5);
+  Spectra(listOfFilesJets[job].data(),listOfFilesMB[job].data(),parsedMode.data(),parsedTrigger.data(),MCStatus,job,UEMode,0,1.5);
   return 0;
 }
 
