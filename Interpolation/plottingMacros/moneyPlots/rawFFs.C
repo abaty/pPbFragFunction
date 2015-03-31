@@ -156,10 +156,13 @@ void rawFFs()
     if(i==2) tlat->DrawLatex(20,1,"ak3PF jets");
     if(i==3) tlat->DrawLatex(20,1,"|#eta_{CM}^{jet}|<1.5");
     if(i==4) tlat->DrawLatex(8,1,"CMS Preliminary");
+    if(i==0) tlat->DrawLatex(0.8,0.000015,"#int_{2.76 TeV pp}Ldt = 5.3 pb^{-1}");
 
+    tlat->SetTextSize(0.057);
+    if(i==5) tlat->DrawLatex(0.8,0.000002,"#int_{7 TeV pp}Ldt = 2.7 fb^{-1}");
     if(i==0)
     {
-      TLegend * leg = new TLegend(0.28,0.3,0.8,0.6);
+      TLegend * leg = new TLegend(0.35,0.5,0.6,0.7);
       leg->AddEntry(hist[0],"2.76 TeV pp","p");
       leg->AddEntry(hist[5],"7 TeV pp","p");
       //leg->AddEntry(hist[10],"5.02 TeV pPb","p");

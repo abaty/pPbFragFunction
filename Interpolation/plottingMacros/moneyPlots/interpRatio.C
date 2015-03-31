@@ -159,6 +159,9 @@ void interpRatio()
     }
     hist[i]->Draw("same");
     if(i<5) tlat->DrawLatex(0.8,0.000008,Form("%d < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+    if(i==5) tlat->DrawLatex(1.05,0.00002,"#int_{pPb}Ldt = 26.3 nb^{-1}");
+    if(i==6) tlat->DrawLatex(0.8,0.00002,"#int_{2.76 TeV pp}Ldt = 5.3 pb^{-1}");
+    if(i==7) tlat->DrawLatex(1,0.00002,"#int_{7 TeV pp}Ldt = 2.7 fb^{-1}");
     if(i==2) tlat->DrawLatex(20,1,"ak3PF jets");
     if(i==3) tlat->DrawLatex(20,1,"|#eta_{CM}^{jet}|<1.5");
     if(i==4) tlat->DrawLatex(8,1,"CMS Preliminary");
@@ -174,7 +177,7 @@ void interpRatio()
 
     if(i==0)
     {
-      TLegend * leg = new TLegend(0.28,0.2,0.8,0.5);
+      TLegend * leg = new TLegend(0.31,0.18,0.5,0.5);
       leg->AddEntry(hist[0],"5.02 TeV pPb","p");
       leg->AddEntry(hist[5],"pp interpolation","p");
       //leg->AddEntry(hist[10],"Fragmentation Function Ratio","p");

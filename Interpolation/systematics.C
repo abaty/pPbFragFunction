@@ -211,11 +211,11 @@ void FFSystematics(const char * mode)
     {
       if(JESTotUP[i]->GetBinContent(j)<JESDOWN[i]->GetBinContent(j)) JESTotUP[i]->SetBinContent(j,JESDOWN[i]->GetBinContent(j));
       JESTotUP[i]->SetBinContent(j,JESTotUP[i]->GetBinContent(j)-1);
-      if(JESTotUP[i]->GetBinContent(j)<0) JESTotUP[i]->SetBinContent(j,0);
+      if(JESTotUP[i]->GetBinContent(j)<0.001) JESTotUP[i]->SetBinContent(j,0.001);
 
       if(JESTotDOWN[i]->GetBinContent(j)>JESUP[i]->GetBinContent(j)) JESTotDOWN[i]->SetBinContent(j,JESUP[i]->GetBinContent(j));
       JESTotDOWN[i]->SetBinContent(j,JESTotDOWN[i]->GetBinContent(j)-1);
-      if(JESTotDOWN[i]->GetBinContent(j)>0) JESTotDOWN[i]->SetBinContent(j,0);
+      if(JESTotDOWN[i]->GetBinContent(j)>-0.001) JESTotDOWN[i]->SetBinContent(j,-0.001);
 
       if(JERTot[i]->GetBinContent(j)!=0)  JERTot[i]->SetBinContent(j,TMath::Abs(JERTot[i]->GetBinContent(j)-1));
     }
@@ -238,6 +238,10 @@ void FFSystematics(const char * mode)
         TotDOWN[i]->SetBinContent(j,0);
         TotUP[i]->SetBinError(j,0);
         TotDOWN[i]->SetBinError(j,0);
+        JESTotUP[i]->SetBinContent(j,0);
+        JESTotDOWN[i]->SetBinContent(j,0);
+        JESTotUP[i]->SetBinError(j,0);
+        JESTotDOWN[i]->SetBinError(j,0);
       }
       else 
       {
@@ -338,27 +342,27 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
     {
       if(pp2JESTotUP[i]->GetBinContent(j)<pp2JESDOWN[i]->GetBinContent(j)) pp2JESTotUP[i]->SetBinContent(j,pp2JESDOWN[i]->GetBinContent(j));
       pp2JESTotUP[i]->SetBinContent(j,pp2JESTotUP[i]->GetBinContent(j)-1);
-      if(pp2JESTotUP[i]->GetBinContent(j)<0) pp2JESTotUP[i]->SetBinContent(j,0);
+      if(pp2JESTotUP[i]->GetBinContent(j)<0.001) pp2JESTotUP[i]->SetBinContent(j,0.001);
 
       if(pp2JESTotDOWN[i]->GetBinContent(j)>pp2JESUP[i]->GetBinContent(j)) pp2JESTotDOWN[i]->SetBinContent(j,pp2JESUP[i]->GetBinContent(j));
       pp2JESTotDOWN[i]->SetBinContent(j,pp2JESTotDOWN[i]->GetBinContent(j)-1);
-      if(pp2JESTotDOWN[i]->GetBinContent(j)>0) pp2JESTotDOWN[i]->SetBinContent(j,0);
+      if(pp2JESTotDOWN[i]->GetBinContent(j)>-0.001) pp2JESTotDOWN[i]->SetBinContent(j,-0.001);
  
       if(pp7JESTotUP[i]->GetBinContent(j)<pp7JESDOWN[i]->GetBinContent(j)) pp7JESTotUP[i]->SetBinContent(j,pp7JESDOWN[i]->GetBinContent(j));
       pp7JESTotUP[i]->SetBinContent(j,pp7JESTotUP[i]->GetBinContent(j)-1);
-      if(pp7JESTotUP[i]->GetBinContent(j)<0) pp7JESTotUP[i]->SetBinContent(j,0);
+      if(pp7JESTotUP[i]->GetBinContent(j)<0.001) pp7JESTotUP[i]->SetBinContent(j,0.001);
 
       if(pp7JESTotDOWN[i]->GetBinContent(j)>pp7JESUP[i]->GetBinContent(j)) pp7JESTotDOWN[i]->SetBinContent(j,pp7JESUP[i]->GetBinContent(j));
       pp7JESTotDOWN[i]->SetBinContent(j,pp7JESTotDOWN[i]->GetBinContent(j)-1);   
-      if(pp7JESTotDOWN[i]->GetBinContent(j)>0) pp7JESTotDOWN[i]->SetBinContent(j,0);
+      if(pp7JESTotDOWN[i]->GetBinContent(j)>-0.001) pp7JESTotDOWN[i]->SetBinContent(j,-0.001);
 
       if(pPb5JESTotUP[i]->GetBinContent(j)<pPb5JESDOWN[i]->GetBinContent(j)) pPb5JESTotUP[i]->SetBinContent(j,pPb5JESDOWN[i]->GetBinContent(j));
       pPb5JESTotUP[i]->SetBinContent(j,pPb5JESTotUP[i]->GetBinContent(j)-1);
-      if(pPb5JESTotUP[i]->GetBinContent(j)<0) pPb5JESTotUP[i]->SetBinContent(j,0);
+      if(pPb5JESTotUP[i]->GetBinContent(j)<0.001) pPb5JESTotUP[i]->SetBinContent(j,0.001);
 
       if(pPb5JESTotDOWN[i]->GetBinContent(j)>pPb5JESUP[i]->GetBinContent(j)) pPb5JESTotDOWN[i]->SetBinContent(j,pPb5JESUP[i]->GetBinContent(j));
       pPb5JESTotDOWN[i]->SetBinContent(j,pPb5JESTotDOWN[i]->GetBinContent(j)-1);
-      if(pPb5JESTotDOWN[i]->GetBinContent(j)>0) pPb5JESTotDOWN[i]->SetBinContent(j,0);
+      if(pPb5JESTotDOWN[i]->GetBinContent(j)>-0.001) pPb5JESTotDOWN[i]->SetBinContent(j,-0.001);
     }
   }
 
