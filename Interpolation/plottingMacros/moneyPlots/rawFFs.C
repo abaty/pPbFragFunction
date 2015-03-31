@@ -52,18 +52,18 @@ void rawFFs()
   {
     if(i<5)
     {    
-      sysU[i] = (TH1D*)inf2->Get(Form("pp2TotUP%d",i%5));
-      sysD[i] = (TH1D*)inf2->Get(Form("pp2TotDOWN%d",i%5));
+      sysU[i] = (TH1D*)inf2->Get(Form("pp2_TotUP%d",i%5));
+      sysD[i] = (TH1D*)inf2->Get(Form("pp2_TotDOWN%d",i%5));
     }   
     else if(i<10) 
     {
-      sysU[i] = (TH1D*)inf2->Get(Form("pp7TotUP%d",i%5));
-      sysD[i] = (TH1D*)inf2->Get(Form("pp7TotDOWN%d",i%5));
+      sysU[i] = (TH1D*)inf2->Get(Form("pp7_TotUP%d",i%5));
+      sysD[i] = (TH1D*)inf2->Get(Form("pp7_TotDOWN%d",i%5));
     }    
     else 
     { 
-      sysU[i] = (TH1D*)inf2->Get(Form("pPb5TotUP%d",i%5));
-      sysD[i] = (TH1D*)inf2->Get(Form("pPb5TotDOWN%d",i%5));
+      sysU[i] = (TH1D*)inf2->Get(Form("pPb5_TotUP%d",i%5));
+      sysD[i] = (TH1D*)inf2->Get(Form("pPb5_TotDOWN%d",i%5));
     }
     sysU[i]->SetDirectory(0);
     sysD[i]->SetDirectory(0);

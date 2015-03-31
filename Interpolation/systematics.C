@@ -91,6 +91,14 @@ TH1D** getpPbPbpDiff(const char * mode = "pPb5", int v=0)
       diffArray[i]->SetName(Form("%s%s_pPbPbpDiff%d",mode,variationTag[v],i));
       diffArray[i]->SetDirectory(0);
     }
+    if(strcmp(mode,"interp")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5TeV_data_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+      diffArray[i]->Add((TH1D*)inf1->Get(Form("Pbp5TeV_data_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])));
+      diffArray[i]->SetName(Form("%s%s_pPbPbpDiff%d",mode,variationTag[v],i));
+      diffArray[i]->SetDirectory(0);
+    }
   }  
   inf1->Close();
   inf2->Close();
@@ -192,10 +200,12 @@ void FFSystematics(const char * mode)
   //doing asymmetric JES errors
   TH1D* JESTotUP[FF_Bins];
   TH1D* JESTotDOWN[FF_Bins];
+  TH1D* JERTot[FF_Bins];
   for(int i = 0; i<FF_Bins; i++)
   {
-    JESTotUP[i] = (TH1D*)JESUP[i]->Clone(Form("%sJESTotUP%d",mode,i));
-    JESTotDOWN[i] = (TH1D*)JESDOWN[i]->Clone(Form("%sJESTotDOWN%d",mode,i));
+    JESTotUP[i] = (TH1D*)JESUP[i]->Clone(Form("%s_JESTotUP%d",mode,i));
+    JESTotDOWN[i] = (TH1D*)JESDOWN[i]->Clone(Form("%s_JESTotDOWN%d",mode,i));
+    JERTot[i] = (TH1D*)JER[i]->Clone(Form("%s_JERTot%d",mode,i));
 
     for(int j = 0; j<JESTotUP[0]->GetSize(); j++)
     {
@@ -206,6 +216,8 @@ void FFSystematics(const char * mode)
       if(JESTotDOWN[i]->GetBinContent(j)>JESUP[i]->GetBinContent(j)) JESTotDOWN[i]->SetBinContent(j,JESUP[i]->GetBinContent(j));
       JESTotDOWN[i]->SetBinContent(j,JESTotDOWN[i]->GetBinContent(j)-1);
       if(JESTotDOWN[i]->GetBinContent(j)>0) JESTotDOWN[i]->SetBinContent(j,0);
+
+      if(JERTot[i]->GetBinContent(j)!=0)  JERTot[i]->SetBinContent(j,TMath::Abs(JERTot[i]->GetBinContent(j)-1));
     }
   }
 
@@ -214,8 +226,8 @@ void FFSystematics(const char * mode)
   TH1D* TotDOWN[FF_Bins];
   for(int i = 0; i<FF_Bins; i++)
   {
-    TotUP[i] = (TH1D*)JESTotUP[i]->Clone(Form("%sTotUP%d",mode,i)); 
-    TotDOWN[i] = (TH1D*)JESTotDOWN[i]->Clone(Form("%sTotDOWN%d",mode,i));
+    TotUP[i] = (TH1D*)JESTotUP[i]->Clone(Form("%s_TotUP%d",mode,i)); 
+    TotDOWN[i] = (TH1D*)JESTotDOWN[i]->Clone(Form("%s_TotDOWN%d",mode,i));
   
     for(int j = 0; j<TotUP[0]->GetSize(); j++)
     {
@@ -250,6 +262,7 @@ void FFSystematics(const char * mode)
     MCDiff[i]->Write();
     JESTotUP[i]->Write();
     JESTotDOWN[i]->Write();
+    JERTot[i]->Write();
     TotUP[i]->Write();
     TotDOWN[i]->Write();
   }
@@ -285,6 +298,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
     pPb5JESUP = getRatio(mode,5);
     pPb5JESDOWN = getRatio(mode,6);
     pPb5JER = getRatio(mode,9);
+    pPbPbpDiff = getpPbPbpDiff(mode,0);
     MCDiff = getMCDiff(mode,0);
   }
   else if(strcmp(mode,"FFratio")==0) 
@@ -351,11 +365,19 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
   //adding all sources in quadrature
   TH1D* TotUP[FF_Bins];
   TH1D* TotDOWN[FF_Bins];
+  TH1D* JESTotUP[FF_Bins];
+  TH1D* JESTotDOWN[FF_Bins];
+  TH1D* JERTot[FF_Bins];
+
   for(int i = 0; i<FF_Bins; i++)
   {
     TotUP[i] = (TH1D*)pp2JESTotUP[i]->Clone(Form("%s_TotUP%d",mode,i)); 
     TotDOWN[i] = (TH1D*)pp2JESTotDOWN[i]->Clone(Form("%s_TotDOWN%d",mode,i));
+    JESTotUP[i] = (TH1D*)pp2JESTotUP[i]->Clone(Form("%s_JESTotUP%d",mode,i));
+    JESTotDOWN[i] = (TH1D*)pp2JESTotDOWN[i]->Clone(Form("%s_JESTotDOWN%d",mode,i));
+    JERTot[i] = (TH1D*)pp2JER[i]->Clone(Form("%s_JERTot%d",mode,i)); 
   
+    
     for(int j = 0; j<TotUP[0]->GetSize(); j++)
     {
       //if empty bins
@@ -365,17 +387,25 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
         TotDOWN[i]->SetBinContent(j,0);
         TotUP[i]->SetBinError(j,0);
         TotDOWN[i]->SetBinError(j,0);
+        JESTotUP[i]->SetBinContent(j,0);
+        JESTotDOWN[i]->SetBinContent(j,0);
+        JESTotUP[i]->SetBinError(j,0);
+        JESTotDOWN[i]->SetBinError(j,0);
+        JERTot[i]->SetBinContent(j,0);
+        JERTot[i]->SetBinContent(j,0);
+        JERTot[i]->SetBinError(j,0);
+        JERTot[i]->SetBinError(j,0);
       }
       else 
       {
-        TotUP[i]->SetBinContent(j,TMath::Power(TotUP[i]->GetBinContent(j),2)+TMath::Power(pp7JESTotUP[i]->GetBinContent(j),2)+TMath::Power(pPb5JESTotUP[i]->GetBinContent(j),2)+TMath::Power(pp7JER[i]->GetBinContent(j)-1,2)+TMath::Power(pp2JER[i]->GetBinContent(j)-1,2)+TMath::Power(pPb5JER[i]->GetBinContent(j)-1,2)+track*track);
-        TotDOWN[i]->SetBinContent(j,TMath::Power(TotDOWN[i]->GetBinContent(j),2)+TMath::Power(pp7JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(pPb5JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(pp7JER[i]->GetBinContent(j)-1,2)+TMath::Power(pp2JER[i]->GetBinContent(j)-1,2)+TMath::Power(pPb5JER[i]->GetBinContent(j)-1,2)+track*track);
+        JESTotUP[i]->SetBinContent(j,TMath::Power(TMath::Power(pp2JESTotUP[i]->GetBinContent(j),2)+TMath::Power(pp7JESTotUP[i]->GetBinContent(j),2)+TMath::Power(pPb5JESTotUP[i]->GetBinContent(j),2),0.5));
+        JESTotDOWN[i]->SetBinContent(j,TMath::Power(TMath::Power(pp2JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(pp7JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(pPb5JESTotDOWN[i]->GetBinContent(j),2),0.5));    
+        JERTot[i]->SetBinContent(j,TMath::Power(TMath::Power(pp2JER[i]->GetBinContent(j)-1,2)+TMath::Power(pp7JER[i]->GetBinContent(j)-1,2)+TMath::Power(pPb5JER[i]->GetBinContent(j)-1,2),0.5)); 
 
-        if(strcmp(mode,"FFratio")==0)
-        {
-          TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(pPbPbpDiff[i]->GetBinContent(j),2));
-          TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(pPbPbpDiff[i]->GetBinContent(j),2));
-        }
+        TotUP[i]->SetBinContent(j,TMath::Power(JESTotUP[i]->GetBinContent(j),2)+TMath::Power(JERTot[i]->GetBinContent(j),2)+track*track);     
+        TotDOWN[i]->SetBinContent(j,TMath::Power(JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(JERTot[i]->GetBinContent(j),2)+track*track);
+        TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(pPbPbpDiff[i]->GetBinContent(j),2));
+        TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(pPbPbpDiff[i]->GetBinContent(j),2));
         if(MCDiff[i]->GetBinContent(j)<0) TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
         else if(MCDiff[i]->GetBinContent(j)>0) TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
        
@@ -392,14 +422,17 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
     pPb5JESUP[i]->Write();
     pPb5JESDOWN[i]->Write();
     pPb5JER[i]->Write();
-    if(strcmp(mode,"FFratio")==0) pPbPbpDiff[i]->Write(); 
+    pPbPbpDiff[i]->Write(); 
     MCDiff[i]->Write();
     pp2JESTotUP[i]->Write();
     pp2JESTotDOWN[i]->Write(); 
     pp7JESTotUP[i]->Write();
     pp7JESTotDOWN[i]->Write();
     pPb5JESTotUP[i]->Write();
-    pPb5JESTotDOWN[i]->Write();
+    pPb5JESTotDOWN[i]->Write();  
+    JESTotUP[i]->Write();
+    JESTotDOWN[i]->Write();
+    JERTot[i]->Write();
     TotUP[i]->Write();
     TotDOWN[i]->Write();
   }

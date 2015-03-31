@@ -398,8 +398,8 @@ void makePlots(const char * tag)
   leg5->AddEntry(pPb5Pb5TeV_data_interp[1][0],"pp 5.02TeV interpolation");
   leg5->Draw();
 
-  c5->SaveAs(Form("plots//pPbPbp_FFs_UE3_%s.png",tag));
-  c5->SaveAs(Form("plots//pPbPbp_FFs_UE3_%s.pdf",tag));
+  c5->SaveAs(Form("plots//pPbPbp_FFs_UE3%s.png",tag));
+  c5->SaveAs(Form("plots//pPbPbp_FFs_UE3%s.pdf",tag));
 
   //MC reco jet gen track
   TCanvas * c6 = new TCanvas("c6","c6",1200,600);

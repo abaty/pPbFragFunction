@@ -52,8 +52,8 @@ void interpRatio()
   {
     if(i<5)
     {     
-      sysU[i] = (TH1D*)inf2->Get(Form("pPb5TotUP%d",i%5));
-      sysD[i] = (TH1D*)inf2->Get(Form("pPb5TotDOWN%d",i%5));
+      sysU[i] = (TH1D*)inf2->Get(Form("pPb5_TotUP%d",i%5));
+      sysD[i] = (TH1D*)inf2->Get(Form("pPb5_TotDOWN%d",i%5));
     }   
     else if(i<10) 
     {
