@@ -2,8 +2,7 @@
 #include "TH2D.h"
 #include "TH1D.h"
 
-const char* filePath = "tempRootFiles/processed_2015_03_29__15_24_34";
-const int UEtype = 3;
+const char* filePath = "tempRootFiles/processed_2015_03_31__20_03_52";
 const int variations = 26;
 const char * variationTag[variations]= {"","_pp2JESUP3","_pp2JESDOWN3","_pp7JESUP3","_pp7JESDOWN3","_pPb5JESUP3","_pPb5JESDOWN3","_pp2JER5","_pp7JER5","_pPb5JER5","_pp2JER2","_pp7JER2","_pPb5JER2","_NoTrackCorr","_pp2JESUP1","_pp2JESDOWN1","_pp7JESUP1","_pp7JESDOWN1","_pPb5JESUP1","_pPb5JESDOWN1","_pp2JESUP2","_pp2JESDOWN2","_pp7JESUP2","_pp7JESDOWN2","_pPb5JESUP2","_pPb5JESDOWN2"};
 
@@ -304,7 +303,7 @@ TH1D *gluon_2tev_gen;
 TH1D *gluon_5tev_gen;
 TH1D *gluon_7tev_gen;
 
-void loadHistos(int v)
+void loadHistos(int v, int UEtype)
 {
   TFile * spectraFilepp2 = new TFile(Form("%s/pp2_UE%d_0_15.root",filePath,UEtype),"read");
   TFile * spectraFilepPb5 = new TFile(Form("%s/pPb5_UE%d_0_15.root",filePath,UEtype),"read");

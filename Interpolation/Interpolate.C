@@ -16,6 +16,7 @@
 #include "plotGluonFraction.C"
 #include "interpolationErrors.h"
 #include "systematics.C"
+#include "systematicsSummaries.C"
 #include <iostream>
 #include <string>
 
@@ -35,17 +36,14 @@ TH1D * jet_pPb;
 const int trkBins=22;
 const double yAxis[trkBins+1] = {0.5, 0.63, 0.77,  1.03,1.38, 1.84, 2.46, 3.29,  4.40, 5.88,  7.87,  10.52, 14.06,  18.8, 25.13,  33.58,  44.89,  60, 80, 100, 120, 140, 200};
 
-//const int trkBins = 40;
-//double yAxis[trkBins+1] = {0.5, 0.58, 0.67, 0.77, 0.89, 1.03, 1.19,1.38, 1.59, 1.84, 2.13, 2.46, 2.85, 3.29, 3.81, 4.40, 5.09, 5.88, 6.80, 7.87, 9.10, 10.52, 12.16, 14.06, 16.2, 18.8, 21.7, 25.13, 29.05, 33.58, 38.83, 44.89, 51.9, 60, 70, 80, 100, 120, 140, 160, 200};
-
 //main execution starts here
-void makeFF(int v)
+void makeFF(int v, int UEtype=3)
 { 
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
 
   //initializing histograms for analysis
-  loadHistos(v);
+  loadHistos(v,UEtype);
 
   for(int i = 0; i < FF_Bins; i++)
   {
@@ -150,7 +148,7 @@ void makeFF(int v)
     pPb_FF_gJrTMC[i]->Divide(pPb5TeV_gJrTMC_interp[i][0]);
   }
  
-  TFile * outfile = new TFile(Form("FragmentationFunctions%sUE3.root",variationTag[v]),"recreate");
+  TFile * outfile = new TFile(Form("FragmentationFunctions%sUE%d.root",variationTag[v],UEtype),"recreate");
   for(int i = 0; i < FF_Bins; i++)
   {
     pp2TeV_data[i]->Write();
@@ -232,8 +230,8 @@ void makeFF(int v)
     pPb_FF_gJrTMC[i]->Write();
   }
   //handing it over to a plotting macro
-  makePlots(variationTag[v]); 
-  plotGluonFraction(variationTag[v]);
+  makePlots(variationTag[v],UEtype); 
+  plotGluonFraction(variationTag[v],UEtype);
   outfile->Close(); 
 }
 
@@ -350,9 +348,12 @@ void Interpolate()
 {
   for(int v = 0; v<variations; v++) 
   {
-    makeFF(v);
+    makeFF(v,0);
+    makeFF(v,3);
   }
-  systematics();
+  systematics(0);
+  systematics(3);
+  systematicSummaries();
 }
 
 //tells the getFF_pp exactly which spectra to use in which jetPt range

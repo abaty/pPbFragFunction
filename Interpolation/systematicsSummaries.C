@@ -16,8 +16,8 @@
 #include "TAttText.h"
 #include <iostream>
 
-const int FF_Bins = 5;
-double FF_Bound[FF_Bins+1] = {60,80,100,120,140,200};
+//const int FF_Bins = 5;
+//double FF_Bound[FF_Bins+1] = {60,80,100,120,140,200};
 
 const int errorSources = 7;
 const char * sources[errorSources] = {"TotUP","TotDOWN","JESTotUP","JESTotDOWN","JERTot","MCDiff","pPbPbpDiff"};  
@@ -30,11 +30,11 @@ const char * prettySources[errorSources] =
    "MC Difference Error",
    "pPb vs Pbp Error"};
 
-void makeSummaries(int v = 0)
+void makeSummaries(int v = 0, int UEtype=3)
 { 
   TLatex * tlat = new TLatex(0.6,0.6,"test"); 
 
-  TFile * inf2 = TFile::Open("../SystematicsUE3.root","read");
+  TFile * inf2 = TFile::Open(Form("SystematicsUE%d.root",UEtype),"read");
   TH1D * sys[25];
   for(int i = 0; i<25; i++)
   {
@@ -136,7 +136,7 @@ void makeSummaries(int v = 0)
       }
     }
     
-    sys[i]->Draw();
+    sys[i]->Draw("hist p");
     tlat->SetNDC();
     double xmin = 0.05;
     if(i%5==0) xmin = 0.3;
@@ -152,11 +152,12 @@ void makeSummaries(int v = 0)
     if(i==2) tlat->DrawLatex(xmin,0.8,prettySources[v]);
   }
 
-  c->SaveAs(Form("../plots/systematicsSummaries_%s.png",sources[v]));
-  c->SaveAs(Form("../plots/systematicsSummaries_%s.pdf",sources[v]));
+  c->SaveAs(Form("plots/systematicsSummaries_UE%d_%s.png",UEtype,sources[v]));
+  c->SaveAs(Form("plots/systematicsSummaries_UE%d_%s.pdf",UEtype,sources[v]));
 }
 
 void systematicSummaries()
 {
-  for(int v=0; v<errorSources ; v++) makeSummaries(v);
+  for(int v=0; v<errorSources ; v++) makeSummaries(v,3);
+  for(int v=0; v<errorSources ; v++) makeSummaries(v,0);
 }

@@ -18,12 +18,12 @@ const int FF_Bins = 5;
 double FF_Bound[FF_Bins+1] = {60,80,100,120,140,200};*/
 
 
-TH1D** getRatio(const char * mode = "pp2", int v=0)
+TH1D** getRatio(const char * mode = "pp2", int v=0, int UEtype=3)
 {
   TH1D** ratioArray = new TH1D*[FF_Bins];
 
-  TFile * inf1 = TFile::Open(Form("FragmentationFunctions%sUE3.root",variationTag[v]),"read");
-  TFile * inf2 = TFile::Open("FragmentationFunctionsUE3.root","read");
+  TFile * inf1 = TFile::Open(Form("FragmentationFunctions%sUE%d.root",variationTag[v],UEtype),"read");
+  TFile * inf2 = TFile::Open(Form("FragmentationFunctionsUE%d.root",UEtype),"read");
   for(int i =0; i<FF_Bins; i++)
   {
     if(strcmp(mode,"pPb5")==0)
@@ -67,12 +67,12 @@ TH1D** getRatio(const char * mode = "pp2", int v=0)
   return ratioArray;
 }
 
-TH1D** getpPbPbpDiff(const char * mode = "pPb5", int v=0)
+TH1D** getpPbPbpDiff(const char * mode = "pPb5", int v=0, int UEtype=3)
 {
   TH1D** diffArray = new TH1D*[FF_Bins];
 
-  TFile * inf1 = TFile::Open(Form("FragmentationFunctions%sUE3.root",variationTag[v]),"read");
-  TFile * inf2 = TFile::Open("FragmentationFunctionsUE3.root","read");
+  TFile * inf1 = TFile::Open(Form("FragmentationFunctions%sUE%d.root",variationTag[v],UEtype),"read");
+  TFile * inf2 = TFile::Open(Form("FragmentationFunctionsUE%d.root",UEtype),"read");
   for(int i =0; i<FF_Bins; i++)
   {
     if(strcmp(mode,"pPb5")==0)
@@ -105,12 +105,12 @@ TH1D** getpPbPbpDiff(const char * mode = "pPb5", int v=0)
   return diffArray;
 }
 
-TH1D** getMCDiff(const char * mode = "pPb5", int v=0)
+TH1D** getMCDiff(const char * mode = "pPb5", int v=0,int UEtype=3)
 {
   TH1D** diffArray = new TH1D*[FF_Bins];
 
-  TFile * inf1 = TFile::Open(Form("FragmentationFunctions%sUE3.root",variationTag[v]),"read");
-  TFile * inf2 = TFile::Open("FragmentationFunctionsUE3.root","read");
+  TFile * inf1 = TFile::Open(Form("FragmentationFunctions%sUE%d.root",variationTag[v],UEtype),"read");
+  TFile * inf2 = TFile::Open(Form("FragmentationFunctionsUE%d.root",UEtype),"read");
   for(int i =0; i<FF_Bins; i++)
   {   
     if(strcmp(mode,"pp2")==0)
@@ -159,7 +159,7 @@ TH1D** getMCDiff(const char * mode = "pPb5", int v=0)
   return diffArray;
 }
 
-void FFSystematics(const char * mode)
+void FFSystematics(const char * mode, int UEtype)
 {
   //getting sources of error as ratios
    TH1D** JESUP;
@@ -172,30 +172,30 @@ void FFSystematics(const char * mode)
 
   if(strcmp(mode,"pPb5")==0)
   {
-    JESUP = getRatio(mode,5);
-    JESDOWN = getRatio(mode,6);
-    JER = getRatio(mode,9);
-    pPbPbpDiff = getpPbPbpDiff(mode,0);
-    MCDiff = getMCDiff(mode,0);
+    JESUP = getRatio(mode,5,UEtype);
+    JESDOWN = getRatio(mode,6,UEtype);
+    JER = getRatio(mode,9,UEtype);
+    pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
+    MCDiff = getMCDiff(mode,0,UEtype);
   }
   if(strcmp(mode,"pp2")==0)
   {
-    JESUP = getRatio(mode,1);
-    JESDOWN = getRatio(mode,2);
-    JER = getRatio(mode,7);
-    MCDiff = getMCDiff(mode,0);
+    JESUP = getRatio(mode,1,UEtype);
+    JESDOWN = getRatio(mode,2,UEtype);
+    JER = getRatio(mode,7,UEtype);
+    MCDiff = getMCDiff(mode,0,UEtype);
   }
   if(strcmp(mode,"pp7")==0)
   {
-    JESUP = getRatio(mode,3);
-    JESDOWN = getRatio(mode,4);
-    JER = getRatio(mode,8);
-    MCDiff = getMCDiff(mode,0);
+    JESUP = getRatio(mode,3,UEtype);
+    JESDOWN = getRatio(mode,4,UEtype);
+    JER = getRatio(mode,8,UEtype);
+    MCDiff = getMCDiff(mode,0,UEtype);
   }
 
   TFile * output;
-  if(strcmp("pPb5",mode)==0) output = new TFile("SystematicsUE3.root","recreate");
-  else output = new TFile("SystematicsUE3.root","update");
+  if(strcmp("pPb5",mode)==0) output = new TFile(Form("SystematicsUE%d.root",UEtype),"recreate");
+  else output = new TFile(Form("SystematicsUE%d.root",UEtype),"update");
 
   //doing asymmetric JES errors
   TH1D* JESTotUP[FF_Bins];
@@ -273,7 +273,7 @@ void FFSystematics(const char * mode)
   output->Close();
 }
 
-void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
+void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtype=3)
 {
   //getting sources of error as ratios
   TH1D** pp2JESUP;
@@ -293,34 +293,34 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
  
   if(strcmp(mode,"interp")==0) 
   {
-    pp2JESUP = getRatio(mode,1);
-    pp2JESDOWN = getRatio(mode,2);
-    pp2JER = getRatio(mode,7);
-    pp7JESUP = getRatio(mode,3);
-    pp7JESDOWN = getRatio(mode,4);
-    pp7JER = getRatio(mode,8);
-    pPb5JESUP = getRatio(mode,5);
-    pPb5JESDOWN = getRatio(mode,6);
-    pPb5JER = getRatio(mode,9);
-    pPbPbpDiff = getpPbPbpDiff(mode,0);
-    MCDiff = getMCDiff(mode,0);
+    pp2JESUP = getRatio(mode,1,UEtype);
+    pp2JESDOWN = getRatio(mode,2,UEtype);
+    pp2JER = getRatio(mode,7,UEtype);
+    pp7JESUP = getRatio(mode,3,UEtype);
+    pp7JESDOWN = getRatio(mode,4,UEtype);
+    pp7JER = getRatio(mode,8,UEtype);
+    pPb5JESUP = getRatio(mode,5,UEtype);
+    pPb5JESDOWN = getRatio(mode,6,UEtype);
+    pPb5JER = getRatio(mode,9,UEtype);
+    pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
+    MCDiff = getMCDiff(mode,0,UEtype);
   }
   else if(strcmp(mode,"FFratio")==0) 
   {
-    pp2JESUP = getRatio(mode,20);
-    pp2JESDOWN = getRatio(mode,21);
-    pp2JER = getRatio(mode,7);
-    pp7JESUP = getRatio(mode,22);
-    pp7JESDOWN = getRatio(mode,23);
-    pp7JER = getRatio(mode,8);
-    pPb5JESUP = getRatio(mode,24);
-    pPb5JESDOWN = getRatio(mode,25);
-    pPb5JER = getRatio(mode,9); 
-    pPbPbpDiff = getpPbPbpDiff(mode,0);
-    MCDiff = getMCDiff(mode,0);
+    pp2JESUP = getRatio(mode,20,UEtype);
+    pp2JESDOWN = getRatio(mode,21,UEtype);
+    pp2JER = getRatio(mode,7,UEtype);
+    pp7JESUP = getRatio(mode,22,UEtype);
+    pp7JESDOWN = getRatio(mode,23,UEtype);
+    pp7JER = getRatio(mode,8,UEtype);
+    pPb5JESUP = getRatio(mode,24,UEtype);
+    pPb5JESDOWN = getRatio(mode,25,UEtype);
+    pPb5JER = getRatio(mode,9,UEtype); 
+    pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
+    MCDiff = getMCDiff(mode,0,UEtype);
   }
 
-  TFile * output = new TFile("SystematicsUE3.root","update");
+  TFile * output = new TFile(Form("SystematicsUE%d.root",UEtype),"update");
 
   TH1D* pp2JESTotUP[FF_Bins];
   TH1D* pp2JESTotDOWN[FF_Bins];
@@ -443,12 +443,12 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp")
   output->Close(); 
 }
 
-void systematics()
+void systematics(int UEtype=3)
 {
   TH1::SetDefaultSumw2();
-  FFSystematics("pPb5");
-  FFSystematics("pp2");
-  FFSystematics("pp7");
-  Interpolation_and_Ratio_Systematics("interp");
-  Interpolation_and_Ratio_Systematics("FFratio");
+  FFSystematics("pPb5",UEtype);
+  FFSystematics("pp2",UEtype);
+  FFSystematics("pp7",UEtype);
+  Interpolation_and_Ratio_Systematics("interp",UEtype);
+  Interpolation_and_Ratio_Systematics("FFratio",UEtype);
 }
