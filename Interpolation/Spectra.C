@@ -133,7 +133,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     {
       getInputEntry(i);
       //cutting out bad runs due to bad alignment
-      if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0) && !isMC && run<210676) continue;
+      //if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0) && !isMC && run<210676) continue;
      
       if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
          
