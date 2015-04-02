@@ -132,8 +132,6 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     for(int i=0; i<nEntry; i++)
     {
       getInputEntry(i);
-      //cutting out bad runs due to bad alignment
-      //if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0) && !isMC && run<210676) continue;
      
       if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
          
@@ -166,6 +164,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       for(int j=0; j<nref; j++)
       {
         totalJetsHist->Fill(1);
+        if(rawpt[j]<30) continue;
+        totalJetsRawPtCut->Fill(1);
         if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax) continue;
         totalJetsEtaCutHist->Fill(1);
   
@@ -657,6 +657,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     if(v==0)
     {
       totalJetsHist->Write();
+      totalJetsRawPtCut->Write();
       totalJetsEtaCutHist->Write();
       totalJetsPtCutHist->Write();
     } 
