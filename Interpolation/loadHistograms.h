@@ -2,7 +2,7 @@
 #include "TH2D.h"
 #include "TH1D.h"
 
-const char* filePath = "tempRootFiles/processed_2015_04_02__10_01_26/";
+const char* filePath = "tempRootFiles/processed_2015_04_02__16_46_39/";
 const int variations = 26;
 const char * variationTag[variations]= {"","_pp2JESUP3","_pp2JESDOWN3","_pp7JESUP3","_pp7JESDOWN3","_pPb5JESUP3","_pPb5JESDOWN3","_pp2JER5","_pp7JER5","_pPb5JER5","_pp2JER2","_pp7JER2","_pPb5JER2","_NoTrackCorr","_pp2JESUP1","_pp2JESDOWN1","_pp7JESUP1","_pp7JESDOWN1","_pPb5JESUP1","_pPb5JESDOWN1","_pp2JESUP2","_pp2JESDOWN2","_pp7JESUP2","_pp7JESDOWN2","_pPb5JESUP2","_pPb5JESDOWN2"};
 
@@ -19,6 +19,10 @@ TH1D ** pPb5TeV_recoMC_interp[FF_Bins];
 TH1D ** pPb5TeV_genMC_interp[FF_Bins];
 TH1D ** pPb5TeV_rJgTMC_interp[FF_Bins];
 TH1D ** pPb5TeV_gJrTMC_interp[FF_Bins];
+TH1D ** Pbp5TeV_recoMC_interp[FF_Bins];
+TH1D ** Pbp5TeV_genMC_interp[FF_Bins];
+TH1D ** Pbp5TeV_rJgTMC_interp[FF_Bins];
+TH1D ** Pbp5TeV_gJrTMC_interp[FF_Bins];
 
 //plotting histos
 TH1D * pp2TeV_data[FF_Bins];
@@ -36,27 +40,33 @@ TH1D * pp7TeV_fulldata[FF_Bins];
 TH1D * pp2TeV_recoMC[FF_Bins];
 TH1D * pp7TeV_recoMC[FF_Bins];
 TH1D * pPb5TeV_recoMC[FF_Bins];
+TH1D * Pbp5TeV_recoMC[FF_Bins];
 TH1D * pp5TeV_recoMC[FF_Bins];
 TH1D * pp2TeV_recoMC_Q[FF_Bins];
 TH1D * pp7TeV_recoMC_Q[FF_Bins];
 TH1D * pPb5TeV_recoMC_Q[FF_Bins];
+TH1D * Pbp5TeV_recoMC_Q[FF_Bins];
 TH1D * pp5TeV_recoMC_Q[FF_Bins];
 TH1D * pp2TeV_recoMC_G[FF_Bins];
 TH1D * pp7TeV_recoMC_G[FF_Bins];
 TH1D * pPb5TeV_recoMC_G[FF_Bins];
+TH1D * Pbp5TeV_recoMC_G[FF_Bins];
 TH1D * pp5TeV_recoMC_G[FF_Bins];
 
 TH1D * pp2TeV_genMC[FF_Bins];
 TH1D * pp7TeV_genMC[FF_Bins];
 TH1D * pPb5TeV_genMC[FF_Bins];
+TH1D * Pbp5TeV_genMC[FF_Bins];
 TH1D * pp5TeV_genMC[FF_Bins];
 TH1D * pp2TeV_genMC_Q[FF_Bins];
 TH1D * pp7TeV_genMC_Q[FF_Bins];
 TH1D * pPb5TeV_genMC_Q[FF_Bins];
+TH1D * Pbp5TeV_genMC_Q[FF_Bins];
 TH1D * pp5TeV_genMC_Q[FF_Bins];
 TH1D * pp2TeV_genMC_G[FF_Bins];
 TH1D * pp7TeV_genMC_G[FF_Bins];
 TH1D * pPb5TeV_genMC_G[FF_Bins];
+TH1D * Pbp5TeV_genMC_G[FF_Bins];
 TH1D * pp5TeV_genMC_G[FF_Bins];
 
 TH1D * pp2TeV_rJgTMC[FF_Bins];
@@ -74,6 +84,10 @@ TH1D * pPb_FF_recoMC[FF_Bins];
 TH1D * pPb_FF_genMC[FF_Bins];
 TH1D * pPb_FF_rJgTMC[FF_Bins];
 TH1D * pPb_FF_gJrTMC[FF_Bins];
+TH1D * Pbp_FF_recoMC[FF_Bins];
+TH1D * Pbp_FF_genMC[FF_Bins];
+TH1D * Pbp_FF_rJgTMC[FF_Bins];
+TH1D * Pbp_FF_gJrTMC[FF_Bins];
 TH1D * pPbPbp_FF[FF_Bins];
 TH1D * pPbPbp_FF_genGluFrac[FF_Bins];
 
@@ -175,8 +189,6 @@ TH2D * pp7_1_track_xi_gJrT;
 TH2D * pp7_1_trackUE_xi_gJrT;
 
 TH1D * pPb5_1_jet_reco;
-TH2D * pPb5_1_track_reco;
-TH2D * pPb5_1_trackUE_reco;
 TH2D * pPb5_1_track_xi_reco;
 TH2D * pPb5_1_trackUE_xi_reco;
 
@@ -200,6 +212,31 @@ TH2D * pPb5_1_track_gJrT;
 TH2D * pPb5_1_trackUE_gJrT;
 TH2D * pPb5_1_track_xi_gJrT;
 TH2D * pPb5_1_trackUE_xi_gJrT;
+
+TH1D * Pbp5_1_jet_reco;
+TH2D * Pbp5_1_track_xi_reco;
+TH2D * Pbp5_1_trackUE_xi_reco;
+
+TH1D * Pbp5_1_jet_reco_Q;
+TH2D * Pbp5_1_track_reco_Q;
+TH2D * Pbp5_1_trackUE_reco_Q;
+TH2D * Pbp5_1_track_xi_reco_Q;
+TH2D * Pbp5_1_trackUE_xi_reco_Q;
+
+TH1D * Pbp5_1_jet_reco_G;
+TH2D * Pbp5_1_track_reco_G;
+TH2D * Pbp5_1_trackUE_reco_G;
+TH2D * Pbp5_1_track_xi_reco_G;
+TH2D * Pbp5_1_trackUE_xi_reco_G;
+
+TH2D * Pbp5_1_track_rJgT;
+TH2D * Pbp5_1_trackUE_rJgT;
+TH2D * Pbp5_1_track_xi_rJgT;
+TH2D * Pbp5_1_trackUE_xi_rJgT;
+TH2D * Pbp5_1_track_gJrT;
+TH2D * Pbp5_1_trackUE_gJrT;
+TH2D * Pbp5_1_track_xi_gJrT;
+TH2D * Pbp5_1_trackUE_xi_gJrT;
 
 TH1D * pp2_1_jet_gen;
 TH2D * pp2_1_track_gen;
@@ -251,6 +288,23 @@ TH2D * pPb5_1_track_gen_G;
 TH2D * pPb5_1_trackUE_gen_G;
 TH2D * pPb5_1_track_xi_gen_G;
 TH2D * pPb5_1_trackUE_xi_gen_G;
+
+TH1D * Pbp5_1_jet_gen;
+TH2D * Pbp5_1_track_gen;
+TH2D * Pbp5_1_trackUE_gen;
+TH2D * Pbp5_1_track_xi_gen;
+TH2D * Pbp5_1_trackUE_xi_gen;
+
+TH1D * Pbp5_1_jet_gen_Q;
+TH2D * Pbp5_1_track_gen_Q;
+TH2D * Pbp5_1_trackUE_gen_Q;
+TH2D * Pbp5_1_track_xi_gen_Q;
+TH2D * Pbp5_1_trackUE_xi_gen_Q;
+TH1D * Pbp5_1_jet_gen_G;
+TH2D * Pbp5_1_track_gen_G;
+TH2D * Pbp5_1_trackUE_gen_G;
+TH2D * Pbp5_1_track_xi_gen_G;
+TH2D * Pbp5_1_trackUE_xi_gen_G;
 
 TH1D * pp5_1_jet_reco;
 TH2D * pp5_1_track_reco;
@@ -311,6 +365,7 @@ void loadHistos(int v, int UEtype)
   TFile * spectraFilepp7 = new TFile(Form("%s/pp7_UE%d_0_15.root",filePath,UEtype),"read");
   TFile * MCFilepp2 = new TFile(Form("%s/pp2MC_UE%d_0_15.root",filePath,UEtype),"read");
   TFile * MCFilepPb5 = new TFile(Form("%s/pPb5MC_UE%d_0_15.root",filePath,UEtype),"read");
+  TFile * MCFilePbp5 = new TFile(Form("%s/Pbp5MC_UE%d_0_15.root",filePath,UEtype),"read");
   TFile * MCFilepp7 = new TFile(Form("%s/pp7MC_UE%d_0_15.root",filePath,UEtype),"read");
   TFile * MCFilepp5 = new TFile(Form("%s/pp5MC_UE%d_0_15.root",filePath,UEtype),"read");
 
@@ -468,6 +523,33 @@ void loadHistos(int v, int UEtype)
   pPb5_1_track_xi_gJrT = (TH2D*) MCFilepPb5->Get(Form("pPb5_gJrT_track_xi%s",pPb5Tag.data()));
   pPb5_1_trackUE_xi_gJrT = (TH2D*)MCFilepPb5->Get(Form("pPb5_gJrT_trackUE_xi%s",pPb5Tag.data()));
 
+  Pbp5_1_jet_reco = (TH1D*) MCFilePbp5->Get(Form("Pbp5_reco_jet%s",pPb5Tag.data()));
+  Pbp5_1_track_reco = (TH2D*) MCFilePbp5->Get(Form("Pbp5_reco_track%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_reco = (TH2D*) MCFilePbp5->Get(Form("Pbp5_reco_trackUE%s",pPb5Tag.data()));
+  Pbp5_1_track_xi_reco = (TH2D*) MCFilePbp5->Get(Form("Pbp5_reco_track_xi%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_xi_reco = (TH2D*)MCFilePbp5->Get(Form("Pbp5_reco_trackUE_xi%s",pPb5Tag.data()));
+
+  Pbp5_1_jet_reco_Q = (TH1D*) MCFilePbp5->Get(Form("Pbp5_reco_jet_Q%s",pPb5Tag.data()));
+  Pbp5_1_track_reco_Q = (TH2D*) MCFilePbp5->Get(Form("Pbp5_reco_track_Q%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_reco_Q = (TH2D*) MCFilePbp5->Get(Form("Pbp5_reco_trackUE_Q%s",pPb5Tag.data()));
+  Pbp5_1_track_xi_reco_Q = (TH2D*) MCFilePbp5->Get(Form("Pbp5_reco_track_xi_Q%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_xi_reco_Q = (TH2D*)MCFilePbp5->Get(Form("Pbp5_reco_trackUE_xi_Q%s",pPb5Tag.data()));
+
+  Pbp5_1_jet_reco_G = (TH1D*) MCFilePbp5->Get(Form("Pbp5_reco_jet_G%s",pPb5Tag.data()));
+  Pbp5_1_track_reco_G = (TH2D*) MCFilePbp5->Get(Form("Pbp5_reco_track_G%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_reco_G = (TH2D*) MCFilePbp5->Get(Form("Pbp5_reco_trackUE_G%s",pPb5Tag.data()));
+  Pbp5_1_track_xi_reco_G = (TH2D*) MCFilePbp5->Get(Form("Pbp5_reco_track_xi_G%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_xi_reco_G = (TH2D*)MCFilePbp5->Get(Form("Pbp5_reco_trackUE_xi_G%s",pPb5Tag.data()));
+
+  Pbp5_1_track_rJgT = (TH2D*) MCFilePbp5->Get(Form("Pbp5_rJgT_track%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_rJgT = (TH2D*) MCFilePbp5->Get(Form("Pbp5_rJgT_trackUE%s",pPb5Tag.data()));
+  Pbp5_1_track_xi_rJgT = (TH2D*) MCFilePbp5->Get(Form("Pbp5_rJgT_track_xi%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_xi_rJgT = (TH2D*)MCFilePbp5->Get(Form("Pbp5_rJgT_trackUE_xi%s",pPb5Tag.data()));
+  Pbp5_1_track_gJrT = (TH2D*) MCFilePbp5->Get(Form("Pbp5_gJrT_track%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_gJrT = (TH2D*) MCFilePbp5->Get(Form("Pbp5_gJrT_trackUE%s",pPb5Tag.data()));
+  Pbp5_1_track_xi_gJrT = (TH2D*) MCFilePbp5->Get(Form("Pbp5_gJrT_track_xi%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_xi_gJrT = (TH2D*)MCFilePbp5->Get(Form("Pbp5_gJrT_trackUE_xi%s",pPb5Tag.data()));
+
   pp5_1_jet_reco = (TH1D*) MCFilepp5->Get(Form("pp5_reco_jet%s",pPb5Tag.data()));
   pp5_1_track_reco = (TH2D*) MCFilepp5->Get(Form("pp5_reco_track%s",pPb5Tag.data()));
   pp5_1_trackUE_reco = (TH2D*) MCFilepp5->Get(Form("pp5_reco_trackUE%s",pPb5Tag.data()));
@@ -511,6 +593,23 @@ void loadHistos(int v, int UEtype)
   pPb5_1_trackUE_gen_G = (TH2D*) MCFilepPb5->Get(Form("pPb5_gen_trackUE_G%s",pPb5Tag.data()));
   pPb5_1_track_xi_gen_G= (TH2D*) MCFilepPb5->Get(Form("pPb5_gen_track_xi_G%s",pPb5Tag.data()));
   pPb5_1_trackUE_xi_gen_G = (TH2D*)MCFilepPb5->Get(Form("pPb5_gen_trackUE_xi_G%s",pPb5Tag.data()));
+
+  Pbp5_1_jet_gen = (TH1D*) MCFilePbp5->Get(Form("Pbp5_gen_jet%s",pPb5Tag.data()));
+  Pbp5_1_track_gen = (TH2D*) MCFilePbp5->Get(Form("Pbp5_gen_track%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_gen = (TH2D*) MCFilePbp5->Get(Form("Pbp5_gen_trackUE%s",pPb5Tag.data()));
+  Pbp5_1_track_xi_gen = (TH2D*) MCFilePbp5->Get(Form("Pbp5_gen_track_xi%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_xi_gen = (TH2D*)MCFilePbp5->Get(Form("Pbp5_gen_trackUE_xi%s",pPb5Tag.data()));
+ 
+  Pbp5_1_jet_gen_Q = (TH1D*) MCFilePbp5->Get(Form("Pbp5_gen_jet_Q%s",pPb5Tag.data()));
+  Pbp5_1_track_gen_Q = (TH2D*) MCFilePbp5->Get(Form("Pbp5_gen_track_Q%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_gen_Q = (TH2D*) MCFilePbp5->Get(Form("Pbp5_gen_trackUE_Q%s",pPb5Tag.data()));
+  Pbp5_1_track_xi_gen_Q = (TH2D*) MCFilePbp5->Get(Form("Pbp5_gen_track_xi_Q%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_xi_gen_Q = (TH2D*)MCFilePbp5->Get(Form("Pbp5_gen_trackUE_xi_Q%s",pPb5Tag.data()));
+  Pbp5_1_jet_gen_G = (TH1D*) MCFilePbp5->Get(Form("Pbp5_gen_jet_G%s",pPb5Tag.data()));
+  Pbp5_1_track_gen_G = (TH2D*) MCFilePbp5->Get(Form("Pbp5_gen_track_G%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_gen_G = (TH2D*) MCFilePbp5->Get(Form("Pbp5_gen_trackUE_G%s",pPb5Tag.data()));
+  Pbp5_1_track_xi_gen_G= (TH2D*) MCFilePbp5->Get(Form("Pbp5_gen_track_xi_G%s",pPb5Tag.data()));
+  Pbp5_1_trackUE_xi_gen_G = (TH2D*)MCFilePbp5->Get(Form("Pbp5_gen_trackUE_xi_G%s",pPb5Tag.data()));
 
   pp5_1_jet_gen = (TH1D*) MCFilepp5->Get(Form("pp5_gen_jet%s",pPb5Tag.data()));
   pp5_1_track_gen = (TH2D*) MCFilepp5->Get(Form("pp5_gen_track%s",pPb5Tag.data()));
