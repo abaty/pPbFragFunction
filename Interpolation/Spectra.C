@@ -163,11 +163,11 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       //starting jet loop Reco
       for(int j=0; j<nref; j++)
       {
-        totalJetsHist->Fill(1);
+        totalJetsHist->Fill(weight);
         if(rawpt[j]<30) continue;
-        totalJetsRawPtCut->Fill(1);
+        totalJetsRawPtCut->Fill(weight);
         if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax) continue;
-        totalJetsEtaCutHist->Fill(1);
+        totalJetsEtaCutHist->Fill(weight);
   
       //residual JEC correction applied
         jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
@@ -182,7 +182,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         if(v==10 || v==11 || v==12)jtpt[j] = getJERCorrected(mode,jtpt[j],0.02);
        
         if(jtpt[j]<lowJetPtBound || jtpt[j]>=upJetPtBound) continue;      
-        totalJetsPtCutHist->Fill(1);    
+        totalJetsPtCutHist->Fill(weight);    
         h_jet->Fill(jtpt[j],weight);
   
       //quark or gluon only contributions for MC

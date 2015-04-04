@@ -1,6 +1,7 @@
 #include "TFile.h"
 #include "TH2D.h"
 #include "TH1D.h"
+#include <iostream>
 
 const char* filePath = "tempRootFiles/processed_2015_04_02__16_46_39/";
 const int variations = 26;
@@ -363,6 +364,11 @@ TH1D *gluon_2tev_gen;
 TH1D *gluon_5tev_gen;
 TH1D *gluon_7tev_gen;
 
+TH1D *Njets_pPbData;
+TH1D *Njets_pPbMC;
+TH1D *Njets_PbpData;
+TH1D *Njets_PbpMC;
+
 void loadHistos(int v, int UEtype)
 {
   TFile * spectraFilepp2 = new TFile(Form("%s/pp2_UE%d_0_15.root",filePath,UEtype),"read");
@@ -633,6 +639,22 @@ void loadHistos(int v, int UEtype)
   pp5_1_trackUE_gen_G = (TH2D*) MCFilepp5->Get(Form("pp5_gen_trackUE_G%s",pPb5Tag.data()));
   pp5_1_track_xi_gen_G = (TH2D*) MCFilepp5->Get(Form("pp5_gen_track_xi_G%s",pPb5Tag.data()));
   pp5_1_trackUE_xi_gen_G = (TH2D*) MCFilepp5->Get(Form("pp5_gen_trackUE_xi_G%s",pPb5Tag.data()));
+
+  
+//reweighting combined MC to match data in terms of pPb vs Pbp fraction
+  Njets_pPbData = (TH1D*) spectraFilepPb5->Get("totalJetsPtCutHist"); 
+  Njets_pPbData->SetName("totalJetsPtCutHistpPbdata"); 
+  Njets_pPbMC = (TH1D*)   MCFilepPb5->Get("totalJetsPtCutHist"); 
+  Njets_pPbMC->SetName("totalJetsPtCutHistpPbMC"); 
+  Njets_PbpData = (TH1D*) spectraFilePbp5->Get("totalJetsPtCutHist");
+  Njets_PbpData->SetName("totalJetsPtCutHistPbpdata"); 
+  Njets_PbpMC = (TH1D*)   MCFilePbp5->Get("totalJetsPtCutHist");
+  Njets_PbpMC->SetName("totalJetsPtCutHistPbpMC"); 
+
+  double pPbMCFracCorr = Njets_pPbData->GetBinContent(2)*(Njets_pPbMC->GetBinContent(2)+Njets_PbpMC->GetBinContent(2))/(Njets_pPbMC->GetBinContent(2)*(Njets_pPbData->GetBinContent(2)+Njets_PbpData->GetBinContent(2)));
+  double PbpMCFracCorr = Njets_PbpData->GetBinContent(2)*(Njets_pPbMC->GetBinContent(2)+Njets_PbpMC->GetBinContent(2))/(Njets_PbpMC->GetBinContent(2)*(Njets_pPbData->GetBinContent(2)+Njets_PbpData->GetBinContent(2)));
+  std::cout << "pPb MC correction factor for combining w/ Pbp:" << pPbMCFracCorr << std::endl;
+  std::cout << "Pbp MC correction factor for combining w/ pPb:" << PbpMCFracCorr << std::endl;
 
 //gluon fractions for interpolation
   gluon_2tev_reco = (TH1D*)pp2_1_jet_reco_G->Clone("pp2_gFrac_recoMC");

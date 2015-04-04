@@ -134,6 +134,10 @@ void makeFF(int v, int UEtype=3)
     pPb5TeV_genMC_interp[i]   = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_genMC_interp",9,pp2TeV_genMC[i],pp7TeV_genMC[i],1);
     pPb5TeV_rJgTMC_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_rJgTMC_interp",35,pp2TeV_rJgTMC[i],pp7TeV_rJgTMC[i],0);
     pPb5TeV_gJrTMC_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"pPb5TeV_gJrTMC_interp",39,pp2TeV_gJrTMC[i],pp7TeV_gJrTMC[i],1);
+    Pbp5TeV_recoMC_interp[i]  = getInterpolation(FF_Bound[i],FF_Bound[i+1],"Pbp5TeV_recoMC_interp",51,pp2TeV_recoMC[i],pp7TeV_recoMC[i],0);
+    Pbp5TeV_genMC_interp[i]   = getInterpolation(FF_Bound[i],FF_Bound[i+1],"Pbp5TeV_genMC_interp",52,pp2TeV_genMC[i],pp7TeV_genMC[i],1);
+    Pbp5TeV_rJgTMC_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"Pbp5TeV_rJgTMC_interp",53,pp2TeV_rJgTMC[i],pp7TeV_rJgTMC[i],0);
+    Pbp5TeV_gJrTMC_interp[i]    = getInterpolation(FF_Bound[i],FF_Bound[i+1],"Pbp5TeV_gJrTMC_interp",54,pp2TeV_gJrTMC[i],pp7TeV_gJrTMC[i],1);
   }
  
   for(int i = 0; i < FF_Bins; i++)
@@ -234,6 +238,10 @@ void makeFF(int v, int UEtype=3)
       pPb5TeV_genMC_interp[i][indx]->Write();
       pPb5TeV_rJgTMC_interp[i][indx]->Write();
       pPb5TeV_gJrTMC_interp[i][indx]->Write();
+      Pbp5TeV_recoMC_interp[i][indx]->Write();
+      Pbp5TeV_genMC_interp[i][indx]->Write();
+      Pbp5TeV_rJgTMC_interp[i][indx]->Write();
+      Pbp5TeV_gJrTMC_interp[i][indx]->Write();
     } 
 
     pPb_FF[i]->Write();
