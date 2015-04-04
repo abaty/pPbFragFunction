@@ -72,10 +72,12 @@ TH1D * pp5TeV_genMC_G[FF_Bins];
 TH1D * pp2TeV_rJgTMC[FF_Bins];
 TH1D * pp7TeV_rJgTMC[FF_Bins];
 TH1D * pPb5TeV_rJgTMC[FF_Bins];
+TH1D * Pbp5TeV_rJgTMC[FF_Bins];
 TH1D * pp5TeV_rJgTMC[FF_Bins];
 TH1D * pp2TeV_gJrTMC[FF_Bins];
 TH1D * pp7TeV_gJrTMC[FF_Bins];
 TH1D * pPb5TeV_gJrTMC[FF_Bins];
+TH1D * Pbp5TeV_gJrTMC[FF_Bins];
 TH1D * pp5TeV_gJrTMC[FF_Bins];
 
 TH1D * pPb_FF[FF_Bins];
@@ -189,6 +191,8 @@ TH2D * pp7_1_track_xi_gJrT;
 TH2D * pp7_1_trackUE_xi_gJrT;
 
 TH1D * pPb5_1_jet_reco;
+TH2D * pPb5_1_track_reco;
+TH2D * pPb5_1_trackUE_reco;
 TH2D * pPb5_1_track_xi_reco;
 TH2D * pPb5_1_trackUE_xi_reco;
 
@@ -214,6 +218,8 @@ TH2D * pPb5_1_track_xi_gJrT;
 TH2D * pPb5_1_trackUE_xi_gJrT;
 
 TH1D * Pbp5_1_jet_reco;
+TH2D * Pbp5_1_track_reco;
+TH2D * Pbp5_1_trackUE_reco;
 TH2D * Pbp5_1_track_xi_reco;
 TH2D * Pbp5_1_trackUE_xi_reco;
 
