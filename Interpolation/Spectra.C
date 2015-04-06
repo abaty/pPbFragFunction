@@ -67,6 +67,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==7 || v==10 || v==13 || v==14 || v==15 || v==20 || v==21)) continue;
     if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8 ||v==11 || v==13 || v==16 || v==17 || v==22 || v==23)) continue;
     if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9 || v==12 || v==13 || v==18 || v==19 || v==24 || v==25)) continue;
+    if(typeUE!=0 && v==26) continue;
 
     //reco
     h_jet = new TH1D("h_jet","",nJetBins,0,300); 
@@ -163,11 +164,11 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       //starting jet loop Reco
       for(int j=0; j<nref; j++)
       {
-        totalJetsHist->Fill(weight);
+        totalJetsHist->Fill(1,weight);
         if(rawpt[j]<30) continue;
-        totalJetsRawPtCut->Fill(weight);
+        totalJetsRawPtCut->Fill(1,weight);
         if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax) continue;
-        totalJetsEtaCutHist->Fill(weight);
+        totalJetsEtaCutHist->Fill(1,weight);
   
       //residual JEC correction applied
         jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
@@ -182,7 +183,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         if(v==10 || v==11 || v==12)jtpt[j] = getJERCorrected(mode,jtpt[j],0.02);
        
         if(jtpt[j]<lowJetPtBound || jtpt[j]>=upJetPtBound) continue;      
-        totalJetsPtCutHist->Fill(weight);    
+        totalJetsPtCutHist->Fill(1,weight);    
         h_jet->Fill(jtpt[j],weight);
   
       //quark or gluon only contributions for MC
@@ -231,7 +232,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
        
           //Phi rotated UE subtraction
           //returns either +-1 to rotate clockwise or ccw randomly
-          int rotationDirection = 2*(int)rand->Integer(2)-1;
+          double rotationDirection = 2*(int)rand->Integer(2)-1;
+          if(v==26) rotationDirection = rotationDirection*2.0/3.0;
   
           if(typeUE==0 && getdR2(jteta[j]+boost,jtphi[j]+rotationDirection*TMath::PiOver2(),trkEta[t]+boost,trkPhi[t]) < 0.3*0.3)
           {
@@ -333,7 +335,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
    
               //Phi rotated UE subtraction
               //returns either +-1 to rotate clockwise or ccw randomly
-              int rotationDirection = 2*(int)rand->Integer(2)-1;
+              double rotationDirection = 2*(int)rand->Integer(2)-1;
+              if(v==26) rotationDirection = rotationDirection*2.0/3.0;
+
               if(typeUE==0 && getdR2(jteta[j]+boost,jtphi[j]+rotationDirection*TMath::PiOver2(),pEta[t]+boost,pPhi[t]) < 0.3*0.3)
               {
                 h_trackUE_rJgT->Fill(jtpt[j],pPt[t],weight);  
@@ -421,8 +425,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
        
             //Phi rotated UE subtraction
             //returns either +-1 to rotate clockwise or ccw randomly
-            int rotationDirection = 2*(int)rand->Integer(2)-1;
-  
+            double rotationDirection = 2*(int)rand->Integer(2)-1; 
+            if(v==26) rotationDirection = rotationDirection*2.0/3.0;
+
             if(typeUE==0 && getdR2(geneta[j]+boost,genphi[j]+rotationDirection*TMath::PiOver2(),pEta[t]+boost,pPhi[t]) < 0.3*0.3)
             {
               h_trackUE_gen->Fill(genpt[j],pPt[t],weight);  
@@ -516,8 +521,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
        
             //Phi rotated UE subtraction
             //returns either +-1 to rotate clockwise or ccw randomly
-            int rotationDirection = 2*(int)rand->Integer(2)-1;
-   
+            double rotationDirection = 2*(int)rand->Integer(2)-1;
+            if(v==26) rotationDirection = rotationDirection*2.0/3.0;
+
             if(typeUE==0 && getdR2(geneta[j]+boost,genphi[j]+rotationDirection*TMath::PiOver2(),trkEta[t]+boost,trkPhi[t]) < 0.3*0.3)
             {
               double trkCorr = factorizedPtCorr(getPtBin(trkPt[t], sType), 1, trkPt[t], trkPhi[t], trkEta[t], r_min, sType);

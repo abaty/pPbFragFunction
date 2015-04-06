@@ -43,10 +43,10 @@ void q_g_MC_plots()
     for(int i = 0; i<5; i++)
     {
       pp2Q[i] = (TH1D*)inf->Get(Form("pp2TeV_%s_Q_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
-      pPb5Q[i] = (TH1D*)inf->Get(Form("pPb5TeV_%s_Q_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
+      pPb5Q[i] = (TH1D*)inf->Get(Form("pPb5Pbp5TeV_%s_Q_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
       pp7Q[i] = (TH1D*)inf->Get(Form("pp7TeV_%s_Q_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
       pp2G[i] = (TH1D*)inf->Get(Form("pp2TeV_%s_G_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
-      pPb5G[i] = (TH1D*)inf->Get(Form("pPb5TeV_%s_G_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
+      pPb5G[i] = (TH1D*)inf->Get(Form("pPb5Pbp5TeV_%s_G_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
       pp7G[i] = (TH1D*)inf->Get(Form("pp7TeV_%s_G_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
       setColors(pp2Q[i],0,0);
       setColors(pPb5Q[i],1,0);

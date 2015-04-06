@@ -131,24 +131,24 @@ TH1D** getMCDiff(const char * mode = "pPb5", int v=0,int UEtype=3)
     }
     if(strcmp(mode,"pPb5")==0)
     {
-      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5TeV_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
-      diffArray[i]->Add((TH1D*)inf1->Get(Form("pPb5TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+      diffArray[i]->Add((TH1D*)inf1->Get(Form("pPb5Pbp5TeV_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
       diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])));
       diffArray[i]->SetName(Form("%s%s_MCDiff%d",mode,variationTag[v],i));
       diffArray[i]->SetDirectory(0);
     }
     if(strcmp(mode,"interp")==0)
     {
-      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5TeV_recoMC_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
-      diffArray[i]->Add((TH1D*)inf1->Get(Form("pPb5TeV_genMC_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_recoMC_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+      diffArray[i]->Add((TH1D*)inf1->Get(Form("pPb5Pbp5TeV_genMC_interp_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
       diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])));
       diffArray[i]->SetName(Form("%s%s_MCDiff%d",mode,variationTag[v],i));
       diffArray[i]->SetDirectory(0);
     }
     if(strcmp(mode,"FFratio")==0)
     {
-      diffArray[i] = (TH1D*)inf1->Get(Form("pPb_FF_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
-      diffArray[i]->Add((TH1D*)inf1->Get(Form("pPb_FF_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPbPbp_FF_recoMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+      diffArray[i]->Add((TH1D*)inf1->Get(Form("pPbPbp_FF_genMC_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])),-1);
       diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_%d_%d",(int)FF_Bound[i],(int)FF_Bound[i+1])));
       diffArray[i]->SetName(Form("%s%s_MCDiff%d",mode,variationTag[v],i));
       diffArray[i]->SetDirectory(0);

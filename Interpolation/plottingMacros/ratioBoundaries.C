@@ -48,7 +48,7 @@ void ratioBoundaries()
     for(int i = 0; i<5; i++)
     {
       pp2Q[i] = (TH1D*)inf->Get(Form("pp2TeV_%s_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
-      if(m!=0) pPb5Q[i] = (TH1D*)inf->Get(Form("pPb5TeV_%s_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
+      if(m!=0) pPb5Q[i] = (TH1D*)inf->Get(Form("pPb5Pbp5TeV_%s_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
       else pPb5Q[i] = (TH1D*)inf->Get(Form("pPb5Pbp5TeV_%s_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
       pp7Q[i] = (TH1D*)inf->Get(Form("pp7TeV_%s_%d_%d",names[m],(int)bins[i],(int)bins[i+1]));
 
