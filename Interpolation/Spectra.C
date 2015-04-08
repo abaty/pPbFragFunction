@@ -64,9 +64,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   //different nonzero variations are used for systematics checks, variation 0 is for the basic calculation
   for(int v = 0; v<variations; v++)
   {
-    if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==7 || v==10 || v==13 || v==14 || v==15 || v==20 || v==21)) continue;
-    if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8 ||v==11 || v==13 || v==16 || v==17 || v==22 || v==23)) continue;
-    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9 || v==12 || v==13 || v==18 || v==19 || v==24 || v==25)) continue;
+    if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==7 || v==10 || v==13 || v==14 || v==15 || v==20 || v==21 || v==26)) continue;
+    if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8 ||v==11 || v==13 || v==16 || v==17 || v==22 || v==23 || v==26)) continue;
+    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9 || v==12 || v==13 || v==18 || v==19 || v==24 || v==25 || v==26)) continue;
     if(typeUE!=0 && v==26) continue;
 
     //reco
@@ -170,7 +170,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax) continue;
         totalJetsEtaCutHist->Fill(1,weight);
   
-      //residual JEC correction applied
+      //JEC correction applied
         jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
         jtpt[j] = getJEC_2nd(jtpt[j],jteta[j],mode);
         if(v==1 || v==3 || v==5)jtpt[j] = jtpt[j]*1.03;

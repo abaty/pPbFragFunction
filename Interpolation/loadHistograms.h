@@ -3,7 +3,7 @@
 #include "TH1D.h"
 #include <iostream>
 
-const char* filePath = "tempRootFiles/processed_2015_04_04__21_47_22/";
+const char* filePath = "tempRootFiles/processed_2015_04_06__16_25_14";
 const int variations = 27;
 const char * variationTag[variations]= {"","_pp2JESUP3","_pp2JESDOWN3","_pp7JESUP3","_pp7JESDOWN3","_pPb5JESUP3","_pPb5JESDOWN3","_pp2JER5","_pp7JER5","_pPb5JER5","_pp2JER2","_pp7JER2","_pPb5JER2","_NoTrackCorr","_pp2JESUP1","_pp2JESDOWN1","_pp7JESUP1","_pp7JESDOWN1","_pPb5JESUP1","_pPb5JESDOWN1","_pp2JESUP2","_pp2JESDOWN2","_pp7JESUP2","_pp7JESDOWN2","_pPb5JESUP2","_pPb5JESDOWN2","_60DegreeCone"};
 
@@ -419,9 +419,11 @@ TH2D * pp5_1_trackUE_xi_gen_G;
 
 TH1D *gluon_2tev_reco;
 TH1D *gluon_5tev_reco;
+TH1D *gluon_5tevSignal_reco;
 TH1D *gluon_7tev_reco;
 TH1D *gluon_2tev_gen;
 TH1D *gluon_5tev_gen;
+TH1D *gluon_5tevSignal_gen;
 TH1D *gluon_7tev_gen;
 
 TH1D *Njets_pPbData;
@@ -985,28 +987,36 @@ void loadHistos(int v, int UEtype)
 //gluon fractions for interpolation
   gluon_2tev_reco = (TH1D*)pp2_1_jet_reco_G->Clone("pp2_gFrac_recoMC");
   gluon_5tev_reco = (TH1D*)pPb5_1_jet_reco_G->Clone("pPb5_gFrac_recoMC");
+  gluon_5tevSignal_reco = (TH1D*)pp5_1_jet_reco_G->Clone("pp5_gFrac_recoMC");
   gluon_7tev_reco = (TH1D*)pp7_1_jet_reco_G->Clone("pp7_gFrac_recoMC");
   gluon_2tev_gen = (TH1D*)pp2_1_jet_gen_G->Clone("pp2_gFrac_genMC");
   gluon_5tev_gen = (TH1D*)pPb5_1_jet_gen_G->Clone("pPb5_gFrac_genMC");
+  gluon_5tevSignal_gen = (TH1D*)pp5_1_jet_gen_G->Clone("pp5_gFrac_genMC");
   gluon_7tev_gen = (TH1D*)pp7_1_jet_gen_G->Clone("pp7_gFrac_genMC");
 
   TH1D * denom2 = (TH1D*)pp2_1_jet_reco_G->Clone("recoDenom2");
   denom2->Add(pp2_1_jet_reco_Q);
   TH1D * denom5 = (TH1D*)pPb5_1_jet_reco_G->Clone("recoDenom5");
   denom5->Add(pPb5_1_jet_reco_Q);
+  TH1D * denom5Signal = (TH1D*)pp5_1_jet_reco_G->Clone("recoDenom5Signal");
+  denom5Signal->Add(pp5_1_jet_reco_Q);
   TH1D * denom7 = (TH1D*)pp7_1_jet_reco_G->Clone("recoDenom7");
   denom7->Add(pp7_1_jet_reco_Q);
   TH1D * gendenom2 = (TH1D*)pp2_1_jet_gen_G->Clone("genDenom2");
   gendenom2->Add(pp2_1_jet_gen_Q);
   TH1D * gendenom5 = (TH1D*)pPb5_1_jet_gen_G->Clone("genDenom5");
   gendenom5->Add(pPb5_1_jet_gen_Q);
+  TH1D * gendenom5Signal = (TH1D*)pp5_1_jet_gen_G->Clone("genDenom5Signal");
+  gendenom5Signal->Add(pp5_1_jet_gen_Q);
   TH1D * gendenom7 = (TH1D*)pp7_1_jet_gen_G->Clone("genDenom7");
   gendenom7->Add(pp7_1_jet_gen_Q); 
   
   gluon_2tev_reco->Divide(denom2); 
   gluon_5tev_reco->Divide(denom5); 
+  gluon_5tevSignal_reco->Divide(denom5Signal); 
   gluon_7tev_reco->Divide(denom7);
   gluon_2tev_gen->Divide(gendenom2); 
   gluon_5tev_gen->Divide(gendenom5); 
+  gluon_5tevSignal_gen->Divide(gendenom5Signal); 
   gluon_7tev_gen->Divide(gendenom7);
 }

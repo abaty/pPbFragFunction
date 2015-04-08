@@ -167,6 +167,7 @@ void FFSystematics(const char * mode, int UEtype)
    TH1D** JER;
    TH1D** pPbPbpDiff;
    TH1D** MCDiff;
+   TH1D** UEDiff;
    //estimating 5% tracking errors
    double track = 0.05;
 
@@ -177,13 +178,15 @@ void FFSystematics(const char * mode, int UEtype)
     JER = getRatio(mode,9,UEtype);
     pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
     MCDiff = getMCDiff(mode,0,UEtype);
+    if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
   if(strcmp(mode,"pp2")==0)
   {
     JESUP = getRatio(mode,1,UEtype);
     JESDOWN = getRatio(mode,2,UEtype);
     JER = getRatio(mode,7,UEtype);
-    MCDiff = getMCDiff(mode,0,UEtype);
+    MCDiff = getMCDiff(mode,0,UEtype); 
+    if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
   if(strcmp(mode,"pp7")==0)
   {
@@ -191,6 +194,7 @@ void FFSystematics(const char * mode, int UEtype)
     JESDOWN = getRatio(mode,4,UEtype);
     JER = getRatio(mode,8,UEtype);
     MCDiff = getMCDiff(mode,0,UEtype);
+    if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
 
   TFile * output;
@@ -255,6 +259,13 @@ void FFSystematics(const char * mode, int UEtype)
         if(MCDiff[i]->GetBinContent(j)<0) TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
         else if(MCDiff[i]->GetBinContent(j)>0) TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
 
+        if(UEtype==0)
+        {        
+          TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+ TMath::Power(UEDiff[i]->GetBinContent(j)-1,2));
+          TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+ TMath::Power(UEDiff[i]->GetBinContent(j)-1,2));
+          UEDiff[i]->SetBinContent(j,TMath::Abs(UEDiff[i]->GetBinContent(j)-1));
+        }      
+ 
         TotUP[i]->SetBinContent(j,TMath::Power(TotUP[i]->GetBinContent(j),0.5));
         TotDOWN[i]->SetBinContent(j,TMath::Power(TotDOWN[i]->GetBinContent(j),0.5));
       }
@@ -264,6 +275,7 @@ void FFSystematics(const char * mode, int UEtype)
     JER[i]->Write();
     if(strcmp(mode,"pPb5")==0) pPbPbpDiff[i]->Write();
     MCDiff[i]->Write();
+    if(UEtype==0) UEDiff[i]->Write();
     JESTotUP[i]->Write();
     JESTotDOWN[i]->Write();
     JERTot[i]->Write();
@@ -287,6 +299,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
   TH1D** pPb5JER;
   TH1D** pPbPbpDiff;
   TH1D** MCDiff;
+  TH1D** UEDiff;
 
   //estimating 5% tracking errors
   double track = 0.05;
@@ -304,6 +317,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
     pPb5JER = getRatio(mode,9,UEtype);
     pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
     MCDiff = getMCDiff(mode,0,UEtype);
+    if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
   else if(strcmp(mode,"FFratio")==0) 
   {
@@ -318,6 +332,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
     pPb5JER = getRatio(mode,9,UEtype); 
     pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
     MCDiff = getMCDiff(mode,0,UEtype);
+    if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
 
   TFile * output = new TFile(Form("SystematicsUE%d.root",UEtype),"update");
@@ -412,7 +427,14 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
         TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(pPbPbpDiff[i]->GetBinContent(j),2));
         if(MCDiff[i]->GetBinContent(j)<0) TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
         else if(MCDiff[i]->GetBinContent(j)>0) TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
-       
+    
+        if(UEtype == 0)
+        {     
+          TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+ TMath::Power(UEDiff[i]->GetBinContent(j)-1,2));
+          TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+ TMath::Power(UEDiff[i]->GetBinContent(j)-1,2));
+          UEDiff[i]->SetBinContent(j,TMath::Abs(UEDiff[i]->GetBinContent(j)-1));
+        }
+
         TotUP[i]->SetBinContent(j,TMath::Power(TotUP[i]->GetBinContent(j),0.5));
         TotDOWN[i]->SetBinContent(j,TMath::Power(TotDOWN[i]->GetBinContent(j),0.5));
       }
@@ -428,6 +450,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
     pPb5JER[i]->Write();
     pPbPbpDiff[i]->Write(); 
     MCDiff[i]->Write();
+    if(UEtype==0) UEDiff[i]->Write();
     pp2JESTotUP[i]->Write();
     pp2JESTotDOWN[i]->Write(); 
     pp7JESTotUP[i]->Write();

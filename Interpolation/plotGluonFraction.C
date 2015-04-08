@@ -15,30 +15,38 @@ void plotGluonFraction(const char * tag,int UEtype)
 
   gluon_2tev_reco->SetLineWidth(2);
   gluon_5tev_reco->SetLineWidth(2);
+  gluon_5tevSignal_reco->SetLineWidth(2);
   gluon_7tev_reco->SetLineWidth(2);
   gluon_2tev_reco->SetLineColor(1);
   gluon_5tev_reco->SetLineColor(kRed+1);
+  gluon_5tevSignal_reco->SetLineColor(kRed+1);
   gluon_7tev_reco->SetLineColor(kBlue+1);
   gluon_2tev_gen->SetLineWidth(1);
   gluon_5tev_gen->SetLineWidth(1);
+  gluon_5tevSignal_gen->SetLineWidth(1);
   gluon_7tev_gen->SetLineWidth(1);
  
   gluon_2tev_reco->SetMarkerColor(1); 
   gluon_5tev_reco->SetMarkerColor(kRed+1);
+  gluon_5tevSignal_reco->SetMarkerColor(kRed+1);
   gluon_7tev_reco->SetMarkerColor(kBlue+1);
   gluon_2tev_reco->SetMarkerStyle(20);
   gluon_5tev_reco->SetMarkerStyle(20);
+  gluon_5tevSignal_reco->SetMarkerStyle(20);
   gluon_7tev_reco->SetMarkerStyle(20);
  
   gluon_2tev_gen->SetLineColor(1);
   gluon_5tev_gen->SetLineColor(kRed+1);
+  gluon_5tevSignal_gen->SetLineColor(kRed+1);
   gluon_7tev_gen->SetLineColor(kBlue+1);
 
   gluon_2tev_reco->SetMarkerSize(0.8);
   gluon_5tev_reco->SetMarkerSize(0.8);
+  gluon_5tevSignal_reco->SetMarkerSize(0.8);
   gluon_7tev_reco->SetMarkerSize(0.8);
   gluon_2tev_gen->SetMarkerSize(0);
   gluon_5tev_gen->SetMarkerSize(0);
+  gluon_5tevSignal_gen->SetMarkerSize(0);
   gluon_7tev_gen->SetMarkerSize(0);
 
   gluon_2tev_reco->SetMaximum(0.75);
@@ -68,4 +76,41 @@ void plotGluonFraction(const char * tag,int UEtype)
   gleg->Draw("same");
   cg1->SaveAs(Form("plots/GluonFractionsMC_UE%d_%s.png",UEtype,tag)); 
   cg1->SaveAs(Form("plots/GluonFractionsMC_UE%d_%s.pdf",UEtype,tag));
+
+  gluon_2tev_reco->Draw("p");
+  gluon_2tev_gen->Draw("h same");
+  gleg->Clear();
+  gleg->AddEntry((TObject*)0,"CMS Preliminary","");
+  gleg->AddEntry(gluon_2tev_reco,"2.76 TeV reco PYTHIA","p");
+  gleg->AddEntry(gluon_2tev_gen,"2.76 TeV gen PYTHIA","l");
+  cg1->SaveAs(Form("plots/pp2GluonFractionsMC_UE%d_%s.png",UEtype,tag));
+  cg1->SaveAs(Form("plots/pp2GluonFractionsMC_UE%d_%s.pdf",UEtype,tag));
+
+  gluon_7tev_reco->Draw("p");
+  gluon_7tev_gen->Draw("h same");
+  gleg->Clear();
+  gleg->AddEntry((TObject*)0,"CMS Preliminary","");
+  gleg->AddEntry(gluon_7tev_reco,"7 TeV reco PYTHIA","p");
+  gleg->AddEntry(gluon_7tev_gen,"7 TeV gen PYTHIA","l");
+  cg1->SaveAs(Form("plots/pp7GluonFractionsMC_UE%d_%s.png",UEtype,tag));
+  cg1->SaveAs(Form("plots/pp7GluonFractionsMC_UE%d_%s.pdf",UEtype,tag));
+
+  gluon_5tevSignal_reco->Draw("p");
+  gluon_5tevSignal_gen->Draw("h same");
+  gleg->Clear();
+  gleg->AddEntry((TObject*)0,"CMS Preliminary","");
+  gleg->AddEntry(gluon_5tevSignal_reco,"5.02 TeV reco PYTHIA","p");
+  gleg->AddEntry(gluon_5tevSignal_gen,"5.02 TeV gen PYTHIA","l");
+  cg1->SaveAs(Form("plots/pp5SignalGluonFractionsMC_UE%d_%s.png",UEtype,tag));
+  cg1->SaveAs(Form("plots/pp5SignalGluonFractionsMC_UE%d_%s.pdf",UEtype,tag));
+
+  gluon_5tev_reco->Draw("p");
+  gluon_5tev_gen->Draw("h same");
+  gleg->Clear();
+  gleg->AddEntry((TObject*)0,"CMS Preliminary","");
+  gleg->AddEntry(gluon_5tev_reco,"5.02 TeV reco PYTHIA+HIJING","p");
+  gleg->AddEntry(gluon_5tev_gen,"5.02 TeV gen PYTHIA+HIJING","l");
+  cg1->SaveAs(Form("plots/pp5GluonFractionsMC_UE%d_%s.png",UEtype,tag));
+  cg1->SaveAs(Form("plots/pp5GluonFractionsMC_UE%d_%s.pdf",UEtype,tag));
+
 }

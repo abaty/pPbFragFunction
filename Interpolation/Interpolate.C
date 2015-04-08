@@ -425,11 +425,14 @@ void Interpolate()
 {
   for(int v = 0; v<variations; v++) 
   {
-    if(v!=26) makeFF(v,0);
-    makeFF(v,3);
+    makeFF(v,0);
+    if(v!=26) makeFF(v,3);
   }
+  std::cout << "here" << std::endl;
   systematics(0);
+  std::cout << "here" << std::endl;
   systematics(3);
+  std::cout << "here" << std::endl;
   systematicSummaries();
 }
 

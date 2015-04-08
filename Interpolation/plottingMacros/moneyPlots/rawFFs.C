@@ -30,11 +30,11 @@ TBox* makeBox(double x1, double y1, double x2, double y2)
   return box;
 }
 
-void rawFFs()
+void rawFFs(int UEtype)
 { 
   TLatex * tlat = new TLatex(0.6,0.6,"test");
 
-  TFile * inf1 = TFile::Open("../../FragmentationFunctionsUE3.root","read");
+  TFile * inf1 = TFile::Open(Form("../../FragmentationFunctionsUE%d.root",UEtype),"read");
   TH1D * hist[15];
   for(int i = 0; i<15; i++)
   {
@@ -45,7 +45,7 @@ void rawFFs()
   }
   inf1->Close();
 
-  TFile * inf2 = TFile::Open("../../SystematicsUE3.root","read");
+  TFile * inf2 = TFile::Open(Form("../../SystematicsUE%d.root",UEtype),"read");
   TH1D * sysU[15];
   TH1D * sysD[15];
   for(int i = 0; i<15; i++)
@@ -89,7 +89,7 @@ void rawFFs()
     c->cd(i+1)->SetLogy();
 
     hist[i]->SetMaximum(4);
-    hist[i]->SetMinimum(0.00000015);
+    hist[i]->SetMinimum(0.000000101);
     
     hist[i]->SetLineWidth(1);
     hist[i]->SetLineColor(1);
@@ -159,7 +159,7 @@ void rawFFs()
     if(i==0) tlat->DrawLatex(0.8,0.000015,"#int_{2.76 TeV pp}Ldt = 5.3 pb^{-1}");
 
     tlat->SetTextSize(0.057);
-    if(i==5) tlat->DrawLatex(0.8,0.000002,"#int_{7 TeV pp}Ldt = 2.7 fb^{-1}");
+    if(i==5) tlat->DrawLatex(0.8,0.000002,"#int_{7 TeV pp}Ldt = 2.5 fb^{-1}");
     if(i==0)
     {
       TLegend * leg = new TLegend(0.35,0.5,0.6,0.7);
@@ -172,6 +172,6 @@ void rawFFs()
       leg->Draw();
     }
   }
-  c->SaveAs("../../plots/prettyRawFFs.png");
-  c->SaveAs("../../plots/prettyRawFFs.pdf");
+  c->SaveAs(Form("../../plots/prettyRawFFs_UE%d.png",UEtype));
+  c->SaveAs(Form("../../plots/prettyRawFFs_UE%d.pdf",UEtype));
 }

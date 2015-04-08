@@ -30,11 +30,11 @@ TBox* makeBox(double x1, double y1, double x2, double y2)
   return box;
 }
 
-void interpRatio()
+void interpRatio(int UEtype)
 {  
   TLatex * tlat = new TLatex(0.6,0.6,"test");
 
-  TFile * inf1 = TFile::Open("../../FragmentationFunctionsUE3.root","read");
+  TFile * inf1 = TFile::Open(Form("../../FragmentationFunctionsUE%d.root",UEtype),"read");
   TH1D * hist[15];
   for(int i = 0; i<15; i++)
   {
@@ -45,7 +45,7 @@ void interpRatio()
   }
   inf1->Close();
 
-  TFile * inf2 = TFile::Open("../../SystematicsUE3.root","read");
+  TFile * inf2 = TFile::Open(Form("../../SystematicsUE%d.root",UEtype),"read");
   TH1D * sysU[15];
   TH1D * sysD[15];
   for(int i = 0; i<15; i++)
@@ -161,7 +161,7 @@ void interpRatio()
     if(i<5) tlat->DrawLatex(0.8,0.000008,Form("%d < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i],(int)FF_Bound[i+1]));
     if(i==5) tlat->DrawLatex(1.05,0.00002,"#int_{pPb}Ldt = 26.3 nb^{-1}");
     if(i==6) tlat->DrawLatex(0.8,0.00002,"#int_{2.76 TeV pp}Ldt = 5.3 pb^{-1}");
-    if(i==7) tlat->DrawLatex(1,0.00002,"#int_{7 TeV pp}Ldt = 2.7 fb^{-1}");
+    if(i==7) tlat->DrawLatex(1,0.00002,"#int_{7 TeV pp}Ldt = 2.5 fb^{-1}");
     if(i==2) tlat->DrawLatex(20,1,"ak3PF jets");
     if(i==3) tlat->DrawLatex(20,1,"|#eta_{CM}^{jet}|<1.5");
     if(i==4) tlat->DrawLatex(8,1,"CMS Preliminary");
@@ -187,6 +187,6 @@ void interpRatio()
       leg->Draw();
     }
   }
-  c->SaveAs("../../plots/prettyInterpRatio.png");
-  c->SaveAs("../../plots/prettyInterpRatio.pdf");
+  c->SaveAs(Form("../../plots/prettyInterpRatio_UE%d.png",UEtype));
+  c->SaveAs(Form("../../plots/prettyInterpRatio_UE%d.pdf",UEtype));
 }

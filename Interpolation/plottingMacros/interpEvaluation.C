@@ -116,8 +116,8 @@ void interpEvaluation()
       ratio1->Divide(pp2Q[i]);
       TH1D * ratio2 = (TH1D*)pPb5Q[i]->Clone(Form("%d%d2",m,i));
       ratio2->Divide(pp7Q[i]);
-      ratio1->SetMaximum(2);
-      ratio1->SetMinimum(0);
+      ratio1->SetMaximum(1.5);
+      ratio1->SetMinimum(0.5);
       ratio1->GetXaxis()->SetRangeUser(0.5,200);
       if(i!=0)
       {

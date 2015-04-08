@@ -78,6 +78,8 @@ int pcollisionEventSelection;
 int pPAcollisionEventSelectionPA;
 int HLT_PAJet80_NoJetID_v1;
 int HLT_PAJet40_NoJetID_v1;
+int HLT_PAJet80_NoJetID_v1_Prescl;
+int HLT_PAJet40_NoJetID_v1_Prescl;
 int HLT_PAZeroBiasPixel_SingleTrack_v1;
 int HLT_Jet30;
 int HLT_Jet60;
@@ -205,6 +207,8 @@ int openInFile(const char * name, const char * mode, int isMC)
   {
     hltIn->SetBranchAddress("HLT_PAJet80_NoJetID_v1",&HLT_PAJet80_NoJetID_v1);
     hltIn->SetBranchAddress("HLT_PAJet40_NoJetID_v1",&HLT_PAJet40_NoJetID_v1);
+    hltIn->SetBranchAddress("HLT_PAJet80_NoJetID_v1_Prescl",&HLT_PAJet80_NoJetID_v1_Prescl);
+    hltIn->SetBranchAddress("HLT_PAJet40_NoJetID_v1_Prescl",&HLT_PAJet40_NoJetID_v1_Prescl);
   }
 
   if(strcmp(mode,"pp7")==0)
