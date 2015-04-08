@@ -9,6 +9,7 @@
 #include "TMath.h"
 #include "TDatime.h"
 #include "TH1D.h"
+#include "TProfile.h"
 #include <iostream>
 #include "skimUtilities.h"
 
@@ -23,6 +24,9 @@ void makeTurnOnCurves(const char * mode = "pp2")
   TH1D * num80 = new TH1D("num80","",nbinsFine,0,140);
   TH1D * denom40 = new TH1D("denom40","",nbinsFine,0,140);
   TH1D * denom80 = new TH1D("denom80","",nbinsFine,0,140);
+
+  TProfile * prof40 = new TProfile("prof40","",nbinsFine,0,140);
+  TProfile * prof80 = new TProfile("prof80","",nbinsFine,0,140);
  
 //setting up files 
   std::vector<std::string> fileList;
@@ -71,11 +75,13 @@ void makeTurnOnCurves(const char * mode = "pp2")
       if(nref>0) denom40->Fill(jtpt[0]);
       if(nref>0) denom80->Fill(jtpt[0]);
 
+      prof40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1,HLT_PAJet40_NoJetID_v1_Prescl*HLT_PAJet40_NoJetID_v1);
+      prof80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1,HLT_PAJet80_NoJetID_v1_Prescl*HLT_PAJet80_NoJetID_v1);
     }
     //cleanup so we can open another
     closeInFile();  
   }
-/*
+
   for(int i=1; i<num40->GetSize() ;i++)
   {
     if(num40->GetBinContent(i)>1.00001*denom40->GetBinContent(i))
@@ -85,7 +91,7 @@ void makeTurnOnCurves(const char * mode = "pp2")
       num40->SetBinError(i,0);
       denom40->SetBinError(i,0);
     }
-  }*/
+  }
 
   TGraphAsymmErrors * turnon40Asym;
   TGraphAsymmErrors * turnon80Asym;
@@ -130,6 +136,9 @@ void makeTurnOnCurves(const char * mode = "pp2")
   //leg->AddEntry(turnon80Asym,"Jet80 Trigger","p");
   leg->Draw("same");
 
-  c2->SaveAs(Form("../plots/TriggerTurnOnMB_allprescale%s.png",mode));
-  c2->SaveAs(Form("../plots/TriggerTurnOnMB_allprescale%s.pdf",mode));
+  //c2->SaveAs(Form("../plots/TriggerTurnOnMB_allprescale%s.png",mode));
+  //c2->SaveAs(Form("../plots/TriggerTurnOnMB_allprescale%s.pdf",mode));
+
+  prof40->Draw("p");
+  //prof80->Draw("same");
 }

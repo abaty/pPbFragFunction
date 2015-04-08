@@ -12,6 +12,7 @@
 #include "residualJEC.h"
 #include "jetSmearing.h"
 #include "getJEC_2nd.h"
+#include "getJEC_1st.h"
 
 const double pPbRapidity = 0.4654094531;
 const int nJetBins = 120;
@@ -170,7 +171,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax) continue;
         totalJetsEtaCutHist->Fill(1,weight);
   
-      //JEC correction applied
+      //JEC and its corrections applied
+        jtpt[j] = getJEC_1st(mode,rawpt[j],jtpt[j],jteta[j]); 
         jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
         jtpt[j] = getJEC_2nd(jtpt[j],jteta[j],mode);
         if(v==1 || v==3 || v==5)jtpt[j] = jtpt[j]*1.03;
