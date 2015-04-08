@@ -43,6 +43,7 @@ TH2D * h_trackUE_xi_G;
 //simple counting Histograms for tabulating jet numbers
 TH1D * totalJetsHist = new TH1D("totalJetsHist","",2,-0.5,1.5);
 TH1D * totalJetsRawPtCut = new TH1D("totalJetsRawPtCut","",2,-0.5,1.5);
+TH1D * totalJetsChargeSumCut = new TH1D("totalJetsChargeSumCut","",2,-0.5,1.5);
 TH1D * totalJetsEtaCutHist = new TH1D("totalJetsEtaCutHist","",2,-0.5,1.5);
 TH1D * totalJetsPtCutHist = new TH1D("totalJetsPtCutHist","",2,-0.5,1.5);
 

@@ -168,6 +168,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         totalJetsHist->Fill(1,weight);
         if(rawpt[j]<30) continue;
         totalJetsRawPtCut->Fill(1,weight);
+        if(chargedSum[j]/rawpt[j]>0.95 || chargedSum[j]/rawpt[j]<0.05) continue;
+        totalJetsChargeSumCut->Fill(1,weight);
         if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax) continue;
         totalJetsEtaCutHist->Fill(1,weight);
   
@@ -666,6 +668,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     {
       totalJetsHist->Write();
       totalJetsRawPtCut->Write();
+      totalJetsChargeSumCut->Write();
       totalJetsEtaCutHist->Write();
       totalJetsPtCutHist->Write();
     } 

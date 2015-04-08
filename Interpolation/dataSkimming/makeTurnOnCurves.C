@@ -48,7 +48,7 @@ void makeTurnOnCurves(const char * mode = "pp2")
     }
 
     int nEntries = ak3PFIn->GetEntries();
-   // nEntries = 5000000;
+    //nEntries = 2000000;
     for(int i = 0; i<nEntries; i++)
     {
       if(i%10000==0) std::cout <<"file: " << f << " event: " << i << "/" << nEntries << std::endl;
@@ -70,21 +70,21 @@ void makeTurnOnCurves(const char * mode = "pp2")
       if(nref>0 && HLT_PAJet80_NoJetID_v1_Prescl==1) denom80->Fill(jtpt[0]);
 */
       //weighting by prescale
-      if(nref>0 && HLT_PAJet40_NoJetID_v1==1) num40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1_Prescl);
-      if(nref>0 && HLT_PAJet80_NoJetID_v1==1) num80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1_Prescl);
-      if(nref>0) denom40->Fill(jtpt[0]);
-      if(nref>0) denom80->Fill(jtpt[0]);
+      if(nref>0 && HLT_PAJet40_NoJetID_v1==1) num40->Fill(jtpt[0]);
+      if(nref>0 && HLT_PAJet80_NoJetID_v1==1) num80->Fill(jtpt[0]);
+      if(nref>0) denom40->Fill(jtpt[0],1.0/(double)HLT_PAJet40_NoJetID_v1_Prescl);
+      if(nref>0) denom80->Fill(jtpt[0],1.0/(double)HLT_PAJet80_NoJetID_v1_Prescl);
 
-      if(nref>0 && HLT_PAJet40_NoJetID_v1==1) prof40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1,HLT_PAJet40_NoJetID_v1_Prescl);
+/*      if(nref>0 && HLT_PAJet40_NoJetID_v1==1) prof40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1,HLT_PAJet40_NoJetID_v1_Prescl);
       else if(nref>0) prof40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1,1);
       if(nref>0 && HLT_PAJet80_NoJetID_v1==1) prof80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1,HLT_PAJet80_NoJetID_v1_Prescl);
-      else if(nref>0) prof80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1,1);
+      else if(nref>0) prof80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1,1);*/
     }
     //cleanup so we can open another
     closeInFile();  
   }
 
-  for(int i=1; i<num40->GetSize() ;i++)
+/*  for(int i=1; i<num40->GetSize() ;i++)
   {
     if(num40->GetBinContent(i)>1.00001*denom40->GetBinContent(i))
     {
@@ -93,7 +93,7 @@ void makeTurnOnCurves(const char * mode = "pp2")
       num40->SetBinError(i,0);
       denom40->SetBinError(i,0);
     }
-  }
+  }*/
 
   TGraphAsymmErrors * turnon40Asym;
   TGraphAsymmErrors * turnon80Asym;
@@ -112,6 +112,12 @@ void makeTurnOnCurves(const char * mode = "pp2")
   turnon40Asym->SetLineColor(kRed+1);
   turnon40Asym->SetMarkerColor(kRed+1);
   turnon40Asym->SetMarkerSize(0.8);
+  num40->SetLineColor(kRed+1);
+  num40->SetMarkerColor(kRed+1);
+  num40->SetMarkerSize(0.8);
+  num40->SetMaximum(1.5);
+  num40->SetMinimum(0);
+
 
   turnon80Asym = new TGraphAsymmErrors();
   turnon80Asym->SetName("turnon4Asym");
@@ -124,23 +130,33 @@ void makeTurnOnCurves(const char * mode = "pp2")
   turnon80Asym->SetLineColor(kBlue+1);
   turnon80Asym->SetMarkerColor(kBlue+1);
   turnon80Asym->SetMarkerSize(0.8);
+  num80->SetLineColor(kBlue+1);
+  num80->SetMarkerColor(kBlue+1);
+  num80->SetMarkerSize(0.8);
+  num80->SetMaximum(1.5);
 
   mg->Add(turnon40Asym,"");
   //mg->Add(turnon80Asym,"");
 
-  mg->Draw("AP");
+//  mg->Draw("AP");
 
   TLegend * leg = new TLegend(0.55,0.2,0.9,0.4);
   if(strcmp(mode,"pp2")==0) leg->AddEntry((TObject*)0,"2.76 TeV MB pp","");
   if(strcmp(mode,"pPb5")==0) leg->AddEntry((TObject*)0,"5.02 TeV MB pPb","");
   if(strcmp(mode,"pp7")==0) leg->AddEntry((TObject*)0,"7 TeV MB pp","");
   leg->AddEntry(turnon40Asym,"Jet40 Trigger","p");
-  //leg->AddEntry(turnon80Asym,"Jet80 Trigger","p");
+ // leg->AddEntry(turnon80Asym,"Jet80 Trigger","p");
+
+  num40->Divide(denom40);
+  num40->Draw("p");
+
+//  num80->Divide(denom80);
+//  num80->Draw("p same");
   leg->Draw("same");
 
-  //c2->SaveAs(Form("../plots/TriggerTurnOnMB_allprescale%s.png",mode));
-  //c2->SaveAs(Form("../plots/TriggerTurnOnMB_allprescale%s.pdf",mode));
+  c2->SaveAs(Form("../plots/TriggerTurnOnMB_allprescale%s.png",mode));
+  c2->SaveAs(Form("../plots/TriggerTurnOnMB_allprescale%s.pdf",mode));
 
-  prof40->Draw("p");
-  //prof80->Draw("same");
+  //prof40->Draw("p");
+  //prof80->Draw("p");
 }
