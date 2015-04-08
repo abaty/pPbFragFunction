@@ -75,8 +75,10 @@ void makeTurnOnCurves(const char * mode = "pp2")
       if(nref>0) denom40->Fill(jtpt[0]);
       if(nref>0) denom80->Fill(jtpt[0]);
 
-      prof40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1,HLT_PAJet40_NoJetID_v1_Prescl*HLT_PAJet40_NoJetID_v1);
-      prof80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1,HLT_PAJet80_NoJetID_v1_Prescl*HLT_PAJet80_NoJetID_v1);
+      if(nref>0 && HLT_PAJet40_NoJetID_v1==1) prof40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1,HLT_PAJet40_NoJetID_v1_Prescl);
+      else if(nref>0) prof40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1,1);
+      if(nref>0 && HLT_PAJet80_NoJetID_v1==1) prof80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1,HLT_PAJet80_NoJetID_v1_Prescl);
+      else if(nref>0) prof80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1,1);
     }
     //cleanup so we can open another
     closeInFile();  
