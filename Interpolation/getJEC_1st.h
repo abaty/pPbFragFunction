@@ -1,7 +1,7 @@
 #include <cmath>
 #include <iostream>
 
-double getJEC_1st(const char * mode, double rawpt, double jetPt, double eta)
+double getJEC_1st(const char * mode, double rawPt, double jetPt, double eta)
 {
   double correction = 1;
 
@@ -61,15 +61,14 @@ double getJEC_1st(const char * mode, double rawpt, double jetPt, double eta)
       {
         correction = 1;
         const float *p = &l2_data[i][5];
-        const float x = rawpt;
+        const float x = rawPt;
         correction *= ((x>=20)*((p[0]+(p[1]/(pow(log10(x),2)+p[2])))+(p[3]*exp(-(p[4]*((log10(x)-p[5])*(log10(x)-p[5])))))))+((x<20)*1);;
         p = &l3_data[0][5];
         correction *= p[0]+p[1]/(pow(log10(x),2)+p[2])+p[3]*exp((-p[4]*(log10(x)-p[5])*(log10(x)-p[5]))+(p[6]*(log10(x)-p[5])));
-        std::cout << correction << std::endl;
         break;
       }
     }   
-    return rawpt*correction;
+    return rawPt*correction;
   }
   //JEC derived by Yaxian, v17 for Pbp direction
   else if(strcmp(mode,"Pbp5")==0)
@@ -119,14 +118,14 @@ double getJEC_1st(const char * mode, double rawpt, double jetPt, double eta)
       {   
         correction = 1;
         const float *q = &l2_data_1[i][5];
-        const float x = rawpt;
+        const float x = rawPt;
         correction *= (q[0]+(q[1]/(pow(log10(x),2)+q[2])))+(q[3]*exp(-(q[4]*((log10(x)-q[5])*(log10(x)-q[5])))));
         q = &l3_data_1[0][5];
         correction *= q[0]+q[1]/(pow(log10(x),2)+q[2])+q[3]*exp((-q[4]*(log10(x)-q[5])*(log10(x)-q[5]))+(q[6]*(log10(x)-q[5])));
         break;
       }
     }   
-    return rawpt*correction;
+    return rawPt*correction;
   }
   //just use JEC in forest for non-Pb systems
   else return jetPt;
