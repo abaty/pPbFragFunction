@@ -30,7 +30,7 @@ TBox* makeBox(double x1, double y1, double x2, double y2)
   return box;
 }
 
-void interpRatio(int UEtype)
+void interpRatio(int UEtype, int turnOffPoints = 0)
 {  
   TLatex * tlat = new TLatex(0.6,0.6,"test");
 
@@ -93,7 +93,7 @@ void interpRatio(int UEtype)
     
     if(i>9)
     {
-      hist[i]->SetMaximum(2.3);
+      hist[i]->SetMaximum(1.9);
       hist[i]->SetMinimum(0.1);
     }
 
@@ -155,11 +155,13 @@ void interpRatio(int UEtype)
     hist[i]->Draw();
     for(int j=1; j<hist[i]->GetSize()-1; j++)
     { 
+      if(turnOffPoints && i==13 && j==21) continue;
+      if(turnOffPoints && i==8 && j==21) continue;
       if(boxArray[i][j]->GetY2()!=0) boxArray[i][j]->Draw("l");
     }
     hist[i]->Draw("same");
     if(i<5) tlat->DrawLatex(0.8,0.000008,Form("%d < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i],(int)FF_Bound[i+1]));
-    if(i==5) tlat->DrawLatex(1.05,0.00002,"#int_{pPb}Ldt = 26.3 nb^{-1}");
+    if(i==5) tlat->DrawLatex(1.05,0.00002,"#int_{pPb}Ldt = 30.9 nb^{-1}");
     if(i==6) tlat->DrawLatex(0.8,0.00002,"#int_{2.76 TeV pp}Ldt = 5.3 pb^{-1}");
     if(i==7) tlat->DrawLatex(1,0.00002,"#int_{7 TeV pp}Ldt = 2.5 fb^{-1}");
     if(i==2) tlat->DrawLatex(20,1,"ak3PF jets");

@@ -58,24 +58,26 @@ void makeTurnOnCurves(const char * mode = "pp2")
    
       ak3PFIn->GetEntry(i);
       float boost = 0;
+      if(nref>0 && (chargedSum[0]/rawpt[0])<0.05) continue;  
+
       if(strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0)
       {
         boost = pPbRapidity;
       }
 
       //only using prescale 1 data       
-      /*if(nref>0 && HLT_PAJet40_NoJetID_v1==1 && HLT_PAJet40_NoJetID_v1_Prescl==1) num40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1_Prescl);
+      //if(nref>0 && HLT_PAJet40_NoJetID_v1==1 && HLT_PAJet40_NoJetID_v1_Prescl==1) num40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1_Prescl);
       if(nref>0 && HLT_PAJet80_NoJetID_v1==1 && HLT_PAJet80_NoJetID_v1_Prescl==1) num80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1_Prescl);
-      if(nref>0 && HLT_PAJet40_NoJetID_v1_Prescl==1) denom40->Fill(jtpt[0]);
+      //if(nref>0 && HLT_PAJet40_NoJetID_v1_Prescl==1) denom40->Fill(jtpt[0]);
       if(nref>0 && HLT_PAJet80_NoJetID_v1_Prescl==1) denom80->Fill(jtpt[0]);
-*/
+/*
       //weighting by prescale
       if(nref>0 && HLT_PAJet40_NoJetID_v1==1) num40->Fill(jtpt[0]);
       if(nref>0 && HLT_PAJet80_NoJetID_v1==1) num80->Fill(jtpt[0]);
       if(nref>0) denom40->Fill(jtpt[0],1.0/(double)HLT_PAJet40_NoJetID_v1_Prescl);
       if(nref>0) denom80->Fill(jtpt[0],1.0/(double)HLT_PAJet80_NoJetID_v1_Prescl);
 
-/*      if(nref>0 && HLT_PAJet40_NoJetID_v1==1) prof40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1,HLT_PAJet40_NoJetID_v1_Prescl);
+      if(nref>0 && HLT_PAJet40_NoJetID_v1==1) prof40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1,HLT_PAJet40_NoJetID_v1_Prescl);
       else if(nref>0) prof40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1,1);
       if(nref>0 && HLT_PAJet80_NoJetID_v1==1) prof80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1,HLT_PAJet80_NoJetID_v1_Prescl);
       else if(nref>0) prof80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1,1);*/
@@ -135,27 +137,27 @@ void makeTurnOnCurves(const char * mode = "pp2")
   num80->SetMarkerSize(0.8);
   num80->SetMaximum(1.5);
 
-  mg->Add(turnon40Asym,"");
-  //mg->Add(turnon80Asym,"");
+  //mg->Add(turnon40Asym,"");
+  mg->Add(turnon80Asym,"");
 
-//  mg->Draw("AP");
+  mg->Draw("AP");
 
   TLegend * leg = new TLegend(0.55,0.2,0.9,0.4);
   if(strcmp(mode,"pp2")==0) leg->AddEntry((TObject*)0,"2.76 TeV MB pp","");
   if(strcmp(mode,"pPb5")==0) leg->AddEntry((TObject*)0,"5.02 TeV MB pPb","");
   if(strcmp(mode,"pp7")==0) leg->AddEntry((TObject*)0,"7 TeV MB pp","");
-  leg->AddEntry(turnon40Asym,"Jet40 Trigger","p");
- // leg->AddEntry(turnon80Asym,"Jet80 Trigger","p");
+  //leg->AddEntry(turnon40Asym,"Jet40 Trigger","p");
+  leg->AddEntry(turnon80Asym,"Jet80 Trigger","p");
 
-  num40->Divide(denom40);
-  num40->Draw("p");
+ // num40->Divide(denom40);
+ // num40->Draw("p");
 
 //  num80->Divide(denom80);
 //  num80->Draw("p same");
   leg->Draw("same");
 
-  c2->SaveAs(Form("../plots/TriggerTurnOnMB_allprescale%s.png",mode));
-  c2->SaveAs(Form("../plots/TriggerTurnOnMB_allprescale%s.pdf",mode));
+  c2->SaveAs(Form("../plots/TriggerTurnOnMB_80prescale1%s.png",mode));
+  c2->SaveAs(Form("../plots/TriggerTurnOnMB_80prescale1%s.pdf",mode));
 
   //prof40->Draw("p");
   //prof80->Draw("p");
