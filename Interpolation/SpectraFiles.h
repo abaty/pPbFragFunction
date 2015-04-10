@@ -41,6 +41,7 @@ TH2D * h_track_xi_G;
 TH2D * h_trackUE_xi_G;
 
 //simple counting Histograms for tabulating jet numbers
+TH1D * totalEvts = new TH1D("totalEvts","",2,-0.5,1.5);
 TH1D * totalJetsHist = new TH1D("totalJetsHist","",2,-0.5,1.5);
 TH1D * totalJetsRawPtCut = new TH1D("totalJetsRawPtCut","",2,-0.5,1.5);
 TH1D * totalJetsChargeSumCut = new TH1D("totalJetsChargeSumCut","",2,-0.5,1.5);
@@ -63,6 +64,7 @@ float trkDzError1[maxTrack], trkDzError1Mix[maxTrack];
 float trkDz1[maxTrack], trkDz1Mix[maxTrack];
 float trkDxyError1[maxTrack], trkDxyError1Mix[maxTrack];
 float trkDxy1[maxTrack], trkDxy1Mix[maxTrack];
+float trkCharge[maxTrack], trkChargeMix[maxTrack];
 bool highPurity[maxTrack], highPurityMix[maxTrack];
 //float trkRmin[maxTrack], trkRminMix[maxTrack];
 int nParticle, nParticleMix;
@@ -152,6 +154,7 @@ void getInputFile(const char * name, int isMC)
   track->SetBranchAddress("trkDz1",&trkDz1);
   track->SetBranchAddress("trkDxyError1",&trkDxyError1);
   track->SetBranchAddress("trkDxy1",&trkDxy1);
+  track->SetBranchAddress("trkCharge",&trkCharge);
   track->SetBranchAddress("highPurity",&highPurity);
   track->SetBranchAddress("nVtx",&nVtx);
 
@@ -224,6 +227,7 @@ void getInputFileMix(const char * name, int isMC)
   trackMix->SetBranchAddress("trkDz1",&trkDz1Mix);
   trackMix->SetBranchAddress("trkDxyError1",&trkDxyError1Mix);
   trackMix->SetBranchAddress("trkDxy1",&trkDxy1Mix);
+  trackMix->SetBranchAddress("trkCharge",&trkChargeMix);
   trackMix->SetBranchAddress("highPurity",&highPurityMix);
   trackMix->SetBranchAddress("nVtx",&nVtxMix);
 

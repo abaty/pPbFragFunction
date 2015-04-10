@@ -134,7 +134,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     for(int i=0; i<nEntry; i++)
     {
       getInputEntry(i);
-     
+      totalEvts->Fill(1,weight);      
+ 
       if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
          
       //finding a MB event to mix with if needed 
@@ -666,12 +667,13 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     h_trackUE_xi_gen_G->Write(Form("%s_gen_trackUE_xi_G%s",mode,variationTag[v]));
     if(v==0)
     {
+      totalEvts->Write();
       totalJetsHist->Write();
       totalJetsRawPtCut->Write();
       totalJetsChargeSumCut->Write();
       totalJetsEtaCutHist->Write();
       totalJetsPtCutHist->Write();
-    } 
+    }
     outf->Close();
   }
 }

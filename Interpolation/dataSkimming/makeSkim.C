@@ -35,7 +35,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
 
   //some parameters for  files
   //max output file size
-  const int maxOutputFileSize = 200000;
+  const int maxOutputFileSize = 50000;
   //if(isMC) 
 
 //setting up files 
@@ -53,8 +53,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     //if((strcmp("pPb5",mode)==0) && strcmp(trigger,"jet80")==0) fileList.push_back("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_JSonPPb_forestv77.root"); 
     //if((strcmp("Pbp5",mode)==0) && strcmp(trigger,"jet80")==0) fileList.push_back("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/Pbp_5_02TeV_pA2013/PA2013_HiForest_PromptReco_JSonPbp_JECdb_forestv84_Jet80_100.root");
     if((strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0) && strcmp(trigger,"jet80")==0) fileList = readInputFileList("pPb5Pbp5_jet80_data_files.txt");
-    if((strcmp("pPb5",mode)==0) && strcmp(trigger,"jet40")==0) fileList.push_back("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_JSonPPb_forestv72_HLT40_HLT60.root");
-    if((strcmp("Pbp5",mode)==0) && strcmp(trigger,"jet40")==0) fileList = readInputFileList("pPb5Pbp5_jet40_data_files.txt");
+    if((strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0) && strcmp(trigger,"jet40")==0) fileList = readInputFileList("pPb5Pbp5_jet40_data_files.txt");
     if((strcmp("pPb5",mode)==0 || strcmp("Pbp5",mode)==0) && strcmp(trigger,"MB")==0) fileList.push_back("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_KrisztianMB_JSonPPb_forestv84.root");
     if(strcmp("pp2",mode)==0 && strcmp(trigger,"jet80")==0) fileList.push_back("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root");
     if(strcmp("pp2",mode)==0 && strcmp(trigger,"jet40")==0) fileList.push_back("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root");

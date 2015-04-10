@@ -35,12 +35,22 @@ float trkDzError1[maxTrack];
 float trkDz1[maxTrack];
 float trkDxyError1[maxTrack];
 float trkDxy1[maxTrack];
+int   trkCharge[maxTrack];
 int highPurity[maxTrack];
 //double trkRmin[maxTrack];i
 int nParticle;
 float pEta[2*maxTrack];
 float pPhi[2*maxTrack];
 float pPt[2*maxTrack];
+float mtrkPt[2*maxTrack];
+float mtrkPtError[2*maxTrack];
+int mtrkQual[2*maxTrack];
+float mtrkChi2[2*maxTrack];
+float mtrkNdof[2*maxTrack];
+float mtrkDz1[2*maxTrack];
+float mtrkDzError1[2*maxTrack];
+float mtrkDxy1[2*maxTrack];
+float mtrkDxyError1[2*maxTrack];
 
 const int maxJet = 500;
 int nref;
@@ -60,7 +70,6 @@ float genpt[maxJet];
 float geneta[maxJet];
 float genphi[maxJet];
 
-
 int run;
 int event;
 float vz;
@@ -71,7 +80,6 @@ float hiHFminusEta4;
 float hiHFhitPlus;
 float hiHFhitMinus;
 float weight;
-
 
 //unwritten variables cut on
 int pcollisionEventSelection;
@@ -105,6 +113,7 @@ void openOutFile(const char * mode, const char * trigger, int isMC, int date,int
   track->Branch("trkDz1",&trkDz1,"trkDz1[nTrk]/F");
   track->Branch("trkDxyError1",&trkDxyError1,"trkDxyError1[nTrk]/F");
   track->Branch("trkDxy1",&trkDxy1,"trkDxy1[nTrk]/F");
+  track->Branch("trkCharge",&trkCharge,"trkCharge[nTrk]/I");
   track->Branch("highPurity",&highPurity,"highPurity[nTrk]/O");
   track->Branch("nVtx",&nVtx,"nVtx/I"); 
   //track->Branch("trkRmin",&trkRmin,"trkRmin[nTrk]/F");
@@ -132,6 +141,15 @@ void openOutFile(const char * mode, const char * trigger, int isMC, int date,int
     track->Branch("pEta",&pEta,"pEta[nParticle]/F");
     track->Branch("pPhi",&pPhi,"pPhi[nParticle]/F");
     track->Branch("pPt",&pPt,"pPt[nParticle]/F");
+    track->Branch("mtrkPt",&mtrkPt,"mtrkPt[nParticle]/F");
+    track->Branch("mtrkPtError",&mtrkPtError,"mtrkPtError[nParticle]/F");
+    track->Branch("mtrkQual",&mtrkQual,"mtrkQual[nParticle]/I");
+    track->Branch("mtrkChi2",&mtrkChi2,"mtrkChi2[nParticle]/F");
+    track->Branch("mtrkNdof",&mtrkNdof,"mtrkNdof[nParticle]/F");
+    track->Branch("mtrkDz1",&mtrkDz1,"mtrkDz1[nParticle]/F");
+    track->Branch("mtrkDzError1",&mtrkDzError1,"mtrkDzError1[nParticle]/F");
+    track->Branch("mtrkDxy1",&mtrkDxy1,"mtrkDxy1[nParticle]/F");
+    track->Branch("mtrkDxyError1",&mtrkDxyError1,"mtrkDxyError1[nParticle]/F");
     
     ak3PF->Branch("refpt",&refpt,"refpt[nref]/F");
     ak3PF->Branch("refeta",&refeta,"refeta[nref]/F");
@@ -176,6 +194,7 @@ int openInFile(const char * name, const char * mode, int isMC)
   trackIn->SetBranchAddress("trkDz1",&trkDz1);
   trackIn->SetBranchAddress("trkDxyError1",&trkDxyError1);
   trackIn->SetBranchAddress("trkDxy1",&trkDxy1);
+  trackIn->SetBranchAddress("trkCharge",&trkCharge);
   trackIn->SetBranchAddress("highPurity",&highPurity);
   trackIn->SetBranchAddress("nVtx",&nVtx);
 
@@ -238,6 +257,15 @@ int openInFile(const char * name, const char * mode, int isMC)
     trackIn->SetBranchAddress("pEta",&pEta);
     trackIn->SetBranchAddress("pPhi",&pPhi);
     trackIn->SetBranchAddress("pPt",&pPt); 
+    trackIn->SetBranchAddress("mtrkPt",&mtrkPt);
+    trackIn->SetBranchAddress("mtrkPtError",&mtrkPtError);
+    trackIn->SetBranchAddress("mtrkQual",&mtrkQual);
+    trackIn->SetBranchAddress("mtrkChi2",&mtrkChi2);
+    trackIn->SetBranchAddress("mtrkNdof",&mtrkNdof);
+    trackIn->SetBranchAddress("mtrkDz1",&mtrkDz1);
+    trackIn->SetBranchAddress("mtrkDzError1",&mtrkDzError1);
+    trackIn->SetBranchAddress("mtrkDxy1",&mtrkDxy1);
+    trackIn->SetBranchAddress("mtrkDxyError1",&mtrkDxyError1);
  
     ak3PFIn->SetBranchAddress("refpt",&refpt);
     ak3PFIn->SetBranchAddress("refeta",&refeta);
