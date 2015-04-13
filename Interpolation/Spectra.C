@@ -74,48 +74,48 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     h_jet = new TH1D("h_jet","",nJetBins,0,300); 
     h_track = new TH2D("h_track","",nJetBins,0,300,ntrackBins-1,axis);
     h_trackUE = new TH2D("h_trackUE","",nJetBins,0,300,ntrackBins-1,axis);
-    h_track_xi = new TH2D("h_track_xi","",nJetBins,0,300,28,-1.5,5.5);
-    h_trackUE_xi = new TH2D("h_trackUE_xi","",nJetBins,0,300,28,-1.5,5.5);
+    h_track_xi = new TH2D("h_track_xi","",nJetBins,0,300,24,0,6.0);
+    h_trackUE_xi = new TH2D("h_trackUE_xi","",nJetBins,0,300,24,0,6.0);
   
     //gen/reco combinations  
     h_track_rJgT = new TH2D("h_track_rJgT","",nJetBins,0,300,ntrackBins-1,axis);
     h_trackUE_rJgT = new TH2D("h_trackUE_rJgT","",nJetBins,0,300,ntrackBins-1,axis);
-    h_track_xi_rJgT = new TH2D("h_track_xi_rJgT","",nJetBins,0,300,28,-1.5,5.5);
-    h_trackUE_xi_rJgT = new TH2D("h_trackUE_xi_rJgT","",nJetBins,0,300,28,-1.5,5.5);
+    h_track_xi_rJgT = new TH2D("h_track_xi_rJgT","",nJetBins,0,300,24,0,6.0);
+    h_trackUE_xi_rJgT = new TH2D("h_trackUE_xi_rJgT","",nJetBins,0,300,24,0,6.0);
   
     h_track_gJrT = new TH2D("h_track_gJrT","",nJetBins,0,300,ntrackBins-1,axis);
     h_trackUE_gJrT = new TH2D("h_trackUE_gJrT","",nJetBins,0,300,ntrackBins-1,axis);
-    h_track_xi_gJrT = new TH2D("h_track_xi_gJrT","",nJetBins,0,300,28,-1.5,5.5);
-    h_trackUE_xi_gJrT = new TH2D("h_trackUE_xi_gJrT","",nJetBins,0,300,28,-1.5,5.5);
+    h_track_xi_gJrT = new TH2D("h_track_xi_gJrT","",nJetBins,0,300,24,0,6.0);
+    h_trackUE_xi_gJrT = new TH2D("h_trackUE_xi_gJrT","",nJetBins,0,300,24,0,6.0);
   
     //gen
     h_jet_gen = new TH1D("h_jet_gen","",nJetBins,0,300);
     h_track_gen = new TH2D("h_track_gen","",nJetBins,0,300,ntrackBins-1,axis);
     h_trackUE_gen = new TH2D("h_trackUE_gen","",nJetBins,0,300,ntrackBins-1,axis);
-    h_track_xi_gen = new TH2D("h_track_xi_gen","",nJetBins,0,300,28,-1.5,5.5);
-    h_trackUE_xi_gen = new TH2D("h_trackUE_xi_gen","",nJetBins,0,300,28,-1.5,5.5);   
+    h_track_xi_gen = new TH2D("h_track_xi_gen","",nJetBins,0,300,24,0,6.0);
+    h_trackUE_xi_gen = new TH2D("h_trackUE_xi_gen","",nJetBins,0,300,24,0,6.0);   
   
     //Quark Gluons checks 
     h_jet_Q = new TH1D("h_jet_Q","",nJetBins,0,300);
     h_track_Q = new TH2D("h_track_Q","",nJetBins,0,300,ntrackBins-1,axis);
     h_trackUE_Q = new TH2D("h_trackUE_Q","",nJetBins,0,300,ntrackBins-1,axis);
-    h_track_xi_Q = new TH2D("h_track_xi_Q","",nJetBins,0,300,28,-1.5,5.5);
-    h_trackUE_xi_Q = new TH2D("h_trackUE_xi_Q","",nJetBins,0,300,28,-1.5,5.5);
+    h_track_xi_Q = new TH2D("h_track_xi_Q","",nJetBins,0,300,24,0,6.0);
+    h_trackUE_xi_Q = new TH2D("h_trackUE_xi_Q","",nJetBins,0,300,24,0,6.0);
     h_jet_G = new TH1D("h_jet_G","",nJetBins,0,300);
     h_track_G = new TH2D("h_track_G","",nJetBins,0,300,ntrackBins-1,axis);
     h_trackUE_G = new TH2D("h_trackUE_G","",nJetBins,0,300,ntrackBins-1,axis);
-    h_track_xi_G = new TH2D("h_track_xi_G","",nJetBins,0,300,28,-1.5,5.5);
-    h_trackUE_xi_G = new TH2D("h_trackUE_xi_G","",nJetBins,0,300,28,-1.5,5.5);
+    h_track_xi_G = new TH2D("h_track_xi_G","",nJetBins,0,300,24,0,6.0);
+    h_trackUE_xi_G = new TH2D("h_trackUE_xi_G","",nJetBins,0,300,24,0,6.0);
     h_jet_gen_Q = new TH1D("h_jet_gen_Q","",nJetBins,0,300);
     h_track_gen_Q = new TH2D("h_track_gen_Q","",nJetBins,0,300,ntrackBins-1,axis);
     h_trackUE_gen_Q = new TH2D("h_trackUE_gen_Q","",nJetBins,0,300,ntrackBins-1,axis);
-    h_track_xi_gen_Q = new TH2D("h_track_xi_gen_Q","",nJetBins,0,300,28,-1.5,5.5);
-    h_trackUE_xi_gen_Q = new TH2D("h_trackUE_xi_gen_Q","",nJetBins,0,300,28,-1.5,5.5);
+    h_track_xi_gen_Q = new TH2D("h_track_xi_gen_Q","",nJetBins,0,300,24,0,6.0);
+    h_trackUE_xi_gen_Q = new TH2D("h_trackUE_xi_gen_Q","",nJetBins,0,300,24,0,6.0);
     h_jet_gen_G = new TH1D("h_jet_gen_G","",nJetBins,0,300);
     h_track_gen_G = new TH2D("h_track_gen_G","",nJetBins,0,300,ntrackBins-1,axis);
     h_trackUE_gen_G = new TH2D("h_trackUE_gen_G","",nJetBins,0,300,ntrackBins-1,axis);
-    h_track_xi_gen_G = new TH2D("h_track_xi_gen_G","",nJetBins,0,300,28,-1.5,5.5);
-    h_trackUE_xi_gen_G = new TH2D("h_trackUE_xi_gen_G","",nJetBins,0,300,28,-1.5,5.5); 
+    h_track_xi_gen_G = new TH2D("h_track_xi_gen_G","",nJetBins,0,300,24,0,6.0);
+    h_trackUE_xi_gen_G = new TH2D("h_trackUE_xi_gen_G","",nJetBins,0,300,24,0,6.0); 
   
     //boosting
     double boost = 0;
