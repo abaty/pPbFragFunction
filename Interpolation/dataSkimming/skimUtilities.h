@@ -30,6 +30,7 @@ int nVtx;
 float trkPt[maxTrack];
 float trkEta[maxTrack];
 float trkPhi[maxTrack];
+bool  trkFake[maxTrack];
 float trkPtError[maxTrack];
 float trkDzError1[maxTrack];
 float trkDz1[maxTrack];
@@ -141,6 +142,7 @@ void openOutFile(const char * mode, const char * trigger, int isMC, int date,int
     track->Branch("pEta",&pEta,"pEta[nParticle]/F");
     track->Branch("pPhi",&pPhi,"pPhi[nParticle]/F");
     track->Branch("pPt",&pPt,"pPt[nParticle]/F");
+    track->Branch("trkFake",&trkFake,"trkFake[nTrk]/O");
     track->Branch("mtrkPt",&mtrkPt,"mtrkPt[nParticle]/F");
     track->Branch("mtrkPtError",&mtrkPtError,"mtrkPtError[nParticle]/F");
     track->Branch("mtrkQual",&mtrkQual,"mtrkQual[nParticle]/I");
@@ -257,6 +259,7 @@ int openInFile(const char * name, const char * mode, int isMC)
     trackIn->SetBranchAddress("pEta",&pEta);
     trackIn->SetBranchAddress("pPhi",&pPhi);
     trackIn->SetBranchAddress("pPt",&pPt); 
+    trackIn->SetBranchAddress("trkFake",&trkFake); 
     trackIn->SetBranchAddress("mtrkPt",&mtrkPt);
     trackIn->SetBranchAddress("mtrkPtError",&mtrkPtError);
     trackIn->SetBranchAddress("mtrkQual",&mtrkQual);
