@@ -4,8 +4,8 @@
 #include <iostream>
 
 const char* filePath = "tempRootFiles/processed_2015_04_08__18_50_31/";
-const int variations = 27;
-const char * variationTag[variations]= {"","_pp2JESUP3","_pp2JESDOWN3","_pp7JESUP3","_pp7JESDOWN3","_pPb5JESUP3","_pPb5JESDOWN3","_pp2JER5","_pp7JER5","_pPb5JER5","_pp2JER2","_pp7JER2","_pPb5JER2","_NoTrackCorr","_pp2JESUP1","_pp2JESDOWN1","_pp7JESUP1","_pp7JESDOWN1","_pPb5JESUP1","_pPb5JESDOWN1","_pp2JESUP2","_pp2JESDOWN2","_pp7JESUP2","_pp7JESDOWN2","_pPb5JESUP2","_pPb5JESDOWN2","_60DegreeCone"};
+const int variations = 29;
+const char * variationTag[variations]= {"","_pp2JESUP3","_pp2JESDOWN3","_pp7JESUP3","_pp7JESDOWN3","_pPb5JESUP3","_pPb5JESDOWN3","_pp2JER5","_pp7JER5","_pPb5JER5","_pp2JER2","_pp7JER2","_pPb5JER2","_NoTrackCorr","_pp2JESUP1","_pp2JESDOWN1","_pp7JESUP1","_pp7JESDOWN1","_pPb5JESUP1","_pPb5JESDOWN1","_pp2JESUP2","_pp2JESDOWN2","_pp7JESUP2","_pp7JESDOWN2","_pPb5JESUP2","_pPb5JESDOWN2","_60DegreeCone","_ChargePlus","_ChargeMinus"};
 
 // jet pt boundaries
 const int FF_Bins = 5;

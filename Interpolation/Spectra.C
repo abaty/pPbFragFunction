@@ -65,9 +65,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   //different nonzero variations are used for systematics checks, variation 0 is for the basic calculation
   for(int v = 0; v<variations; v++)
   {
-    if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==7 || v==10 || v==13 || v==14 || v==15 || v==20 || v==21 || v==26)) continue;
-    if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8 ||v==11 || v==13 || v==16 || v==17 || v==22 || v==23 || v==26)) continue;
-    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9 || v==12 || v==13 || v==18 || v==19 || v==24 || v==25 || v==26)) continue;
+    if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==7 || v==10 || v==13 || v==14 || v==15 || v==20 || v==21 || v==26 || v==27 || v==28)) continue;
+    if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8 ||v==11 || v==13 || v==16 || v==17 || v==22 || v==23 || v==26 || v==27 || v==28)) continue;
+    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9 || v==12 || v==13 || v==18 || v==19 || v==24 || v==25 || v==26 || v==27 || v==28)) continue;
     if(typeUE!=0 && v==26) continue;
 
     //reco
@@ -200,7 +200,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         if(isG) h_jet_G->Fill(jtpt[j],weight);
        
         for(int t=0; t<nTrk; t++)
-        {         
+        { 
+          if((trkCharge[t]!=1 && v==27) || (trkCharge[t]!=-1 && v==28)) continue;     
           if(trkPt[t] < 0.5 || trkPt[t] > 1e+5 || !highPurity[t] || TMath::Abs(trkEta[t])>2.4 ) continue;
           if(TMath::Abs(trkDxy1[t]/trkDxyError1[t]) > 3 || TMath::Abs(trkDz1[t]/trkDzError1[t]) > 3 || trkPtError[t]/trkPt[t] > 0.1) continue;        
     
@@ -290,6 +291,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           getInputEntryMix(lastMixEvt);
           for(int t = 0; t < nTrkMix; t++)
           {
+            if((trkChargeMix[t]!=1 && v==27) || (trkChargeMix[t]!=-1 && v==28)) continue;     
             if(trkPtMix[t] < 0.5 || trkPtMix[t] > 1e+5 || !highPurityMix[t] || TMath::Abs(trkEtaMix[t])>2.4 ) continue;
             if(TMath::Abs(trkDxy1Mix[t]/trkDxyError1Mix[t]) > 3 || TMath::Abs(trkDz1Mix[t]/trkDzError1Mix[t]) > 3 || trkPtErrorMix[t]/trkPtMix[t] > 0.1) continue;
   
@@ -500,6 +502,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           //gen jet reco track
           for(int t=0; t<nTrk; t++)
           {         
+            if((trkCharge[t]!=1 && v==27) || (trkCharge[t]!=-1 && v==28)) continue;     
             if(trkPt[t] < 0.5 || trkPt[t] > 1e+5 || !highPurity[t] || TMath::Abs(trkEta[t])>2.4 ) continue;
             if(TMath::Abs(trkDxy1[t]/trkDxyError1[t]) > 3 || TMath::Abs(trkDz1[t]/trkDzError1[t]) > 3 || trkPtError[t]/trkPt[t] > 0.1) continue;        
     
@@ -559,6 +562,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             getInputEntryMix(lastMixEvt);
             for(int t = 0; t < nTrkMix; t++)
             {
+              if((trkChargeMix[t]!=1 && v==27) || (trkChargeMix[t]!=-1 && v==28)) continue;     
               if(trkPtMix[t] < 0.5 || trkPtMix[t] > 1e+5 || !highPurityMix[t] || TMath::Abs(trkEtaMix[t])>2.4 ) continue;
               if(TMath::Abs(trkDxy1Mix[t]/trkDxyError1Mix[t]) > 3 || TMath::Abs(trkDz1Mix[t]/trkDzError1Mix[t]) > 3 || trkPtErrorMix[t]/trkPtMix[t] > 0.1) continue;
   

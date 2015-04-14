@@ -36,7 +36,7 @@ float trkDzError1[maxTrack];
 float trkDz1[maxTrack];
 float trkDxyError1[maxTrack];
 float trkDxy1[maxTrack];
-int   trkCharge[maxTrack];
+int trkCharge[maxTrack];
 int highPurity[maxTrack];
 //double trkRmin[maxTrack];i
 int nParticle;
@@ -72,6 +72,7 @@ float geneta[maxJet];
 float genphi[maxJet];
 
 int run;
+int lumi;
 int event;
 float vz;
 float hiHFplus;
@@ -127,6 +128,7 @@ void openOutFile(const char * mode, const char * trigger, int isMC, int date,int
   ak3PF->Branch("chargedSum",&chargedSum,"chargedSum[nref]/F");
 
   evt->Branch("run",&run,"run/I");
+  evt->Branch("lumi",&lumi,"lumi/I");
   evt->Branch("vz",&vz,"vz/F");
   evt->Branch("hiHFplus",&hiHFplus,"hiHFplus/F");
   evt->Branch("hiHFminus",&hiHFminus,"hiHFminus/F"); 
@@ -210,6 +212,7 @@ int openInFile(const char * name, const char * mode, int isMC)
   if(strcmp(mode,"pp7")!=0 || !isMC)
   {
     evtIn->SetBranchAddress("run",&run);
+    evtIn->SetBranchAddress("lumi",&lumi);
     evtIn->SetBranchAddress("vz",&vz);
     evtIn->SetBranchAddress("hiHFplus",&hiHFplus);
     evtIn->SetBranchAddress("hiHFminus",&hiHFminus);
@@ -313,9 +316,9 @@ int openInFileFast(const char * name, const char * mode, int isMC)
 void closeOutFile()
 {
   outf->cd();
-  track->Write(); 
-  ak3PF->Write();
-  evt->Write();  
+  track->Write("", TObject::kOverwrite); 
+  ak3PF->Write("", TObject::kOverwrite);
+  evt->Write("", TObject::kOverwrite);  
   outf->Close();
   delete outf;
   return;
