@@ -232,7 +232,7 @@ void makePlots(const char * tag,int UEtype)
       pPbPbp_FF_recoMC[i-6]->SetMarkerSize(1);
       pPbPbp_FF_recoMC[i-6]->SetLineWidth(1);
 
-      pPb_FF_recoMC[i-6]->Draw();
+      pPbPbp_FF_recoMC[i-6]->Draw();
       l3->Draw("same");
     }
   }

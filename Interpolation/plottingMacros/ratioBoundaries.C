@@ -42,7 +42,7 @@ void ratioBoundaries()
   for(int i = 1; i<11; i++) c1->cd(i)->SetLogx();
 
   const char * names[3] = {"fulldata","genMC","recoMC"};
-  TFile * inf = TFile::Open("../FragmentationFunctionsUE3.root","read");
+  TFile * inf = TFile::Open("../FragmentationFunctionsUE0.root","read");
   for(int m = 0; m<3;m++)
   {
     for(int i = 0; i<5; i++)
@@ -132,8 +132,8 @@ void ratioBoundaries()
       ratio2->Draw("same");
       l->Draw();
     }
-    c1->SaveAs(Form("../plots/ratioBoundaries_%s.png",names[m]));
-    c1->SaveAs(Form("../plots/ratioBoundaries_%s.pdf",names[m]));
+    c1->SaveAs(Form("../plots/ratioBoundaries_%s_PhiSub.png",names[m]));
+    c1->SaveAs(Form("../plots/ratioBoundaries_%s_PhiSub.pdf",names[m]));
     //c1->Clear(); 
   }
 }
