@@ -89,11 +89,11 @@ void interpRatio(int UEtype, int turnOffPoints = 0)
     if(i<10) c->cd(i+1)->SetLogy();
 
     hist[i]->SetMaximum(4);
-    hist[i]->SetMinimum(0.000002);
+    hist[i]->SetMinimum(0.0000015);
     
     if(i>9)
     {
-      hist[i]->SetMaximum(1.9);
+      hist[i]->SetMaximum(2.4);
       hist[i]->SetMinimum(0.1);
     }
 
@@ -155,8 +155,18 @@ void interpRatio(int UEtype, int turnOffPoints = 0)
     hist[i]->Draw();
     for(int j=1; j<hist[i]->GetSize()-1; j++)
     { 
-      if(turnOffPoints && i==13 && j==21) continue;
-      if(turnOffPoints && i==8 && j==21) continue;
+      if(turnOffPoints && i==13 && j==21)
+      {
+        hist[i]->SetBinContent(j,0);
+        hist[i]->SetBinError(j,0);
+        continue;
+      } 
+      if(turnOffPoints && i==8 && j==21)
+      {
+        hist[i]->SetBinContent(j,0);
+        hist[i]->SetBinError(j,0);
+        continue;
+      }
       if(boxArray[i][j]->GetY2()!=0) boxArray[i][j]->Draw("l");
     }
     hist[i]->Draw("same");
