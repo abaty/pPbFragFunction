@@ -48,7 +48,7 @@ void Pbp_Comparison()
   pPbFF[i]->SetLineWidth(2);
   pPbFF[i]->SetLineStyle(1);
   pPbFF[i]->SetMaximum(10);
-  pPbFF[i]->SetMinimum(0.001);
+  pPbFF[i]->SetMinimum(0.000001);
   pPbFF[i]->GetYaxis()->SetTitle("#frac{1}{N_{jet}} #frac{N}{p_{t}^{track}}");
   pPbFF[i]->GetYaxis()->SetTitleColor(1);
   pPbFF[i]->GetYaxis()->SetTitleSize(0.07);
@@ -84,7 +84,7 @@ void Pbp_Comparison()
 
   pPbFF[i]->DrawCopy("e");
   PbpFF[i]->DrawCopy("same e");
-  lat->DrawLatex(0.6,0.002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)bins[i],(int)bins[i+1]));
+  lat->DrawLatex(0.6,0.000002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)bins[i],(int)bins[i+1]));
   }
   c2->cd(1);
   TLegend * leg = new TLegend(0.2,0.1,0.5,0.5);

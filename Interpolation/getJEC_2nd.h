@@ -13,13 +13,21 @@ double getJEC_2nd(double perp, double pseudorapidity, const char * mode)
   { 
     #include "jec_2nd_pp_7.h"
   }
-  else if(strcmp(mode,"pPb5")==0 || strcmp(mode,"pp5")==0)
+  /*else if(strcmp(mode,"pPb5")==0 || strcmp(mode,"pp5")==0)
   { 
     #include "jec_2nd_ppb.h"
   }
   else if(strcmp(mode,"Pbp5")==0)
   { 
     #include "jec_2nd_pbp.h"
+  }*/
+
+  if(strcmp(mode,"pp7")==0)
+  {
+    return perp*perp_scale*1.01; 
   }
- return perp*perp_scale; 
+  else
+  {
+    return perp*perp_scale;
+  }
 }
