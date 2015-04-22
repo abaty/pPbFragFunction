@@ -47,10 +47,22 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   TH2::SetDefaultSumw2(); 
   TDatime * dateTime = new TDatime();
   TRandom * rand = new TRandom(dateTime->GetTime());
-  setJetPtRange(mode,trigger);
   const sampleType sType = kPPDATA;
   InitCorrFiles(sType);
   InitCorrHists(sType);
+
+  //tracking variables calc
+  const int ny=20;
+  double trkx[ny+1];
+  double inix=log(0.5)/log(10);
+  double delta=(log(200)-log(0.5))/(ny*log(10));
+  for(int ix=0; ix<ny+1;ix++)
+  {
+    trkx[ix]=pow(10,inix);
+    inix+=delta;
+  }
+  TH1D * totalGen_Tracking = new TH1D("totalGen_Tracking","",ny,trkx);
+  TH1D * totalReco_Tracking = new TH1D("totalReco_Tracking","",ny,trkx);
 
   //for testing code in interactive mode only
   if(jobNum == -1)
@@ -65,10 +77,15 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   //different nonzero variations are used for systematics checks, variation 0 is for the basic calculation
   for(int v = 0; v<variations; v++)
   {
-    if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==7 || v==10 || v==13 || v==14 || v==15 || v==20 || v==21 || v==26 || v==27 || v==28)) continue;
-    if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8 ||v==11 || v==13 || v==16 || v==17 || v==22 || v==23 || v==26 || v==27 || v==28)) continue;
-    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9 || v==12 || v==13 || v==18 || v==19 || v==24 || v==25 || v==26 || v==27 || v==28)) continue;
+    setJetPtRange(mode,trigger,(int)(v==29));
+  
+    if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==7 || v==10 || v==13 || v==14 || v==15 || v==20 || v==21 || v==26 || v==27 || v==28 || v==29 || v==30)) continue;
+    if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8 ||v==11 || v==13 || v==16 || v==17 || v==22 || v==23 || v==26 || v==27 || v==28 || v==29 || v==30)) continue;
+    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9 || v==12 || v==13 || v==18 || v==19 || v==24 || v==25 || v==26 || v==27 || v==28 || v==29 || v==30)) continue;
     if(typeUE!=0 && v==26) continue;
+    float xtScaling = 1;
+    if(v==29 && strcmp(mode,"pp2")==0) xtScaling = 5.02/2.76;
+    if(v==29 && strcmp(mode,"pp7")==0) xtScaling = 5.02/7.00;
 
     //reco
     h_jet = new TH1D("h_jet","",nJetBins,0,300); 
@@ -169,7 +186,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         totalJetsHist->Fill(1,weight);
         if(rawpt[j]<30) continue;
         totalJetsRawPtCut->Fill(1,weight);
-        if(chargedSum[j]/rawpt[j]>0.95 || chargedSum[j]/rawpt[j]<0.05) continue;
+        if((chargedSum[j]/rawpt[j]>0.95 || chargedSum[j]/rawpt[j]<0.05) && v!=30) continue;
         totalJetsChargeSumCut->Fill(1,weight);
         if(TMath::Abs(jteta[j]+boost) < jetEtaMin || TMath::Abs(jteta[j]+boost) > jetEtaMax) continue;
         totalJetsEtaCutHist->Fill(1,weight);
@@ -189,15 +206,15 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
        
         if(jtpt[j]<lowJetPtBound || jtpt[j]>=upJetPtBound) continue;      
         totalJetsPtCutHist->Fill(1,weight);    
-        h_jet->Fill(jtpt[j],weight);
+        h_jet->Fill(xtScaling*jtpt[j],weight);
   
       //quark or gluon only contributions for MC
         bool isQ = false;
         bool isG = false;
         if(isMC && TMath::Abs(refparton_flavor[j])<901 && TMath::Abs(refparton_flavor[j])!=21) isQ=true;
         if(isMC && TMath::Abs(refparton_flavor[j])==21) isG=true;
-        if(isQ) h_jet_Q->Fill(jtpt[j],weight);
-        if(isG) h_jet_G->Fill(jtpt[j],weight);
+        if(isQ) h_jet_Q->Fill(xtScaling*jtpt[j],weight);
+        if(isG) h_jet_G->Fill(xtScaling*jtpt[j],weight);
        
         for(int t=0; t<nTrk; t++)
         { 
@@ -221,17 +238,18 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             if(v==13) trkCorr=1; 
             if(std::isfinite(trkCorr))
             {
-              h_track->Fill(jtpt[j],trkPt[t],trkCorr*weight);
-              h_track_xi->Fill(jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
+              totalReco_Tracking->Fill(trkPt[t],weight*trkCorr);
+              h_track->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight);
+              h_track_xi->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               if(isQ)
               {
-                h_track_Q->Fill(jtpt[j],trkPt[t],trkCorr*weight);
-                h_track_xi_Q->Fill(jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
+                h_track_Q->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight);
+                h_track_xi_Q->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               }
               if(isG)
               {
-                h_track_G->Fill(jtpt[j],trkPt[t],trkCorr*weight);
-                h_track_xi_G->Fill(jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
+                h_track_G->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight);
+                h_track_xi_G->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               }
             }
           }
@@ -247,17 +265,17 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             if(v==13) trkCorr=1;
             if(std::isfinite(trkCorr))
             {
-              h_trackUE->Fill(jtpt[j],trkPt[t],trkCorr*weight);  
-              h_trackUE_xi->Fill(jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j]+rotationDirection*TMath::PiOver2(),trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
+              h_trackUE->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight);  
+              h_trackUE_xi->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j]+rotationDirection*TMath::PiOver2(),trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               if(isQ)
               {
-                h_trackUE_Q->Fill(jtpt[j],trkPt[t],trkCorr*weight);
-                h_trackUE_xi_Q->Fill(jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j]+rotationDirection*TMath::PiOver2(),trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
+                h_trackUE_Q->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight);
+                h_trackUE_xi_Q->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j]+rotationDirection*TMath::PiOver2(),trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               }
               if(isG)
               {
-                h_trackUE_G->Fill(jtpt[j],trkPt[t],trkCorr*weight);
-                h_trackUE_xi_G->Fill(jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j]+rotationDirection*TMath::PiOver2(),trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
+                h_trackUE_G->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight);
+                h_trackUE_xi_G->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j]+rotationDirection*TMath::PiOver2(),trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               }
             }
           }
@@ -269,17 +287,17 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             if(v==13) trkCorr=1;
             if(std::isfinite(trkCorr))
             {
-              h_trackUE->Fill(jtpt[j],trkPt[t],trkCorr*weight); 
-              h_trackUE_xi->Fill(jtpt[j],getXi(jtpt[j],-1*(jteta[j]+boost),jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
+              h_trackUE->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight); 
+              h_trackUE_xi->Fill(xtScaling*jtpt[j],getXi(jtpt[j],-1*(jteta[j]+boost),jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               if(isG)
               {
-                h_trackUE_G->Fill(jtpt[j],trkPt[t],trkCorr*weight);
-                h_trackUE_xi_G->Fill(jtpt[j],getXi(jtpt[j],-1*(jteta[j]+boost),jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
+                h_trackUE_G->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight);
+                h_trackUE_xi_G->Fill(xtScaling*jtpt[j],getXi(jtpt[j],-1*(jteta[j]+boost),jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               }
               if(isQ)
               {
-                h_trackUE_Q->Fill(jtpt[j],trkPt[t],trkCorr*weight);
-                h_trackUE_xi_Q->Fill(jtpt[j],getXi(jtpt[j],-1*(jteta[j]+boost),jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
+                h_trackUE_Q->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight);
+                h_trackUE_xi_Q->Fill(xtScaling*jtpt[j],getXi(jtpt[j],-1*(jteta[j]+boost),jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               } 
             }
           }
@@ -311,17 +329,17 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
               if(v==13) trkCorr=1;
               if(std::isfinite(trkCorr))
               {
-                h_trackUE->Fill(jtpt[j],trkPtMix[t],trkCorr*weight);
-                h_trackUE_xi->Fill(jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPtMix[t],trkEtaMix[t]+boost,trkPhiMix[t]),trkCorr*weight);
+                h_trackUE->Fill(xtScaling*jtpt[j],trkPtMix[t],trkCorr*weight);
+                h_trackUE_xi->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPtMix[t],trkEtaMix[t]+boost,trkPhiMix[t]),trkCorr*weight);
                 if(isG)
                 {
-                  h_trackUE_G->Fill(jtpt[j],trkPtMix[t],trkCorr*weight);
-                  h_trackUE_xi_G->Fill(jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPtMix[t],trkEtaMix[t]+boost,trkPhiMix[t]),trkCorr*weight);
+                  h_trackUE_G->Fill(xtScaling*jtpt[j],trkPtMix[t],trkCorr*weight);
+                  h_trackUE_xi_G->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPtMix[t],trkEtaMix[t]+boost,trkPhiMix[t]),trkCorr*weight);
                 }
                 if(isQ)
                 {
-                  h_trackUE_Q->Fill(jtpt[j],trkPtMix[t],trkCorr*weight);
-                  h_trackUE_xi_Q->Fill(jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPtMix[t],trkEtaMix[t]+boost,trkPhiMix[t]),trkCorr*weight);
+                  h_trackUE_Q->Fill(xtScaling*jtpt[j],trkPtMix[t],trkCorr*weight);
+                  h_trackUE_xi_Q->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPtMix[t],trkEtaMix[t]+boost,trkPhiMix[t]),trkCorr*weight);
                 }
               }
             }
@@ -337,8 +355,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             //Filling track spectrum in jet cone
             if(getdR2(jteta[j]+boost,jtphi[j],pEta[t]+boost,pPhi[t]) < 0.3*0.3)
             {
-              h_track_rJgT->Fill(jtpt[j],pPt[t],weight);
-              h_track_xi_rJgT->Fill(jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
+              totalGen_Tracking->Fill(pPt[t],weight);
+              h_track_rJgT->Fill(xtScaling*jtpt[j],pPt[t],weight);
+              h_track_xi_rJgT->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
    
               //Phi rotated UE subtraction
               //returns either +-1 to rotate clockwise or ccw randomly
@@ -347,15 +366,15 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
 
               if(typeUE==0 && getdR2(jteta[j]+boost,jtphi[j]+rotationDirection*TMath::PiOver2(),pEta[t]+boost,pPhi[t]) < 0.3*0.3)
               {
-                h_trackUE_rJgT->Fill(jtpt[j],pPt[t],weight);  
-                h_trackUE_xi_rJgT->Fill(jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j]+rotationDirection*TMath::PiOver2(),pPt[t],pEta[t]+boost,pPhi[t]),weight);
+                h_trackUE_rJgT->Fill(xtScaling*jtpt[j],pPt[t],weight);  
+                h_trackUE_xi_rJgT->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j]+rotationDirection*TMath::PiOver2(),pPt[t],pEta[t]+boost,pPhi[t]),weight);
               }
   
               //Eta Reflected UE subtraction
               if(typeUE==1 && getdR2(-1*(jteta[j]+boost),jtphi[j],pEta[t]+boost,pPhi[t]) < 0.3*0.3)
               {
-                h_trackUE_rJgT->Fill(jtpt[j],pPt[t],weight); 
-                h_trackUE_xi_rJgT->Fill(jtpt[j],getXi(jtpt[j],-1*(jteta[j]+boost),jtphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
+                h_trackUE_rJgT->Fill(xtScaling*jtpt[j],pPt[t],weight); 
+                h_trackUE_xi_rJgT->Fill(xtScaling*jtpt[j],getXi(jtpt[j],-1*(jteta[j]+boost),jtphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
               }
             }
           }
@@ -370,8 +389,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
               //Filling track spectrum in jet cone
               if(getdR2(jteta[j]+boost,jtphi[j],pEtaMix[t]+boost,pPhiMix[t]) < 0.3*0.3)
               {
-                h_trackUE_rJgT->Fill(jtpt[j],pPtMix[t],weight);
-                h_trackUE_xi_rJgT->Fill(jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],pPtMix[t],pEtaMix[t]+boost,pPhiMix[t]),weight);
+                h_trackUE_rJgT->Fill(xtScaling*jtpt[j],pPtMix[t],weight);
+                h_trackUE_xi_rJgT->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],pPtMix[t],pEtaMix[t]+boost,pPhiMix[t]),weight);
               }
             }
           }
@@ -404,9 +423,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
              if(isQ || isG) break;
           }
             
-          h_jet_gen->Fill(genpt[j], weight);  
-          if(isQ) h_jet_gen_Q->Fill(genpt[j],weight);
-          if(isG) h_jet_gen_G->Fill(genpt[j],weight);
+          h_jet_gen->Fill(xtScaling*genpt[j], weight);  
+          if(isQ) h_jet_gen_Q->Fill(xtScaling*genpt[j],weight);
+          if(isG) h_jet_gen_G->Fill(xtScaling*genpt[j],weight);
        
           for(int t=0; t<nParticle; t++)
           { 
@@ -415,18 +434,18 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             //Filling track spectrum in jet cone
             if(getdR2(geneta[j]+boost,genphi[j],pEta[t]+boost,pPhi[t]) < 0.3*0.3)
             {
-              h_track_gen->Fill(genpt[j],pPt[t],weight);
-              h_track_xi_gen->Fill(genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
+              h_track_gen->Fill(xtScaling*genpt[j],pPt[t],weight);
+              h_track_xi_gen->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
    
               if(isQ)
               {
-                h_track_gen_Q->Fill(genpt[j], pPt[t],weight);
-                h_track_xi_gen_Q->Fill(genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
+                h_track_gen_Q->Fill(xtScaling*genpt[j], pPt[t],weight);
+                h_track_xi_gen_Q->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
               }
               if(isG)
               {
-                h_track_gen_G->Fill(genpt[j],pPt[t],weight);
-                h_track_xi_gen_G->Fill(genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
+                h_track_gen_G->Fill(xtScaling*genpt[j],pPt[t],weight);
+                h_track_xi_gen_G->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
               }
             }
        
@@ -437,36 +456,36 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
 
             if(typeUE==0 && getdR2(geneta[j]+boost,genphi[j]+rotationDirection*TMath::PiOver2(),pEta[t]+boost,pPhi[t]) < 0.3*0.3)
             {
-              h_trackUE_gen->Fill(genpt[j],pPt[t],weight);  
-              h_trackUE_xi_gen->Fill(genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j]+rotationDirection*TMath::PiOver2(),pPt[t],pEta[t]+boost,pPhi[t]),weight);
+              h_trackUE_gen->Fill(xtScaling*genpt[j],pPt[t],weight);  
+              h_trackUE_xi_gen->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j]+rotationDirection*TMath::PiOver2(),pPt[t],pEta[t]+boost,pPhi[t]),weight);
    
               if(isQ)
               {
-                h_trackUE_gen_Q->Fill(genpt[j], pPt[t],weight);
-                h_trackUE_xi_gen_Q->Fill(genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j]+rotationDirection*TMath::PiOver2(),pPt[t],pEta[t]+boost,pPhi[t]),weight);
+                h_trackUE_gen_Q->Fill(xtScaling*genpt[j], pPt[t],weight);
+                h_trackUE_xi_gen_Q->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j]+rotationDirection*TMath::PiOver2(),pPt[t],pEta[t]+boost,pPhi[t]),weight);
               }
               if(isG)
               {
-                h_trackUE_gen_G->Fill(genpt[j],pPt[t],weight);
-                h_trackUE_xi_gen_G->Fill(genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j]+rotationDirection*TMath::PiOver2(),pPt[t],pEta[t]+boost,pPhi[t]),weight);
+                h_trackUE_gen_G->Fill(xtScaling*genpt[j],pPt[t],weight);
+                h_trackUE_xi_gen_G->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j]+rotationDirection*TMath::PiOver2(),pPt[t],pEta[t]+boost,pPhi[t]),weight);
               }
             }
   
             //Eta Reflected UE subtraction
             if(typeUE==1 && getdR2(-1*(geneta[j]+boost),genphi[j],pEta[t]+boost,pPhi[t]) < 0.3*0.3)
             {
-              h_trackUE_gen->Fill(genpt[j],pPt[t],weight); 
-              h_trackUE_xi_gen->Fill(genpt[j],getXi(genpt[j],-1*(geneta[j]+boost),genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
+              h_trackUE_gen->Fill(xtScaling*genpt[j],pPt[t],weight); 
+              h_trackUE_xi_gen->Fill(xtScaling*genpt[j],getXi(genpt[j],-1*(geneta[j]+boost),genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
   
               if(isQ)
               {
-                h_trackUE_gen_Q->Fill(genpt[j],pPt[t],weight);
-                h_trackUE_xi_gen_Q->Fill(genpt[j],getXi(genpt[j],-1*(geneta[j]+boost),genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
+                h_trackUE_gen_Q->Fill(xtScaling*genpt[j],pPt[t],weight);
+                h_trackUE_xi_gen_Q->Fill(xtScaling*genpt[j],getXi(genpt[j],-1*(geneta[j]+boost),genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
               }
               if(isG)
               {
-                h_trackUE_gen_G->Fill(genpt[j],pPt[t],weight);
-                h_trackUE_xi_gen_G->Fill(genpt[j],getXi(genpt[j],-1*(geneta[j]+boost),genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
+                h_trackUE_gen_G->Fill(xtScaling*genpt[j],pPt[t],weight);
+                h_trackUE_xi_gen_G->Fill(xtScaling*genpt[j],getXi(genpt[j],-1*(geneta[j]+boost),genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
               }
             }
           }
@@ -482,18 +501,18 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
               //Filling track spectrum in jet cone
               if(getdR2(geneta[j]+boost,genphi[j],pEtaMix[t]+boost,pPhiMix[t]) < 0.3*0.3)
               {
-                h_trackUE_gen->Fill(genpt[j],pPtMix[t],weight);
-                h_trackUE_xi_gen->Fill(genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPtMix[t],pEtaMix[t]+boost,pPhiMix[t]),weight);
+                h_trackUE_gen->Fill(xtScaling*genpt[j],pPtMix[t],weight);
+                h_trackUE_xi_gen->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPtMix[t],pEtaMix[t]+boost,pPhiMix[t]),weight);
                 
                 if(isQ)
                 {
-                  h_trackUE_gen_Q->Fill(genpt[j],pPtMix[t],weight);
-                  h_trackUE_xi_gen_Q->Fill(genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPtMix[t],pEtaMix[t]+boost,pPhiMix[t]),weight);
+                  h_trackUE_gen_Q->Fill(xtScaling*genpt[j],pPtMix[t],weight);
+                  h_trackUE_xi_gen_Q->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPtMix[t],pEtaMix[t]+boost,pPhiMix[t]),weight);
                 }
                 if(isG)
                 {
-                  h_trackUE_gen_G->Fill(genpt[j],pPtMix[t],weight);
-                  h_trackUE_xi_gen_G->Fill(genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPtMix[t],pEtaMix[t]+boost,pPhiMix[t]),weight);
+                  h_trackUE_gen_G->Fill(xtScaling*genpt[j],pPtMix[t],weight);
+                  h_trackUE_xi_gen_G->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPtMix[t],pEtaMix[t]+boost,pPhiMix[t]),weight);
                 }
               }
             }
@@ -522,8 +541,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
               if(v==13) trkCorr=1;          
               if(std::isfinite(trkCorr))
               {
-                h_track_gJrT->Fill(genpt[j],trkPt[t],trkCorr*weight);
-                h_track_xi_gJrT->Fill(genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
+                h_track_gJrT->Fill(xtScaling*genpt[j],trkPt[t],trkCorr*weight);
+                h_track_xi_gJrT->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               }
             }
        
@@ -538,8 +557,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
               if(v==13) trkCorr=1;
               if(std::isfinite(trkCorr))
               {
-                h_trackUE_gJrT->Fill(genpt[j],trkPt[t],trkCorr*weight);  
-                h_trackUE_xi_gJrT->Fill(genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j]+rotationDirection*TMath::Pi(),trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
+                h_trackUE_gJrT->Fill(xtScaling*genpt[j],trkPt[t],trkCorr*weight);  
+                h_trackUE_xi_gJrT->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j]+rotationDirection*TMath::Pi(),trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               }
             }
   
@@ -550,8 +569,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
               if(v==13) trkCorr=1;
               if(std::isfinite(trkCorr))
               {
-                h_trackUE_gJrT->Fill(genpt[j],trkPt[t],trkCorr*weight); 
-                h_trackUE_xi_gJrT->Fill(genpt[j],getXi(genpt[j],-1*(geneta[j]+boost),genphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight); 
+                h_trackUE_gJrT->Fill(xtScaling*genpt[j],trkPt[t],trkCorr*weight); 
+                h_trackUE_xi_gJrT->Fill(xtScaling*genpt[j],getXi(genpt[j],-1*(geneta[j]+boost),genphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight); 
               }
             }
           }
@@ -582,8 +601,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
                 if(v==13) trkCorr=1;
                 if(std::isfinite(trkCorr))
                 {
-                  h_trackUE_gJrT->Fill(genpt[j],trkPtMix[t],trkCorr*weight);
-                  h_trackUE_xi_gJrT->Fill(genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],trkPtMix[t],trkEtaMix[t]+boost,trkPhiMix[t]),trkCorr*weight);
+                  h_trackUE_gJrT->Fill(xtScaling*genpt[j],trkPtMix[t],trkCorr*weight);
+                  h_trackUE_xi_gJrT->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],trkPtMix[t],trkEtaMix[t]+boost,trkPhiMix[t]),trkCorr*weight);
                 }
               }
             }
@@ -677,6 +696,11 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       totalJetsChargeSumCut->Write();
       totalJetsEtaCutHist->Write();
       totalJetsPtCutHist->Write();
+    }
+    if(v==0 || v==30)
+    {
+      totalGen_Tracking->Write();
+      totalReco_Tracking->Write();
     }
     outf->Close();
   }

@@ -1,5 +1,7 @@
-const int variations = 29;
-const char * variationTag[variations]= {"","_pp2JESUP3","_pp2JESDOWN3","_pp7JESUP3","_pp7JESDOWN3","_pPb5JESUP3","_pPb5JESDOWN3","_pp2JER5","_pp7JER5","_pPb5JER5","_pp2JER2","_pp7JER2","_pPb5JER2","_NoTrackCorr","_pp2JESUP1","_pp2JESDOWN1","_pp7JESUP1","_pp7JESDOWN1","_pPb5JESUP1","_pPb5JESDOWN1","_pp2JESUP2","_pp2JESDOWN2","_pp7JESUP2","_pp7JESDOWN2","_pPb5JESUP2","_pPb5JESDOWN2","_60DegreeCone","_ChargePlus","_ChargeMinus"};
+#include <cmath>
+
+const int variations = 31;
+const char * variationTag[variations]= {"","_pp2JESUP3","_pp2JESDOWN3","_pp7JESUP3","_pp7JESDOWN3","_pPb5JESUP3","_pPb5JESDOWN3","_pp2JER5","_pp7JER5","_pPb5JER5","_pp2JER2","_pp7JER2","_pPb5JER2","_NoTrackCorr","_pp2JESUP1","_pp2JESDOWN1","_pp7JESUP1","_pp7JESDOWN1","_pPb5JESUP1","_pPb5JESDOWN1","_pp2JESUP2","_pp2JESDOWN2","_pp7JESUP2","_pp7JESDOWN2","_pPb5JESUP2","_pPb5JESDOWN2","_60DegreeCone","_ChargePlus","_ChargeMinus","_XtScaled","_NoChargeCut"};
 
 TH1D * h_jet;
 TH2D * h_track;
@@ -64,6 +66,7 @@ float trkDzError1[maxTrack], trkDzError1Mix[maxTrack];
 float trkDz1[maxTrack], trkDz1Mix[maxTrack];
 float trkDxyError1[maxTrack], trkDxyError1Mix[maxTrack];
 float trkDxy1[maxTrack], trkDxy1Mix[maxTrack];
+float trkFake[maxTrack], trkFakeMix[maxTrack];
 int trkCharge[maxTrack], trkChargeMix[maxTrack];
 bool highPurity[maxTrack], highPurityMix[maxTrack];
 //float trkRmin[maxTrack], trkRminMix[maxTrack];
@@ -71,6 +74,7 @@ int nParticle, nParticleMix;
 float pEta[2*maxTrack], pEtaMix[2*maxTrack];
 float pPhi[2*maxTrack], pPhiMix[2*maxTrack];
 float pPt[2*maxTrack], pPtMix[2*maxTrack];
+float mtrkPt[2*maxTrack], mtrkPtMix[2*maxTrack];
 
 
 const int maxJet = 500;
@@ -105,7 +109,7 @@ float weight, weightMix;
 double lowJetPtBound;
 double upJetPtBound;
 
-void setJetPtRange(const char * mode, const char* trigger)
+void setJetPtRange(const char * mode, const char* trigger, int doXt = 0)
 {
   if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp2")==0 || strcmp(mode,"pp5")==0) && strcmp(trigger,"jet80")==0)
   {
@@ -131,6 +135,7 @@ void setJetPtRange(const char * mode, const char* trigger)
   {
     lowJetPtBound = 140;
     upJetPtBound  = 200;
+    if(doXt == 1) upJetPtBound = 300;
   }
   return;
 }
@@ -142,7 +147,6 @@ void getInputFile(const char * name, int isMC)
   track = (TTree*)inf->Get("track"); 
   ak3PF = (TTree*)inf->Get("ak3PF");
   evt = (TTree*)inf->Get("evt");
-
 
   //Setting addresses
   track->SetBranchAddress("nTrk",&nTrk); 
@@ -181,7 +185,9 @@ void getInputFile(const char * name, int isMC)
     track->SetBranchAddress("pEta",&pEta);
     track->SetBranchAddress("pPhi",&pPhi);
     track->SetBranchAddress("pPt",&pPt);
-    
+    track->SetBranchAddress("trkFake",&trkFake);
+    track->SetBranchAddress("mtrkPt",&mtrkPt);   
+ 
     ak3PF->SetBranchAddress("refpt",&refpt);
     ak3PF->SetBranchAddress("refeta",&refeta);
     ak3PF->SetBranchAddress("refphi",&refphi);
@@ -254,6 +260,8 @@ void getInputFileMix(const char * name, int isMC)
     trackMix->SetBranchAddress("pEta",&pEtaMix);
     trackMix->SetBranchAddress("pPhi",&pPhiMix);
     trackMix->SetBranchAddress("pPt",&pPtMix);
+    trackMix->SetBranchAddress("trkFake",&trkFakeMix);
+    trackMix->SetBranchAddress("mtrkPt",&mtrkPtMix);
     
     ak3PFMix->SetBranchAddress("refpt",&refptMix);
     ak3PFMix->SetBranchAddress("refeta",&refetaMix);

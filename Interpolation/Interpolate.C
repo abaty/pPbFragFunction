@@ -312,7 +312,7 @@ void makeFF(int v, int UEtype=3)
   }
   //handing it over to a plotting macro
   makePlots(variationTag[v],UEtype); 
-  if(v==0)  plotGluonFraction(variationTag[v],UEtype);
+  if(v==0 || v==29)  plotGluonFraction(variationTag[v],UEtype);
   outfile->Close(); 
 }
 

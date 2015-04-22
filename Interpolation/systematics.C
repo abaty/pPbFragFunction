@@ -28,7 +28,6 @@ TH1D** getRatio(const char * mode = "pp2", int v=0, int UEtype=3)
   {
     std::string  isXi = "";
     if(i>=FF_Bins) isXi = "_xi";
-    std::cout << "i1" << std::endl;
     if(strcmp(mode,"pPb5")==0)
     {
       ratioArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
@@ -65,7 +64,6 @@ TH1D** getRatio(const char * mode = "pp2", int v=0, int UEtype=3)
       ratioArray[i]->SetDirectory(0);
     }
   }  
-  std::cout << "i2" << std::endl;
   inf1->Close();
   inf2->Close();
   return ratioArray;
