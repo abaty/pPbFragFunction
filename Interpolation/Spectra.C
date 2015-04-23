@@ -61,8 +61,12 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     trkx[ix]=pow(10,inix);
     inix+=delta;
   }
-  TH1D * totalGen_Tracking = new TH1D("totalGen_Tracking","",ny,trkx);
-  TH1D * totalReco_Tracking = new TH1D("totalReco_Tracking","",ny,trkx);
+  TH1D * totalGenTGenJ_Tracking = new TH1D("totalGenTGenJ_Tracking","",ny,trkx);
+  TH1D * totalRecoTGenJ_Tracking = new TH1D("totalRecoTGenJ_Tracking","",ny,trkx);
+  TH1D * totalGenTRecoJ_Tracking = new TH1D("totalGenTRecoJ_Tracking","",ny,trkx);
+  TH1D * totalRecoTRecoJ_Tracking = new TH1D("totalRecoTRecoJ_Tracking","",ny,trkx);
+  TH1D * totalGenTRecoJ_Tracking_largeEta = new TH1D("totalGenTRecoJ_Tracking_largeEta","",ny,trkx);
+  TH1D * totalRecoTRecoJ_Tracking_largeEta = new TH1D("totalRecoTRecoJ_Tracking_largeEta","",ny,trkx);
 
   //for testing code in interactive mode only
   if(jobNum == -1)
@@ -151,8 +155,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     for(int i=0; i<nEntry; i++)
     {
       getInputEntry(i);
-      totalEvts->Fill(1,weight);      
- 
+      totalEvts->Fill(1,weight);       
       if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
          
       //finding a MB event to mix with if needed 
@@ -220,8 +223,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         { 
           if((trkCharge[t]!=1 && v==27) || (trkCharge[t]!=-1 && v==28)) continue;     
           if(trkPt[t] < 0.5 || trkPt[t] > 1e+5 || !highPurity[t] || TMath::Abs(trkEta[t])>2.4 ) continue;
-          if(TMath::Abs(trkDxy1[t]/trkDxyError1[t]) > 3 || TMath::Abs(trkDz1[t]/trkDzError1[t]) > 3 || trkPtError[t]/trkPt[t] > 0.1) continue;        
-    
+          if(TMath::Abs(trkDxy1[t]/trkDxyError1[t]) > 3 || TMath::Abs(trkDz1[t]/trkDzError1[t]) > 3 || trkPtError[t]/trkPt[t] > 0.1) continue;            
           //calculating r_min for tracking correction
           double r_min = 9;
           for(int j2 = 0; j2<nref; j2++)
@@ -234,11 +236,12 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           //Filling track spectrum in jet cone
           if(getdR2(jteta[j]+boost,jtphi[j],trkEta[t]+boost,trkPhi[t]) < 0.3*0.3)
           {
-            double trkCorr = factorizedPtCorr(getPtBin(trkPt[t], sType), 1, trkPt[t], trkPhi[t], trkEta[t], r_min, sType);         
+            double trkCorr = factorizedPtCorr(getPtBin(trkPt[t], sType), 1, trkPt[t], trkPhi[t], trkEta[t], r_min, sType);           
             if(v==13) trkCorr=1; 
             if(std::isfinite(trkCorr))
             {
-              totalReco_Tracking->Fill(trkPt[t],weight*trkCorr);
+              totalRecoTRecoJ_Tracking->Fill(trkPt[t],weight*trkCorr);
+              if(TMath::Abs(trkEta[t])>1.9 && trkPt[t]>10)totalRecoTRecoJ_Tracking_largeEta->Fill(trkPt[t],weight*trkCorr);
               h_track->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight);
               h_track_xi->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               if(isQ)
@@ -355,7 +358,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             //Filling track spectrum in jet cone
             if(getdR2(jteta[j]+boost,jtphi[j],pEta[t]+boost,pPhi[t]) < 0.3*0.3)
             {
-              totalGen_Tracking->Fill(pPt[t],weight);
+              totalGenTRecoJ_Tracking->Fill(pPt[t],weight);
+              if(TMath::Abs(pEta[t])>1.9 && pPt[t]>10)totalGenTRecoJ_Tracking_largeEta->Fill(pPt[t],weight);
               h_track_rJgT->Fill(xtScaling*jtpt[j],pPt[t],weight);
               h_track_xi_rJgT->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
    
@@ -434,6 +438,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             //Filling track spectrum in jet cone
             if(getdR2(geneta[j]+boost,genphi[j],pEta[t]+boost,pPhi[t]) < 0.3*0.3)
             {
+              totalGenTGenJ_Tracking->Fill(pPt[t],weight);
               h_track_gen->Fill(xtScaling*genpt[j],pPt[t],weight);
               h_track_xi_gen->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
    
@@ -541,6 +546,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
               if(v==13) trkCorr=1;          
               if(std::isfinite(trkCorr))
               {
+                totalRecoTGenJ_Tracking->Fill(trkPt[t],weight*trkCorr);
                 h_track_gJrT->Fill(xtScaling*genpt[j],trkPt[t],trkCorr*weight);
                 h_track_xi_gJrT->Fill(xtScaling*genpt[j],getXi(genpt[j],geneta[j]+boost,genphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               }
@@ -697,10 +703,14 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       totalJetsEtaCutHist->Write();
       totalJetsPtCutHist->Write();
     }
-    if(v==0 || v==30)
+    if(v==0)
     {
-      totalGen_Tracking->Write();
-      totalReco_Tracking->Write();
+      totalGenTRecoJ_Tracking->Write();
+      totalRecoTRecoJ_Tracking->Write();
+      totalGenTGenJ_Tracking->Write();
+      totalRecoTGenJ_Tracking->Write();
+      totalRecoTRecoJ_Tracking_largeEta->Write();
+      totalGenTRecoJ_Tracking_largeEta->Write();
     }
     outf->Close();
   }

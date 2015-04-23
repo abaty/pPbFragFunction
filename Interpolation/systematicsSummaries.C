@@ -19,8 +19,8 @@
 //const int FF_Bins = 5;
 //double FF_Bound[FF_Bins+1] = {60,80,100,120,140,200};
 
-const int errorSources = 8;
-const char * sources[errorSources] = {"TotUP","TotDOWN","JESTotUP","JESTotDOWN","JERTot","MCDiff","pPbPbpDiff","60DegreeCone_Ratio"};  
+const int errorSources = 9;
+const char * sources[errorSources] = {"TotUP","TotDOWN","JESTotUP","JESTotDOWN","JERTot","MCDiff","pPbPbpDiff","60DegreeCone_Ratio","ChargeCutDiff"};  
 const char * prettySources[errorSources] = 
   {"Total Upwards Error",
    "Total Downwards Error",
@@ -29,7 +29,8 @@ const char * prettySources[errorSources] =
    "JER Error",
    "MC Difference Error",
    "pPb vs Pbp Error",
-   "UE Subtraction Error"};
+   "UE Subtraction Error",
+   "Jet Charge Cut Error"};
 
 void makeSummaries(int v = 0, int UEtype=3)
 { 

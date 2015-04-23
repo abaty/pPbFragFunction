@@ -166,6 +166,29 @@ void plotGluonFraction(const char * tag,int UEtype)
   gleg->Draw("same");
   cg1->SaveAs(Form("plots/pp5GluonFractionsMC_UE%d_%s.png",UEtype,tag));
   cg1->SaveAs(Form("plots/pp5GluonFractionsMC_UE%d_%s.pdf",UEtype,tag));
+
+  gluon_5tev_reco->Draw("");
+  gluon_7tev_reco->Draw("same");
+  gluon_2tev_reco->Draw("same");
+  gleg->Clear();
+  gleg->AddEntry((TObject*)0,"CMS Preliminary","");
+  gleg->AddEntry(gluon_5tev_reco,"5.02 TeV reco PYTHIA+HIJING","p");
+  gleg->AddEntry(gluon_7tev_reco,"7 TeV reco PYTHIA","p");
+  gleg->AddEntry(gluon_2tev_reco,"2.76 TeV reco PYTHIA","p");
+  gleg->Draw("same");
+  cg1->SaveAs(Form("plots/recoGluonFractionsMC_UE%d_%s.pdf",UEtype,tag));
+
+  gluon_5tev_gen->GetXaxis()->SetRangeUser(60,200);
+  gluon_5tev_gen->Draw("hist E");
+  gluon_7tev_gen->Draw("hist same E");
+  gluon_2tev_gen->Draw("hist same E");
+  gleg->Clear();
+  gleg->AddEntry((TObject*)0,"CMS Preliminary","");
+  gleg->AddEntry(gluon_5tev_gen,"5.02 TeV gen PYTHIA+HIJING","l");
+  gleg->AddEntry(gluon_7tev_gen,"7 TeV gen PYTHIA","l");
+  gleg->AddEntry(gluon_2tev_gen,"2.76 TeV gen PYTHIA","l");
+  gleg->Draw("same");
+  cg1->SaveAs(Form("plots/genGluonFractionsMC_UE%d_%s.pdf",UEtype,tag));
  
   gluon_5tevSignal_gen->Fit("pp5SignalGluonFitGen","0");
   gluon_5tev_gen->Fit("pp5GluonFitGen","0");

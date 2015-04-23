@@ -165,6 +165,62 @@ TH1D** getMCDiff(const char * mode = "pPb5", int v=0,int UEtype=3)
   return diffArray;
 }
 
+TH1D** getChargeCutDiff(const char * mode = "pPb5", int UEtype=3)
+{
+  TH1D** diffArray = new TH1D*[FF_Bins*2];
+
+  TFile * inf1 = TFile::Open(Form("FragmentationFunctions%sUE%d.root",variationTag[30],UEtype),"read");
+  TFile * inf2 = TFile::Open(Form("FragmentationFunctionsUE%d.root",UEtype),"read");
+  for(int i =0; i<FF_Bins*2; i++)
+  {   
+    std::string  isXi = "";
+    if(i>=FF_Bins) isXi = "_xi";
+    if(strcmp(mode,"pp2")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pp2TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
+      diffArray[i]->Add((TH1D*)inf2->Get(Form("pp2TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
+      diffArray[i]->SetDirectory(0);
+    }
+    if(strcmp(mode,"pp7")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pp7TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
+      diffArray[i]->Add((TH1D*)inf2->Get(Form("pp7TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
+      diffArray[i]->SetDirectory(0);
+    }
+    if(strcmp(mode,"pPb5")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
+      diffArray[i]->Add((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
+      diffArray[i]->SetDirectory(0);
+    }
+    if(strcmp(mode,"interp")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_recoMC_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
+      diffArray[i]->Add((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_recoMC_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
+      diffArray[i]->SetDirectory(0);
+    }
+    if(strcmp(mode,"FFratio")==0)
+    {
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPbPbp_FF_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
+      diffArray[i]->Add((TH1D*)inf2->Get(Form("pPbPbp_FF_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
+      diffArray[i]->SetDirectory(0);
+    }
+  }  
+  inf1->Close();
+  inf2->Close();
+  return diffArray;
+}
+
 void FFSystematics(const char * mode, int UEtype)
 {
   //getting sources of error as ratios
@@ -173,6 +229,7 @@ void FFSystematics(const char * mode, int UEtype)
    TH1D** JER;
    TH1D** pPbPbpDiff;
    TH1D** MCDiff;
+   TH1D** ChargeCutDiff;
    TH1D** UEDiff;
    //estimating 5% tracking errors
    double track = 0.05;
@@ -184,6 +241,7 @@ void FFSystematics(const char * mode, int UEtype)
     JER = getRatio(mode,9,UEtype);
     pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
     MCDiff = getMCDiff(mode,0,UEtype);
+    ChargeCutDiff = getChargeCutDiff(mode,UEtype);
     if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
   if(strcmp(mode,"pp2")==0)
@@ -192,6 +250,7 @@ void FFSystematics(const char * mode, int UEtype)
     JESDOWN = getRatio(mode,2,UEtype);
     JER = getRatio(mode,7,UEtype);
     MCDiff = getMCDiff(mode,0,UEtype); 
+    ChargeCutDiff = getChargeCutDiff(mode,UEtype);
     if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
   if(strcmp(mode,"pp7")==0)
@@ -200,6 +259,7 @@ void FFSystematics(const char * mode, int UEtype)
     JESDOWN = getRatio(mode,4,UEtype);
     JER = getRatio(mode,8,UEtype);
     MCDiff = getMCDiff(mode,0,UEtype);
+    ChargeCutDiff = getChargeCutDiff(mode,UEtype);
     if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
 
@@ -268,6 +328,8 @@ void FFSystematics(const char * mode, int UEtype)
         }
         if(MCDiff[i]->GetBinContent(j)<0) TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
         else if(MCDiff[i]->GetBinContent(j)>0) TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
+        if(ChargeCutDiff[i]->GetBinContent(j)>0) TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(ChargeCutDiff[i]->GetBinContent(j),2));
+        else if(ChargeCutDiff[i]->GetBinContent(j)<0) TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(ChargeCutDiff[i]->GetBinContent(j),2));
 
         if(UEtype==0)
         {        
@@ -285,6 +347,7 @@ void FFSystematics(const char * mode, int UEtype)
     JER[i]->Write();
     if(strcmp(mode,"pPb5")==0) pPbPbpDiff[i]->Write();
     MCDiff[i]->Write();
+    ChargeCutDiff[i]->Write();
     if(UEtype==0) UEDiff[i]->Write();
     JESTotUP[i]->Write();
     JESTotDOWN[i]->Write();
@@ -309,6 +372,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
   TH1D** pPb5JER;
   TH1D** pPbPbpDiff;
   TH1D** MCDiff;
+  TH1D** ChargeCutDiff;
   TH1D** UEDiff;
 
   //estimating 5% tracking errors
@@ -327,6 +391,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
     pPb5JER = getRatio(mode,9,UEtype);
     pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
     MCDiff = getMCDiff(mode,0,UEtype);
+    ChargeCutDiff = getChargeCutDiff(mode,UEtype);
     if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
   else if(strcmp(mode,"FFratio")==0) 
@@ -342,6 +407,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
     pPb5JER = getRatio(mode,9,UEtype); 
     pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
     MCDiff = getMCDiff(mode,0,UEtype);
+    ChargeCutDiff = getChargeCutDiff(mode,UEtype);
     if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
 
@@ -441,6 +507,8 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
         TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(pPbPbpDiff[i]->GetBinContent(j),2));
         if(MCDiff[i]->GetBinContent(j)<0) TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
         else if(MCDiff[i]->GetBinContent(j)>0) TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
+        if(ChargeCutDiff[i]->GetBinContent(j)>0) TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(ChargeCutDiff[i]->GetBinContent(j),2));
+        else if(ChargeCutDiff[i]->GetBinContent(j)<0) TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(ChargeCutDiff[i]->GetBinContent(j),2));
     
         if(UEtype == 0)
         {     
@@ -464,6 +532,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
     pPb5JER[i]->Write();
     pPbPbpDiff[i]->Write(); 
     MCDiff[i]->Write();
+    ChargeCutDiff[i]->Write();
     if(UEtype==0) UEDiff[i]->Write();
     pp2JESTotUP[i]->Write();
     pp2JESTotDOWN[i]->Write(); 
