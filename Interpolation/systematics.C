@@ -177,41 +177,41 @@ TH1D** getChargeCutDiff(const char * mode = "pPb5", int UEtype=3)
     if(i>=FF_Bins) isXi = "_xi";
     if(strcmp(mode,"pp2")==0)
     {
-      diffArray[i] = (TH1D*)inf1->Get(Form("pp2TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
-      diffArray[i]->Add((TH1D*)inf2->Get(Form("pp2TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pp2TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i] = (TH1D*)inf1->Get(Form("pp2TeV_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
+      diffArray[i]->Add((TH1D*)inf2->Get(Form("pp2TeV_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pp2TeV_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
     if(strcmp(mode,"pp7")==0)
     {
-      diffArray[i] = (TH1D*)inf1->Get(Form("pp7TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
-      diffArray[i]->Add((TH1D*)inf2->Get(Form("pp7TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pp7TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i] = (TH1D*)inf1->Get(Form("pp7TeV_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
+      diffArray[i]->Add((TH1D*)inf2->Get(Form("pp7TeV_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pp7TeV_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
     if(strcmp(mode,"pPb5")==0)
     {
-      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
-      diffArray[i]->Add((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
+      diffArray[i]->Add((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
     if(strcmp(mode,"interp")==0)
     {
-      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_recoMC_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
-      diffArray[i]->Add((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_recoMC_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_recoMC_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_data_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
+      diffArray[i]->Add((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_data_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_data_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
     if(strcmp(mode,"FFratio")==0)
     {
-      diffArray[i] = (TH1D*)inf1->Get(Form("pPbPbp_FF_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
-      diffArray[i]->Add((TH1D*)inf2->Get(Form("pPbPbp_FF_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i] = (TH1D*)inf1->Get(Form("pPbPbp_FF_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
+      diffArray[i]->Add((TH1D*)inf2->Get(Form("pPbPbp_FF_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
