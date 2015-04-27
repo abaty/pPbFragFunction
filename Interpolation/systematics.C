@@ -99,7 +99,7 @@ TH1D** getpPbPbpDiff(const char * mode = "pPb5", int v=0, int UEtype=3)
     {
       diffArray[i] = (TH1D*)inf1->Get(Form("pPb5TeV_data_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf1->Get(Form("Pbp5TeV_data_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_data_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s%s_pPbPbpDiff%d%s",mode,variationTag[v],i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -123,7 +123,7 @@ TH1D** getMCDiff(const char * mode = "pPb5", int v=0,int UEtype=3)
     {
       diffArray[i] = (TH1D*)inf1->Get(Form("pp2TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf1->Get(Form("pp2TeV_gen_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pp2TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s%s_MCDiff%d%s",mode,variationTag[v],i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -131,7 +131,7 @@ TH1D** getMCDiff(const char * mode = "pPb5", int v=0,int UEtype=3)
     {
       diffArray[i] = (TH1D*)inf1->Get(Form("pp7TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf1->Get(Form("pp7TeV_gen_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pp7TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s%s_MCDiff%d%s",mode,variationTag[v],i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -139,7 +139,7 @@ TH1D** getMCDiff(const char * mode = "pPb5", int v=0,int UEtype=3)
     {
       diffArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf1->Get(Form("pPb5Pbp5TeV_genMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s%s_MCDiff%d%s",mode,variationTag[v],i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -147,7 +147,7 @@ TH1D** getMCDiff(const char * mode = "pPb5", int v=0,int UEtype=3)
     {
       diffArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_recoMC_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf1->Get(Form("pPb5Pbp5TeV_genMC_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_recoMC_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s%s_MCDiff%d%s",mode,variationTag[v],i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -155,7 +155,7 @@ TH1D** getMCDiff(const char * mode = "pPb5", int v=0,int UEtype=3)
     {
       diffArray[i] = (TH1D*)inf1->Get(Form("pPbPbp_FF_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf1->Get(Form("pPbPbp_FF_genMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s%s_MCDiff%d%s",mode,variationTag[v],i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -179,7 +179,7 @@ TH1D** getChargeCutDiff(const char * mode = "pPb5", int UEtype=3)
     {
       diffArray[i] = (TH1D*)inf1->Get(Form("pp2TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf2->Get(Form("pp2TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pp2TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -187,7 +187,7 @@ TH1D** getChargeCutDiff(const char * mode = "pPb5", int UEtype=3)
     {
       diffArray[i] = (TH1D*)inf1->Get(Form("pp7TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf2->Get(Form("pp7TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pp7TeV_reco_NoReweight_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -195,7 +195,7 @@ TH1D** getChargeCutDiff(const char * mode = "pPb5", int UEtype=3)
     {
       diffArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -203,7 +203,7 @@ TH1D** getChargeCutDiff(const char * mode = "pPb5", int UEtype=3)
     {
       diffArray[i] = (TH1D*)inf1->Get(Form("pPb5Pbp5TeV_recoMC_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_recoMC_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_recoMC_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -211,7 +211,7 @@ TH1D** getChargeCutDiff(const char * mode = "pPb5", int UEtype=3)
     {
       diffArray[i] = (TH1D*)inf1->Get(Form("pPbPbp_FF_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf2->Get(Form("pPbPbp_FF_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
-      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
       diffArray[i]->SetName(Form("%s_ChargeCutDiff%d%s",mode,i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -240,7 +240,7 @@ void FFSystematics(const char * mode, int UEtype)
     JESDOWN = getRatio(mode,6,UEtype);
     JER = getRatio(mode,9,UEtype);
     pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
-    MCDiff = getMCDiff(mode,0,UEtype);
+    MCDiff = getMCDiff(mode,30,UEtype);
     ChargeCutDiff = getChargeCutDiff(mode,UEtype);
     if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
@@ -249,7 +249,7 @@ void FFSystematics(const char * mode, int UEtype)
     JESUP = getRatio(mode,1,UEtype);
     JESDOWN = getRatio(mode,2,UEtype);
     JER = getRatio(mode,7,UEtype);
-    MCDiff = getMCDiff(mode,0,UEtype); 
+    MCDiff = getMCDiff(mode,30,UEtype); 
     ChargeCutDiff = getChargeCutDiff(mode,UEtype);
     if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
@@ -258,7 +258,7 @@ void FFSystematics(const char * mode, int UEtype)
     JESUP = getRatio(mode,3,UEtype);
     JESDOWN = getRatio(mode,4,UEtype);
     JER = getRatio(mode,8,UEtype);
-    MCDiff = getMCDiff(mode,0,UEtype);
+    MCDiff = getMCDiff(mode,30,UEtype);
     ChargeCutDiff = getChargeCutDiff(mode,UEtype);
     if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
@@ -390,7 +390,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
     pPb5JESDOWN = getRatio(mode,6,UEtype);
     pPb5JER = getRatio(mode,9,UEtype);
     pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
-    MCDiff = getMCDiff(mode,0,UEtype);
+    MCDiff = getMCDiff(mode,30,UEtype);
     ChargeCutDiff = getChargeCutDiff(mode,UEtype);
     if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }
@@ -406,7 +406,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
     pPb5JESDOWN = getRatio(mode,25,UEtype);
     pPb5JER = getRatio(mode,9,UEtype); 
     pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
-    MCDiff = getMCDiff(mode,0,UEtype);
+    MCDiff = getMCDiff(mode,30,UEtype);
     ChargeCutDiff = getChargeCutDiff(mode,UEtype);
     if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
   }

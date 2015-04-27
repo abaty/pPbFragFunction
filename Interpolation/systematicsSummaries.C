@@ -20,7 +20,7 @@
 //double FF_Bound[FF_Bins+1] = {60,80,100,120,140,200};
 
 const int errorSources = 9;
-const char * sources[errorSources] = {"TotUP","TotDOWN","JESTotUP","JESTotDOWN","JERTot","MCDiff","pPbPbpDiff","60DegreeCone_Ratio","ChargeCutDiff"};  
+const char * sources[errorSources] = {"TotUP","TotDOWN","JESTotUP","JESTotDOWN","JERTot","NoChargeCut_MCDiff","pPbPbpDiff","60DegreeCone_Ratio","ChargeCutDiff"};  
 const char * prettySources[errorSources] = 
   {"Total Upwards Error",
    "Total Downwards Error",

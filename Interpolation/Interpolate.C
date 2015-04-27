@@ -311,7 +311,7 @@ void makeFF(int v, int UEtype=3)
     pPbPbp_FF_gJrTMC[i]->Write();
   }
   //handing it over to a plotting macro
-  //makePlots(variationTag[v],UEtype); 
+  makePlots(variationTag[v],UEtype); 
   if(v==0 || v==29)  plotGluonFraction(variationTag[v],UEtype);
   outfile->Close(); 
 }
