@@ -129,7 +129,7 @@ void getTable(int UE = 0)
 
   const char * prefix[5] = {"pp2_","pp7_","pPb5_","interp_","FFratio_"};
   const char * suffix[4] = {"0","4","5_xi","9_xi"};
-  const char * middle[9] = {"JERTot","pPbPbpDiff","60DegreeCone_Ratio","JESTotUP","JESTotDOWN","MCDiff","ChargeCutDiff","TotUP","TotDOWN"};
+  const char * middle[9] = {"JERTot","pPbPbpDiff","60DegreeCone_Ratio","JESTotUP","JESTotDOWN","NoChargeCut_MCDiff","ChargeCutDiff","TotUP","TotDOWN"};
   const char * source[9] = {"JER","pPb/Pbp Difference","UE Subtraction","JES (Upwards Error)","JES (Downwards Error)","Reco/Gen Difference","Jet Charge Fraction Cut","Total (Upwards Error)","Total (Downwards Error)"};
 
   for(int i = 0; i<5; i++)
