@@ -117,5 +117,4 @@ void ChargeFrac_Comp()
   }
   c2->SaveAs("../plots/ChargeFrac_Comparison.png");
   c2->SaveAs("../plots/ChargeFrac_Comparison.pdf");
-
 }
