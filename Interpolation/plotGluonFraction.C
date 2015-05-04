@@ -240,8 +240,12 @@ void plotGluonFraction(const char * tag,int UEtype)
     TFile * gluout = TFile::Open("gluonFractions5TeV.root","recreate");
     gluon_5tevSignal_gen->SetDirectory(0);
     gluon_5tev_gen->SetDirectory(0);
+    gluon_5tev_reco->SetDirectory(0);
+    gluon_5tevSignal_reco->SetDirectory(0);
     gluon_5tevSignal_gen->Write();
     gluon_5tev_gen->Write();
+    gluon_5tev_reco->Write();
+    gluon_5tevSignal_reco->Write();
   }
   delete pp5GluonFitGen;
   delete pp5SignalGluonFitGen;

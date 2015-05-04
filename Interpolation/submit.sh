@@ -11,6 +11,7 @@ mkdir $now
 cp fake*.root $now
 cp eff*.root $now
 cp secondary*.root $now
+cp multiple*.root $now
 cp residualJEC.root $now
 cp jetJER.root $now
 cp fileLists/masterList.txt $now
