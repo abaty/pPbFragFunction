@@ -93,7 +93,7 @@ void getPUComparison(int mode = 2, int UE = 0)
  // leg->AddEntry((TObject*)0, "140 < p_{t}^{jet} < 200 GeV/c", "");
   if(mode==2) leg->AddEntry((TObject*)0,"7 TeV pp","");
   leg->AddEntry(pPbFF[0], "nVtx #geq 7, <nVtx>~8.5", "p");
-  leg->AddEntry(PbpFF[0], "nVtx<7, <nVtx>~4.4", "p");
+  leg->AddEntry(PbpFF[0], "nVtx #leq 4, <nVtx>~3.2", "p");
   //leg->AddEntry(PbpFF[0],"pPb FF MC","p");
   leg->Draw();
 

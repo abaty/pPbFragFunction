@@ -23,7 +23,7 @@ void getPU(const char * mode = "pp7", int isMC = 0)
 //start of skim here 
   //looping over forests to skim out of
   //change f= at 2 spots to change starting point, as well as skim outFileNum
-  for(int f = 0; f<5; f++)
+  for(int f = 0; f<nFiles; f++)
   {   
     int isGoodFile = openInFile(fileList[f].data(),mode,isMC);
     if( isGoodFile == 0)
