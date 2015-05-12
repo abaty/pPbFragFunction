@@ -232,7 +232,7 @@ void FFSystematics(const char * mode, int UEtype)
    TH1D** ChargeCutDiff;
    TH1D** UEDiff;
    //estimating 5% tracking errors
-   double track = 0.05;
+   double track = 0.039;
 
   if(strcmp(mode,"pPb5")==0)
   {
@@ -376,7 +376,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
   TH1D** UEDiff;
 
   //estimating 5% tracking errors
-  double track = 0.05;
+  double track = 0.039;
  
   if(strcmp(mode,"interp")==0) 
   {

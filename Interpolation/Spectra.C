@@ -67,6 +67,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   TH1D * totalRecoTRecoJ_Tracking = new TH1D("totalRecoTRecoJ_Tracking","",ny,trkx);
   TH1D * totalGenTRecoJ_Tracking_largeEta = new TH1D("totalGenTRecoJ_Tracking_largeEta","",ny,trkx);
   TH1D * totalRecoTRecoJ_Tracking_largeEta = new TH1D("totalRecoTRecoJ_Tracking_largeEta","",ny,trkx);
+  TH1D * totalGenTRecoJ_Tracking_largePt = new TH1D("totalGenTRecoJ_Tracking_largePt","",10,-2.4,2.4);
+  TH1D * totalRecoTRecoJ_Tracking_largePt = new TH1D("totalRecoTRecoJ_Tracking_largePt","",10,-2.4,2.4);
 
   //for testing code in interactive mode only
   if(jobNum == -1)
@@ -247,7 +249,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             if(std::isfinite(trkCorr))
             {
               totalRecoTRecoJ_Tracking->Fill(trkPt[t],weight*trkCorr);
-              if(TMath::Abs(trkEta[t])>1.9 && trkPt[t]>10)totalRecoTRecoJ_Tracking_largeEta->Fill(trkPt[t],weight*trkCorr);
+              if(TMath::Abs(trkEta[t])>1.9)totalRecoTRecoJ_Tracking_largeEta->Fill(trkPt[t],weight*trkCorr);
+              if(trkPt[t]>10)totalRecoTRecoJ_Tracking_largePt->Fill(trkEta[t],weight*trkCorr);
               h_track->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight);
               h_track_xi->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
               if(isQ)
@@ -365,7 +368,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             if(getdR2(jteta[j]+boost,jtphi[j],pEta[t]+boost,pPhi[t]) < 0.3*0.3)
             {
               totalGenTRecoJ_Tracking->Fill(pPt[t],weight);
-              if(TMath::Abs(pEta[t])>1.9 && pPt[t]>10)totalGenTRecoJ_Tracking_largeEta->Fill(pPt[t],weight);
+              if(TMath::Abs(pEta[t])>1.9)totalGenTRecoJ_Tracking_largeEta->Fill(pPt[t],weight);
+              if(pPt[t]>10)totalGenTRecoJ_Tracking_largePt->Fill(pEta[t],weight);
               h_track_rJgT->Fill(xtScaling*jtpt[j],pPt[t],weight);
               h_track_xi_rJgT->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
    
@@ -717,6 +721,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       totalRecoTGenJ_Tracking->Write();
       totalRecoTRecoJ_Tracking_largeEta->Write();
       totalGenTRecoJ_Tracking_largeEta->Write();
+      totalRecoTRecoJ_Tracking_largePt->Write();
+      totalGenTRecoJ_Tracking_largePt->Write();
     }
     outf->Close();
   }

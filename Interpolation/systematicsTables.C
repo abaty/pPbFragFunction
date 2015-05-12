@@ -171,7 +171,7 @@ void getTable(int UE = 0)
       cout << "\\hline \n"
       << "Symmetric Error Source&&&&&& \\\\ \n"
       << "\\hline \n";
-      cout << "Tracking & 5\\%& 5\\%& 5\\%& 5\\%& 5\\%& 5\\% \\\\ \n";
+      cout << "Tracking & 3.9\\%& 3.9\\%& 3.9\\%& 3.9\\%& 3.9\\%& 3.9\\% \\\\ \n";
       for(int k = 0; k<9; k++)
       {
         if(i<2 && k==1) continue;
