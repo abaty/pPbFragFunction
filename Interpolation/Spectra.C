@@ -13,6 +13,7 @@
 #include "jetSmearing.h"
 #include "getJEC_2nd.h"
 #include "getJEC_1st.h"
+#include "getJEC_L2L3res.h"
 
 const double pPbRapidity = 0.4654094531;
 const int nJetBins = 120;
@@ -204,8 +205,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   
       //JEC and its corrections applied
         jtpt[j] = getJEC_1st(mode,rawpt[j],jtpt[j],jteta[j]); 
-        jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
         jtpt[j] = getJEC_2nd(jtpt[j],jteta[j],mode);
+        jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
+        jtpt[j] = getJEC_L2L3res(mode,jtpt[j]);
         if(v==1 || v==3 || v==5)jtpt[j] = jtpt[j]*1.03;
         if(v==20 || v==22 || v==24)jtpt[j] = jtpt[j]*1.02;
         if(v==14 || v==16 || v==18)jtpt[j] = jtpt[j]*1.01;
