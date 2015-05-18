@@ -105,4 +105,6 @@ double getJEC_SystError(const char * mode, double jetPt, double eta, double resC
     }
     return jetPt*TMath::Power(TMath::Abs(error7 - error5)+TMath::Power(resCorrTemp,2),0.5);
   }
+  return jetPt;
 }
+

@@ -209,7 +209,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         jtpt[j] = getJEC_2nd(jtpt[j],jteta[j],mode);
         jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
         double resCorrTemp = getJEC_L2L3res("pp7",jtpt[j])/jtpt[j]-1;
-        jtpt[j] = getJEC_L2L3res(mode,jtpt[j]);
+        if(!isMC)  jtpt[j] = getJEC_L2L3res(mode,jtpt[j]);
         if(v==1 || v==3 || v==5)jtpt[j] = jtpt[j]+getJEC_SystError(mode,jtpt[j],jteta[j],resCorrTemp,false);
         if(v==20 || v==22 || v==24)jtpt[j] = jtpt[j]+getJEC_SystError(mode,jtpt[j],jteta[j],resCorrTemp,true);
         //if(v==14 || v==16 || v==18)jtpt[j] = jtpt[j]*1.01;

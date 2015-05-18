@@ -85,11 +85,11 @@ void makeSummaries(int v = 0, int UEtype=3)
     sys[i]->SetMaximum(1.5*max);
     sys[i]->SetMinimum(0.5*min);
    
-    if(v==6 && (i<15||i>19))
+    /*if(v==6 && (i<15||i>19))
     {
       sys[i]->SetMaximum(1.5*max);
       sys[i]->SetMinimum(100000*min);
-    }
+    }*/
  
     sys[i]->SetLineWidth(1);
     sys[i]->SetLineColor(1);
