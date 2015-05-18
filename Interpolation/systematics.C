@@ -84,6 +84,7 @@ TH1D** getpPbPbpDiff(const char * mode = "pPb5", int v=0, int UEtype=3)
       diffArray[i] = (TH1D*)inf1->Get(Form("pPb5TeV_data_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf1->Get(Form("Pbp5TeV_data_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
       diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_fulldata_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Scale(0.5);
       diffArray[i]->SetName(Form("%s%s_pPbPbpDiff%d%s",mode,variationTag[v],i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -92,6 +93,7 @@ TH1D** getpPbPbpDiff(const char * mode = "pPb5", int v=0, int UEtype=3)
       diffArray[i] = (TH1D*)inf1->Get(Form("pPb_FF_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf1->Get(Form("Pbp_FF_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
       diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPbPbp_FF_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Scale(0.5);
       diffArray[i]->SetName(Form("%s%s_pPbPbpDiff%d%s",mode,variationTag[v],i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
@@ -100,6 +102,7 @@ TH1D** getpPbPbpDiff(const char * mode = "pPb5", int v=0, int UEtype=3)
       diffArray[i] = (TH1D*)inf1->Get(Form("pPb5TeV_data_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
       diffArray[i]->Add((TH1D*)inf1->Get(Form("Pbp5TeV_data_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())),-1);
       diffArray[i]->Divide((TH1D*)inf2->Get(Form("pPb5Pbp5TeV_data_interp_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data())));
+      diffArray[i]->Scale(0.5);
       diffArray[i]->SetName(Form("%s%s_pPbPbpDiff%d%s",mode,variationTag[v],i,isXi.data()));
       diffArray[i]->SetDirectory(0);
     }
