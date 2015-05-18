@@ -14,6 +14,7 @@
 #include "getJEC_2nd.h"
 #include "getJEC_1st.h"
 #include "getJEC_L2L3res.h"
+#include "getJEC_SystError.h"
 
 const double pPbRapidity = 0.4654094531;
 const int nJetBins = 120;
@@ -86,9 +87,9 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   {
     setJetPtRange(mode,trigger,(int)(v==29));
   
-    if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==7 || v==10 || v==13 || v==14 || v==15 || v==20 || v==21 || v==26 || v==27 || v==28 || v==29 || v==30)) continue;
-    if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8 ||v==11 || v==13 || v==16 || v==17 || v==22 || v==23 || v==26 || v==27 || v==28 || v==29 || v==30 || v==31 || v==32 || v==33)) continue;
-    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9 || v==12 || v==13 || v==18 || v==19 || v==24 || v==25 || v==26 || v==27 || v==28 || v==29 || v==30)) continue;
+    if(strcmp(mode,"pp2")==0 && !(v==0 || v==1 || v==2 || v==7 || v==10 || v==13 || v==20 || v==21 || v==26 || v==27 || v==28 || v==29 || v==30)) continue;
+    if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8 ||v==11 || v==13 || v==22 || v==23 || v==26 || v==27 || v==28 || v==29 || v==30 || v==31 || v==32 || v==33)) continue;
+    if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9 || v==12 || v==13 || v==24 || v==25 || v==26 || v==27 || v==28 || v==29 || v==30)) continue;
     if(typeUE!=0 && v==26) continue;
     float xtScaling = 1;
     if(v==29 && strcmp(mode,"pp2")==0) xtScaling = 5.02/2.76;
@@ -207,13 +208,14 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         jtpt[j] = getJEC_1st(mode,rawpt[j],jtpt[j],jteta[j]); 
         jtpt[j] = getJEC_2nd(jtpt[j],jteta[j],mode);
         jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
+        double resCorrTemp = getJEC_L2L3res("pp7",jtpt[j])/jtpt[j]-1;
         jtpt[j] = getJEC_L2L3res(mode,jtpt[j]);
-        if(v==1 || v==3 || v==5)jtpt[j] = jtpt[j]*1.03;
-        if(v==20 || v==22 || v==24)jtpt[j] = jtpt[j]*1.02;
-        if(v==14 || v==16 || v==18)jtpt[j] = jtpt[j]*1.01;
-        if(v==2 || v==4 || v==6)jtpt[j] = jtpt[j]*0.97;
-        if(v==21 || v==23 || v==25)jtpt[j] = jtpt[j]*0.98;
-        if(v==15 || v==17 || v==19)jtpt[j] = jtpt[j]*0.99;
+        if(v==1 || v==3 || v==5)jtpt[j] = jtpt[j]+getJEC_SystError(mode,jtpt[j],jteta[j],resCorrTemp,false);
+        if(v==20 || v==22 || v==24)jtpt[j] = jtpt[j]+getJEC_SystError(mode,jtpt[j],jteta[j],resCorrTemp,true);
+        //if(v==14 || v==16 || v==18)jtpt[j] = jtpt[j]*1.01;
+        if(v==2 || v==4 || v==6)jtpt[j] = jtpt[j]-getJEC_SystError(mode,jtpt[j],jteta[j],resCorrTemp,false);
+        if(v==21 || v==23 || v==25)jtpt[j] = jtpt[j]-getJEC_SystError(mode,jtpt[j],jteta[j],resCorrTemp,true);
+        //if(v==15 || v==17 || v==19)jtpt[j] = jtpt[j]*0.99;
         if(v==7 || v==8 || v==9)jtpt[j] = getJERCorrected(mode,jtpt[j],0.05);
         if(v==10 || v==11 || v==12)jtpt[j] = getJERCorrected(mode,jtpt[j],0.02);
        

@@ -481,8 +481,11 @@ void Interpolate()
 {
   for(int v = 0; v<variations; v++) 
   {
-    makeFF(v,0);
-    if(v!=26) makeFF(v,3);
+    if(v<14 || v>19)
+    {
+      makeFF(v,0);
+      if(v!=26) makeFF(v,3);
+    }
   }
   systematics(0);
   systematics(3);
