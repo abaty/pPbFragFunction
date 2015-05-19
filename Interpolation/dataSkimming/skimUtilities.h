@@ -91,6 +91,7 @@ int HLT_PAJet40_NoJetID_v1;
 int HLT_PAJet80_NoJetID_v1_Prescl;
 int HLT_PAJet40_NoJetID_v1_Prescl;
 int HLT_PAZeroBiasPixel_SingleTrack_v1;
+int HLT_ZeroBias;
 int HLT_Jet30;
 int HLT_Jet60;
 int HLT_Jet110;
@@ -237,6 +238,11 @@ int openInFile(const char * name, const char * mode, int isMC)
 
   if(strcmp(mode,"pp7")==0)
   {
+    for(int vNum = 0; vNum<100; vNum++)
+    {
+      int status = hltIn->SetBranchAddress(Form("HLT_ZeroBias_v%d",vNum),&HLT_ZeroBias);
+      if(status!=-5) break;
+    }
     for(int vNum = 0; vNum<100; vNum++)
     {
       int status = hltIn->SetBranchAddress(Form("HLT_Jet30_v%d",vNum),&HLT_Jet30);

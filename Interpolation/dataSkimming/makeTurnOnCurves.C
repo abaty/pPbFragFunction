@@ -24,29 +24,64 @@ void makeTurnOnCurves(const char * mode = "pp2")
   TH1D * num80 = new TH1D("num80","",nbinsFine,0,140);
   TH1D * denom40 = new TH1D("denom40","",nbinsFine,0,140);
   TH1D * denom80 = new TH1D("denom80","",nbinsFine,0,140);
+  TH1D * num30 = new TH1D("num30","",nbinsFine,0,140);
+  TH1D * num60 = new TH1D("num60","",nbinsFine,0,140);
+  TH1D * denom30 = new TH1D("denom30","",nbinsFine,0,140);
+  TH1D * denom60 = new TH1D("denom60","",nbinsFine,0,140);
+  TH1D * num110 = new TH1D("num110","",nbinsFine,0,140);
+  TH1D * denom110 = new TH1D("denom110","",nbinsFine,0,140);
 
   TProfile * prof40 = new TProfile("prof40","",nbinsFine,0,140);
   TProfile * prof80 = new TProfile("prof80","",nbinsFine,0,140);
  
 //setting up files 
   std::vector<std::string> fileList;
+  bool isMC = false;
   if(strcmp("pp2",mode)==0) fileList.push_back("/mnt/hadoop/cms/store/user/luck/pp_minbiasSkim_forest_53x_2013-08-15-0155/pp_minbiasSkim_forest_53x_2013-08-15-0155.root");
   if(strcmp("pPb5",mode)==0) fileList.push_back("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pPb_5_02TeV_pA2013/PA2013_HiForest_PromptReco_KrisztianMB_JSonPPb_forestv84.root");
-  //if(strcmp("pp7",mode)==0) fileList = readInputFileList("pp7MCFiles.txt");
+  if(strcmp("pp7",mode)==0)
+  {
+    fileList = readInputFileList("pp7MCFiles.txt");
+    isMC = true;
+  }
+
   int nFiles = fileList.size();
+  int totalEntriesForWeighting[7] = {0};
+  if(strcmp(mode, "pp7")==0 && isMC)
+  {
+    for(int f=0; f<nFiles; f++)
+    { 
+      if(f%100 == 0) std::cout << "tabulating entries; file " << f << "/" << nFiles <<std::endl;
+      int isGoodFile = openInFileFast(fileList[f].data(),mode,isMC);
+      if( isGoodFile == 0)
+      { 
+        closeInFileFast(0);
+        continue;
+      }
+
+      for(int i = 0; i<7; i++)
+      {
+        if(fileList[f].find(Form("%dto%d",(int)pp7PthatBounds[i],(int)pp7PthatBounds[i+1])) != std::string::npos) totalEntriesForWeighting[i] += trackIn->GetEntries();
+      }
+      closeInFileFast();
+    }
+    for(int i = 0 ; i<7; i++) std::cout << pp7PthatBounds[i] << " has " << totalEntriesForWeighting[i] << " entries." <<std::endl;
+  }
 
 //start of skim here 
   //looping over forests to skim out of
   //change f= at 2 spots to change starting point, as well as skim outFileNum
+  //nFiles = 500;
   for(int f = 0; f<nFiles; f++)
-  {   
-    int isGoodFile = openInFile(fileList[f].data(),mode,0);
+  { 
+//std::cout << "here1" << std::endl;
+    int isGoodFile = openInFile(fileList[f].data(),mode,isMC);
+//std::cout << "here1" << std::endl;
     if( isGoodFile == 0)
     {
       closeInFile(0);
       continue;
-    }
-
+    } 
     int nEntries = ak3PFIn->GetEntries();
     //nEntries = 2000000;
     for(int i = 0; i<nEntries; i++)
@@ -64,12 +99,25 @@ void makeTurnOnCurves(const char * mode = "pp2")
       {
         boost = pPbRapidity;
       }
+      if(strcmp("pp7",mode)==0)
+      {
+        for(int k = 0; k<7; k++)
+        {
+          if(fileList[f].find(Form("%dto%d",(int)pp7PthatBounds[k],(int)pp7PthatBounds[k+1])) != std::string::npos) weight = crossSection7[k]/(float)totalEntriesForWeighting[k];
+        }    
+      }
 
       //only using prescale 1 data       
       //if(nref>0 && HLT_PAJet40_NoJetID_v1==1 && HLT_PAJet40_NoJetID_v1_Prescl==1) num40->Fill(jtpt[0],HLT_PAJet40_NoJetID_v1_Prescl);
-      if(nref>0 && HLT_PAJet80_NoJetID_v1==1 && HLT_PAJet80_NoJetID_v1_Prescl==1) num80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1_Prescl);
+  //    if(nref>0 && HLT_PAJet80_NoJetID_v1==1 && HLT_PAJet80_NoJetID_v1_Prescl==1) num80->Fill(jtpt[0],HLT_PAJet80_NoJetID_v1_Prescl);
       //if(nref>0 && HLT_PAJet40_NoJetID_v1_Prescl==1) denom40->Fill(jtpt[0]);
-      if(nref>0 && HLT_PAJet80_NoJetID_v1_Prescl==1) denom80->Fill(jtpt[0]);
+    //  if(nref>0 && HLT_PAJet80_NoJetID_v1_Prescl==1) denom80->Fill(jtpt[0]);
+        if(nref>0 && HLT_ZeroBias==1 && HLT_Jet30==1) num30->Fill(jtpt[0],weight);
+        if(nref>0 && HLT_ZeroBias==1 && HLT_Jet60==1) num60->Fill(jtpt[0],weight);
+        if(nref>0 && HLT_ZeroBias==1 && HLT_Jet110==1) num110->Fill(jtpt[0],weight);
+        if(nref>0 && HLT_ZeroBias==1) denom30->Fill(jtpt[0],weight);
+        if(nref>0 && HLT_ZeroBias==1) denom60->Fill(jtpt[0],weight);
+        if(nref>0 && HLT_ZeroBias==1) denom110->Fill(jtpt[0],weight);
 /*
       //weighting by prescale
       if(nref>0 && HLT_PAJet40_NoJetID_v1==1) num40->Fill(jtpt[0]);
@@ -96,7 +144,7 @@ void makeTurnOnCurves(const char * mode = "pp2")
       denom40->SetBinError(i,0);
     }
   }*/
-
+/*
   TGraphAsymmErrors * turnon40Asym;
   TGraphAsymmErrors * turnon80Asym;
   TCanvas * c2 = new TCanvas("c2","c2",800,600);
@@ -141,13 +189,78 @@ void makeTurnOnCurves(const char * mode = "pp2")
   mg->Add(turnon80Asym,"");
 
   mg->Draw("AP");
+*/
+
+//pp7 mode
+  TGraphAsymmErrors * turnon30Asym;
+  TGraphAsymmErrors * turnon60Asym;
+  TGraphAsymmErrors * turnon110Asym;
+  TCanvas * c2 = new TCanvas("c2","c2",800,600);
+  TMultiGraph * mg = new TMultiGraph();
+  mg->SetTitle(";lead jet p_{T}^{reco};Efficiency");
+
+  turnon30Asym = new TGraphAsymmErrors();
+  turnon30Asym->SetName("turnon30Asym");
+  turnon30Asym->BayesDivide(num30,denom30);
+  for(int i =1; i<41; i++)
+  {
+    turnon30Asym->SetPointEXlow(i,0);
+    turnon30Asym->SetPointEXhigh(i,0);
+  }
+  turnon30Asym->SetLineColor(kRed+1);
+  turnon30Asym->SetMarkerColor(kRed+1);
+  turnon30Asym->SetMarkerSize(0.8);
+  num30->SetLineColor(kRed+1);
+  num30->SetMarkerColor(kRed+1);
+  num30->SetMarkerSize(0.8);
+  num30->SetMaximum(1.2);
+  num30->SetMinimum(0);
+
+
+  turnon60Asym = new TGraphAsymmErrors();
+  turnon60Asym->SetName("turnon60Asym");
+  turnon60Asym->BayesDivide(num60,denom60);
+  for(int i =1; i<41; i++)
+  {
+    turnon60Asym->SetPointEXlow(i,0);
+    turnon60Asym->SetPointEXhigh(i,0);
+  }
+  turnon60Asym->SetLineColor(kBlue+1);
+  turnon60Asym->SetMarkerColor(kBlue+1);
+  turnon60Asym->SetMarkerSize(0.8);
+  num60->SetLineColor(kBlue+1);
+  num60->SetMarkerColor(kBlue+1);
+  num60->SetMarkerSize(0.8);
+  num60->SetMaximum(1.2);
+
+  turnon110Asym = new TGraphAsymmErrors();
+  turnon110Asym->SetName("turnon110Asym");
+  turnon110Asym->BayesDivide(num110,denom110);
+  for(int i =1; i<41; i++)
+  {
+    turnon110Asym->SetPointEXlow(i,0);
+    turnon110Asym->SetPointEXhigh(i,0);
+  }
+  turnon110Asym->SetLineColor(kBlack);
+  turnon110Asym->SetMarkerColor(kBlack);
+  turnon110Asym->SetMarkerSize(0.8);
+  num110->SetLineColor(kBlack);
+  num110->SetMarkerColor(kBlack);
+  num110->SetMarkerSize(0.8);
+  num110->SetMaximum(1.2);
+
+  mg->Add(turnon30Asym,"");
+  mg->Add(turnon60Asym,"");
+  mg->Add(turnon110Asym,"");
+  mg->Draw("AP");
 
   TLegend * leg = new TLegend(0.55,0.2,0.9,0.4);
   if(strcmp(mode,"pp2")==0) leg->AddEntry((TObject*)0,"2.76 TeV MB pp","");
   if(strcmp(mode,"pPb5")==0) leg->AddEntry((TObject*)0,"5.02 TeV MB pPb","");
   if(strcmp(mode,"pp7")==0) leg->AddEntry((TObject*)0,"7 TeV MB pp","");
-  //leg->AddEntry(turnon40Asym,"Jet40 Trigger","p");
-  leg->AddEntry(turnon80Asym,"Jet80 Trigger","p");
+  leg->AddEntry(turnon30Asym,"Jet30 Trigger","p");
+  leg->AddEntry(turnon60Asym,"Jet60 Trigger","p");
+  leg->AddEntry(turnon110Asym,"Jet110 Trigger","p");
 
  // num40->Divide(denom40);
  // num40->Draw("p");
@@ -156,8 +269,8 @@ void makeTurnOnCurves(const char * mode = "pp2")
 //  num80->Draw("p same");
   leg->Draw("same");
 
-  c2->SaveAs(Form("../plots/TriggerTurnOnMB_80prescale1%s.png",mode));
-  c2->SaveAs(Form("../plots/TriggerTurnOnMB_80prescale1%s.pdf",mode));
+  c2->SaveAs(Form("../plots/TriggerTurnOnMC_%s.png",mode));
+  c2->SaveAs(Form("../plots/TriggerTurnOnMC_%s.pdf",mode));
 
   //prof40->Draw("p");
   //prof80->Draw("p");
