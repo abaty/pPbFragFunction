@@ -19,20 +19,20 @@ void makeTurnOnCurves(const char * mode = "pp2")
 {
   TH1::SetDefaultSumw2();
 
-  int nbinsFine = 28;
-  TH1D * num40 = new TH1D("num40","",nbinsFine,0,140);
-  TH1D * num80 = new TH1D("num80","",nbinsFine,0,140);
-  TH1D * denom40 = new TH1D("denom40","",nbinsFine,0,140);
-  TH1D * denom80 = new TH1D("denom80","",nbinsFine,0,140);
-  TH1D * num30 = new TH1D("num30","",nbinsFine,0,140);
-  TH1D * num60 = new TH1D("num60","",nbinsFine,0,140);
-  TH1D * denom30 = new TH1D("denom30","",nbinsFine,0,140);
-  TH1D * denom60 = new TH1D("denom60","",nbinsFine,0,140);
-  TH1D * num110 = new TH1D("num110","",nbinsFine,0,140);
-  TH1D * denom110 = new TH1D("denom110","",nbinsFine,0,140);
+  int nbinsFine = 36;
+  TH1D * num40 = new TH1D("num40","",nbinsFine,0,180);
+  TH1D * num80 = new TH1D("num80","",nbinsFine,0,180);
+  TH1D * denom40 = new TH1D("denom40","",nbinsFine,0,180);
+  TH1D * denom80 = new TH1D("denom80","",nbinsFine,0,180);
+  TH1D * num30 = new TH1D("num30","",nbinsFine,0,180);
+  TH1D * num60 = new TH1D("num60","",nbinsFine,0,180);
+  TH1D * denom30 = new TH1D("denom30","",nbinsFine,0,180);
+  TH1D * denom60 = new TH1D("denom60","",nbinsFine,0,180);
+  TH1D * num110 = new TH1D("num110","",nbinsFine,0,180);
+  TH1D * denom110 = new TH1D("denom110","",nbinsFine,0,180);
 
-  TProfile * prof40 = new TProfile("prof40","",nbinsFine,0,140);
-  TProfile * prof80 = new TProfile("prof80","",nbinsFine,0,140);
+  TProfile * prof40 = new TProfile("prof40","",nbinsFine,0,180);
+  TProfile * prof80 = new TProfile("prof80","",nbinsFine,0,180);
  
 //setting up files 
   std::vector<std::string> fileList;
@@ -257,7 +257,7 @@ void makeTurnOnCurves(const char * mode = "pp2")
   TLegend * leg = new TLegend(0.55,0.2,0.9,0.4);
   if(strcmp(mode,"pp2")==0) leg->AddEntry((TObject*)0,"2.76 TeV MB pp","");
   if(strcmp(mode,"pPb5")==0) leg->AddEntry((TObject*)0,"5.02 TeV MB pPb","");
-  if(strcmp(mode,"pp7")==0) leg->AddEntry((TObject*)0,"7 TeV MB pp","");
+  if(strcmp(mode,"pp7")==0) leg->AddEntry((TObject*)0,"7 TeV MC pp","");
   leg->AddEntry(turnon30Asym,"Jet30 Trigger","p");
   leg->AddEntry(turnon60Asym,"Jet60 Trigger","p");
   leg->AddEntry(turnon110Asym,"Jet110 Trigger","p");
