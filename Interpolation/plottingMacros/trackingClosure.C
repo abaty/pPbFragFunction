@@ -74,9 +74,9 @@ void trackingClosure()
     pPb5Reco[i]->SetMarkerColor(kBlack);
     pp7Reco[i]->SetMarkerColor(kBlack);
     
-    pp2Reco[i]->GetYaxis()->SetTitle("N_{trk}^{Reco}/N_{trk}^{Gen}");
+    pp2Reco[i]->GetYaxis()->SetTitle("N_{trk}^{Corrected Reco}/N_{trk}^{Gen}");
     pp2Reco[i]->GetYaxis()->SetTitleSize(0.06);
-    pPb5Reco[i]->GetYaxis()->SetTitle("N_{trk}^{Reco}/N_{trk}^{Gen}");
+    pPb5Reco[i]->GetYaxis()->SetTitle("N_{trk}^{Corrected Reco}/N_{trk}^{Gen}");
     pPb5Reco[i]->GetYaxis()->SetTitleSize(0.06);
     if(i<2)
     {
@@ -138,8 +138,9 @@ void trackingClosure()
         pp7Reco[2]->SetMarkerColor(kRed+1);
         pp7Reco[2]->SetLineColor(kRed+1);
         pp7Reco[2]->DrawCopy("same");
-        
-        TLegend * leg2 = new TLegend(0.2,0.3,0.4,0.4);
+       
+        c1[i]->cd(1); 
+        TLegend * leg2 = new TLegend(0.15,0.15,0.5,0.4);
         leg2->AddEntry(pPb5Reco[i],"p_{T}>10 GeV/c","p");
         leg2->AddEntry(pPb5Reco[2],"Inclusive","p");
         leg2->Draw("same");
@@ -155,7 +156,7 @@ void trackingClosure()
       pPb5Reco[0]->SetLineColor(kRed+1);
       pPb5Reco[0]->DrawCopy("same");
 
-      TLegend * leg1 = new TLegend(0.2,0.3,0.4,0.4);
+      TLegend * leg1 = new TLegend(0.15,0.15,0.5,0.4);
       leg1->AddEntry(pPb5Reco[i],"|#eta|>1.9","p");
       leg1->AddEntry(pPb5Reco[0],"Inclusive","p");
       leg1->Draw("same");
