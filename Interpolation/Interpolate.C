@@ -193,6 +193,11 @@ void makeFF(int v, int UEtype=3)
     pPbPbp_FF_rJgTMC[i]->Divide(pPb5Pbp5TeV_rJgTMC_interp[i][0]);
     pPbPbp_FF_gJrTMC[i] = (TH1D*) pPb5Pbp5TeV_gJrTMC[i]->Clone(Form("pPbPbp_FF_gJrTMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
     pPbPbp_FF_gJrTMC[i]->Divide(pPb5Pbp5TeV_gJrTMC_interp[i][0]);
+
+    pp5_FF_recoMC[i] = (TH1D*) pp5TeV_recoMC[i]->Clone(Form("pp5_FF_recoMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
+    pp5_FF_recoMC[i]->Divide(pPb5Pbp5TeV_recoMC_interp[i][0]);
+    pp5_FF_genMC[i] = (TH1D*) pp5TeV_genMC[i]->Clone(Form("pp5_FF_genMC_%d_%d%s",(int)FF_Bound[i%FF_Bins],(int)FF_Bound[i%FF_Bins+1],isXi.data()));
+    pp5_FF_genMC[i]->Divide(pPb5Pbp5TeV_genMC_interp[i][0]);
   }
  
   TFile * outfile = new TFile(Form("FragmentationFunctions%sUE%d.root",variationTag[v],UEtype),"recreate");

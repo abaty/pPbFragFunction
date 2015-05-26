@@ -67,6 +67,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   TH1D * totalRecoTGenJ_Tracking = new TH1D("totalRecoTGenJ_Tracking","",ny,trkx);
   TH1D * totalGenTRecoJ_Tracking = new TH1D("totalGenTRecoJ_Tracking","",ny,trkx);
   TH1D * totalRecoTRecoJ_Tracking = new TH1D("totalRecoTRecoJ_Tracking","",ny,trkx);
+  TH1D * totalGenTRecoJ_Tracking_eta = new TH1D("totalGenTRecoJ_Tracking_eta","",10,-2.4,2.4);
+  TH1D * totalRecoTRecoJ_Tracking_eta = new TH1D("totalRecoTRecoJ_Tracking_eta","",10,-2.4,2.4);
   TH1D * totalGenTRecoJ_Tracking_largeEta = new TH1D("totalGenTRecoJ_Tracking_largeEta","",ny,trkx);
   TH1D * totalRecoTRecoJ_Tracking_largeEta = new TH1D("totalRecoTRecoJ_Tracking_largeEta","",ny,trkx);
   TH1D * totalGenTRecoJ_Tracking_largePt = new TH1D("totalGenTRecoJ_Tracking_largePt","",10,-2.4,2.4);
@@ -253,6 +255,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             if(std::isfinite(trkCorr))
             {
               totalRecoTRecoJ_Tracking->Fill(trkPt[t],weight*trkCorr);
+              totalRecoTRecoJ_Tracking_eta->Fill(trkEta[t],weight*trkCorr);
               if(TMath::Abs(trkEta[t])>1.9)totalRecoTRecoJ_Tracking_largeEta->Fill(trkPt[t],weight*trkCorr);
               if(trkPt[t]>10)totalRecoTRecoJ_Tracking_largePt->Fill(trkEta[t],weight*trkCorr);
               h_track->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight);
@@ -372,6 +375,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             if(getdR2(jteta[j]+boost,jtphi[j],pEta[t]+boost,pPhi[t]) < 0.3*0.3)
             {
               totalGenTRecoJ_Tracking->Fill(pPt[t],weight);
+              totalGenTRecoJ_Tracking_eta->Fill(pEta[t],weight);
               if(TMath::Abs(pEta[t])>1.9)totalGenTRecoJ_Tracking_largeEta->Fill(pPt[t],weight);
               if(pPt[t]>10)totalGenTRecoJ_Tracking_largePt->Fill(pEta[t],weight);
               h_track_rJgT->Fill(xtScaling*jtpt[j],pPt[t],weight);
@@ -717,17 +721,30 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       totalJetsEtaCutHist->Write();
       totalJetsPtCutHist->Write();
     }
-    if(v==0)
+    if(v==0 || v==31 || v==32)
     {
-      totalGenTRecoJ_Tracking->Write();
-      totalRecoTRecoJ_Tracking->Write();
-      totalGenTGenJ_Tracking->Write();
-      totalRecoTGenJ_Tracking->Write();
-      totalRecoTRecoJ_Tracking_largeEta->Write();
-      totalGenTRecoJ_Tracking_largeEta->Write();
-      totalRecoTRecoJ_Tracking_largePt->Write();
-      totalGenTRecoJ_Tracking_largePt->Write();
+      totalGenTRecoJ_Tracking->Write(Form("totalGenTRecoJ_Tracking%s",variationTag[v]));
+      totalRecoTRecoJ_Tracking->Write(Form("totalRecoTRecoJ_Tracking%s",variationTag[v]));
+      totalGenTGenJ_Tracking->Write(Form("totalGenTGenJ_Tracking%s",variationTag[v]));
+      totalRecoTGenJ_Tracking->Write(Form("totalRecoTGenJ_Tracking%s",variationTag[v]));
+      totalGenTRecoJ_Tracking_eta->Write(Form("totalGenTRecoJ_Tracking_eta%s",variationTag[v]));
+      totalRecoTRecoJ_Tracking_eta->Write(Form("totalRecoTRecoJ_Tracking_eta%s",variationTag[v]));
+      totalRecoTRecoJ_Tracking_largeEta->Write(Form("totalRecoTRecoJ_Tracking_largeEta%s",variationTag[v]));
+      totalGenTRecoJ_Tracking_largeEta->Write(Form("totalGenTRecoJ_Tracking_largeEta%s",variationTag[v]));
+      totalRecoTRecoJ_Tracking_largePt->Write(Form("totalRecoTRecoJ_Tracking_largePt%s",variationTag[v]));
+      totalGenTRecoJ_Tracking_largePt->Write(Form("totalGenTRecoJ_Tracking_largePt%s",variationTag[v]));
     }
+    totalGenTRecoJ_Tracking->Reset();
+    totalRecoTRecoJ_Tracking->Reset();
+    totalGenTGenJ_Tracking->Reset();
+    totalRecoTGenJ_Tracking->Reset();
+    totalRecoTRecoJ_Tracking_eta->Reset();
+    totalGenTRecoJ_Tracking_eta->Reset();
+    totalRecoTRecoJ_Tracking_largeEta->Reset();
+    totalGenTRecoJ_Tracking_largeEta->Reset();
+    totalRecoTRecoJ_Tracking_largePt->Reset();
+    totalGenTRecoJ_Tracking_largePt->Reset();
+  
     outf->Close();
   }
 }

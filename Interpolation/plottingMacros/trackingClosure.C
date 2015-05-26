@@ -25,10 +25,14 @@ void trackingClosure()
 
   TH1D * pp2Reco[4];
   TH1D * pp7Reco[4];
+  TH1D * pp7Reco_lowPU[4];
+  TH1D * pp7Reco_highPU[4];
   TH1D * pPb5Reco[4];
   TH1D * Pbp5Reco[4];
   TH1D * pp2Gen[4];
   TH1D * pp7Gen[4];
+  TH1D * pp7Gen_lowPU[4];
+  TH1D * pp7Gen_highPU[4];
   TH1D * pPb5Gen[4];
   TH1D * Pbp5Gen[4];
 
@@ -47,32 +51,52 @@ void trackingClosure()
     pPb5Gen[i] = (TH1D*) inFilepPb5->Get(Form("totalGenTRecoJ_Tracking%s",suffix[i]));
     Pbp5Gen[i] = (TH1D*) inFilePbp5->Get(Form("totalGenTRecoJ_Tracking%s",suffix[i]));
 
+    pp7Reco_lowPU[i] = (TH1D*) inFilepp7->Get(Form("totalRecoTRecoJ_Tracking%s_lowPU",suffix[i]));
+    pp7Reco_highPU[i] = (TH1D*) inFilepp7->Get(Form("totalRecoTRecoJ_Tracking%s_highPU",suffix[i]));
+    pp7Gen_lowPU[i] = (TH1D*) inFilepp7->Get(Form("totalGenTRecoJ_Tracking%s_lowPU",suffix[i]));
+    pp7Gen_highPU[i] =  (TH1D*) inFilepp7->Get(Form("totalGenTRecoJ_Tracking%s_highPU",suffix[i]));
+
     pp2Reco[i]->Divide(pp2Gen[i]);
     pp7Reco[i]->Divide(pp7Gen[i]);
     pPb5Reco[i]->Add(Pbp5Reco[i]);
     pPb5Gen[i]->Add(Pbp5Gen[i]);
     pPb5Reco[i]->Divide(pPb5Gen[i]);
     
+    pp7Reco_lowPU[i]->Divide(pp7Gen_lowPU[i]);
+    pp7Reco_highPU[i]->Divide(pp7Gen_highPU[i]);   
+ 
     pp2Reco[i]->SetMaximum(1.3);
     pPb5Reco[i]->SetMaximum(1.3);
     pp7Reco[i]->SetMaximum(1.3);
+    pp7Reco_lowPU[i]->SetMaximum(1.3);
+    pp7Reco_highPU[i]->SetMaximum(1.3);
     pp2Reco[i]->SetMinimum(0.7);
     pPb5Reco[i]->SetMinimum(0.7);
     pp7Reco[i]->SetMinimum(0.7);
+    pp7Reco_lowPU[i]->SetMinimum(0.7);
+    pp7Reco_highPU[i]->SetMinimum(0.7);
 
     pp2Reco[i]->SetLineWidth(2);
     pPb5Reco[i]->SetLineWidth(2);
     pp7Reco[i]->SetLineWidth(2);
+    pp7Reco_lowPU[i]->SetLineWidth(2);
+    pp7Reco_highPU[i]->SetLineWidth(2);
     pp2Reco[i]->SetLineColor(kBlack);
     pPb5Reco[i]->SetLineColor(kBlack);
     pp7Reco[i]->SetLineColor(kBlack);
+    pp7Reco_lowPU[i]->SetLineColor(kBlack);
+    pp7Reco_highPU[i]->SetLineColor(kBlack);
  
     pp2Reco[i]->SetMarkerStyle(8);
     pPb5Reco[i]->SetMarkerStyle(8);
     pp7Reco[i]->SetMarkerStyle(8);
+    pp7Reco_lowPU[i]->SetMarkerStyle(8);
+    pp7Reco_highPU[i]->SetMarkerStyle(8); 
     pp2Reco[i]->SetMarkerColor(kBlack);
     pPb5Reco[i]->SetMarkerColor(kBlack);
     pp7Reco[i]->SetMarkerColor(kBlack);
+    pp7Reco_lowPU[i]->SetMarkerColor(kBlack);
+    pp7Reco_highPU[i]->SetMarkerColor(kBlack);
     
     pp2Reco[i]->GetYaxis()->SetTitle("N_{trk}^{Corrected Reco}/N_{trk}^{Gen}");
     pp2Reco[i]->GetYaxis()->SetTitleSize(0.06);
@@ -83,16 +107,20 @@ void trackingClosure()
       pp2Reco[i]->GetXaxis()->SetTitle("p_{T}^{trk}");
       pPb5Reco[i]->GetXaxis()->SetTitle("p_{T}^{trk}");
       pp7Reco[i]->GetXaxis()->SetTitle("p_{T}^{trk}");
+      pp7Reco_lowPU[i]->GetXaxis()->SetTitle("p_{T}^{trk}");
+      pp7Reco_highPU[i]->GetXaxis()->SetTitle("p_{T}^{trk}");
     }
     else
     {
       pp2Reco[i]->GetXaxis()->SetTitle("#eta");
       pPb5Reco[i]->GetXaxis()->SetTitle("#eta");
       pp7Reco[i]->GetXaxis()->SetTitle("#eta");
+      pp7Reco_lowPU[i]->GetXaxis()->SetTitle("#eta");
+      pp7Reco_highPU[i]->GetXaxis()->SetTitle("#eta");
     }
   }
  
-  TCanvas * c1[4];
+  TCanvas * c1[6];
   for(int i =0; i<4; i++)
   {
     //if(i==2) continue;
@@ -124,6 +152,34 @@ void trackingClosure()
       if(i<2) lat->DrawLatex(0.6,1.23,"7 TeV PYTHIA");
       else lat->DrawLatex(-2.1,1.23,"7TeV PYTHIA");
       
+      if(i==0 || i==2)
+      {  
+        c1[i/2+4] = new TCanvas(Form("c%d",i/2+4),Form("c%d",i/2+4),400,400); 
+        c1[i/2+4]->cd(1);
+        if(i<2) c1[i/2+4]->cd(1)->SetLogx();
+        pp7Reco_lowPU[i]->DrawCopy();
+
+        pp7Reco_highPU[i]->SetMarkerColor(kRed+1);
+        pp7Reco_highPU[i]->SetLineColor(kRed+1);
+        pp7Reco_highPU[i]->DrawCopy("same");
+
+        TLegend * leg3 = new TLegend(0.15,0.15,0.7,0.4);
+        leg3->AddEntry(pp7Reco_lowPU[i],"nVtx #leq 4, <nVtx>~3.2","p");
+        leg3->AddEntry(pp7Reco_highPU[i],"nVtx #geq 7, <nVtx>~8.5","p");
+        leg3->Draw("same");
+
+        if(i==0)
+        {
+          lat->DrawLatex(0.6,1.23,"7 TeV PYTHIA");
+          lat->DrawLatex(0.6,1.18,"Tracks within R<0.3 of reco jet.");
+        }
+        else
+        {
+          lat->DrawLatex(-2.1,1.23,"7 TeV PYTHIA");
+          lat->DrawLatex(-2.1,1.18,"Tracks within R<0.3 of reco jet.");
+        }
+      }
+
       if(i==3)
       {
         c1[i]->cd(1);
@@ -164,6 +220,12 @@ void trackingClosure()
       lat->DrawLatex(0.6,1.23,"5.02 TeV PYTHIA+HIJING");
       lat->DrawLatex(0.6,1.18,"Tracks within R<0.3 of reco jet.");
     }
+  }
+  
+  for(int i =0 ; i<6; i++)
+  {
+    c1[i]->SaveAs(Form("../plots/TrackingClosureCheck%d.pdf",i));
+    c1[i]->SaveAs(Form("../plots/TrackingClosureCheck%d.png",i));
   }
 
   /*inFilepp2->Close();

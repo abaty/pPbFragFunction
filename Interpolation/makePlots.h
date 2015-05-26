@@ -557,4 +557,160 @@ void makePlots(const char * tag,int UEtype)
 
   c7->SaveAs(Form("plots//pPbPbp_FF_gJrTMC_UE%d%s.png",UEtype,tag));
   c7->SaveAs(Form("plots//pPbPbp_FF_gJrTMC_UE%d%s.pdf",UEtype,tag));
+
+
+  //MC reco signal 
+  TCanvas * c8 = new TCanvas("c8","c8",1200,600);
+  c8->SetLeftMargin(0.2);
+  c8->Divide(5,2,0,0);
+  
+  TLine * l8 = new TLine(0.5,1, pp5TeV_recoMC[1]->GetBinLowEdge(40),1);
+  l8->SetLineWidth(1);
+  l8->SetLineStyle(2);
+  l8->SetLineColor(1);
+
+  for(int i=1; i<11; i++)
+  {
+    c8->cd(i);
+    c8->cd(i)->SetLogx();
+
+    if(i<6)
+    {
+      c8->cd(i)->SetLogy();
+
+      if(i!=1)
+      {
+        pp5TeV_recoMC[i-1]->GetYaxis()->SetTitle("");
+        pp5TeV_recoMC[i-1]->GetYaxis()->SetLabelSize(0);      
+      }
+
+      pp5TeV_recoMC[i-1]->GetXaxis()->SetRange(1,39);
+      pp5TeV_recoMC[i-1]->GetYaxis()->SetTitleSize(0.06);     
+
+      pp5TeV_recoMC[i-1]->SetMarkerSize(0.8);
+      pp5TeV_recoMC[i-1]->SetLineWidth(1);
+      pp5TeV_recoMC[i-1]->SetMarkerStyle(21);
+      pp5TeV_recoMC[i-1]->SetMarkerColor(kRed+1);
+      pp5TeV_recoMC[i-1]->SetLineColor(kRed+1);
+      pp5TeV_recoMC[i-1]->SetMaximum(10);
+      pp5TeV_recoMC[i-1]->SetMinimum(0.00001);
+
+      pPb5Pbp5TeV_recoMC_interp[i-1][0]->SetMarkerSize(0.8);
+      pPb5Pbp5TeV_recoMC_interp[i-1][0]->SetLineWidth(1);
+
+      pp5TeV_recoMC[i-1]->Draw();
+      pPb5Pbp5TeV_recoMC_interp[i-1][0]->Draw("same"); 
+
+      tlat->DrawLatex(0.6,0.00002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i-1],(int)FF_Bound[i]));
+    }
+    else
+    {
+      if(i!=6)
+      {
+        pp5_FF_recoMC[i-6]->GetYaxis()->SetTitle("");
+        pp5_FF_recoMC[i-6]->GetYaxis()->SetLabelSize(0);
+      }
+
+      pp5_FF_recoMC[i-6]->GetXaxis()->SetRange(1,39);
+      pp5_FF_recoMC[i-6]->GetXaxis()->SetTitleSize(0.06);
+      pp5_FF_recoMC[i-6]->GetXaxis()->SetTitle("p_{T}^{track} (GeV/c)");
+      if(i==6) pp5_FF_recoMC[i-6]->GetYaxis()->SetTitle("D_{5}/D_{interp}"); 
+      pp5_FF_recoMC[i-6]->GetXaxis()->SetTitleOffset(1.2);
+      pp5_FF_recoMC[i-6]->GetYaxis()->SetTitleSize(0.06);
+
+      pp5_FF_recoMC[i-6]->SetMaximum(2);
+      pp5_FF_recoMC[i-6]->SetMinimum(0);
+      pp5_FF_recoMC[i-6]->SetMarkerSize(1);
+      pp5_FF_recoMC[i-6]->SetLineWidth(1);
+
+      pp5_FF_recoMC[i-6]->Draw();
+      l8->Draw("same");
+    }
+  }
+  c8->cd(1);
+  TLegend * leg8 = new TLegend(0.3,0.2,0.9,0.3);
+  leg8->AddEntry(pp5TeV_recoMC[1],"5TeV PYTHIA Signal Reco");
+  leg8->AddEntry(pPb5Pbp5TeV_recoMC_interp[1][0],"PYTHIA Reco Interpolation");
+  leg8->Draw();
+
+  c8->SaveAs(Form("plots//pp5_FF_recoMC_UE%d%s.png",UEtype,tag));
+  c8->SaveAs(Form("plots//pp5_FF_recoMC_UE%d%s.pdf",UEtype,tag));
+
+   
+  //MC gen signal
+  TCanvas * c9 = new TCanvas("c9","c9",1200,600);
+  c9->SetLeftMargin(0.2);
+  c9->Divide(5,2,0,0);
+  
+  TLine * l9 = new TLine(0.5,1, pp5TeV_genMC[1]->GetBinLowEdge(40),1);
+  l9->SetLineWidth(1);
+  l9->SetLineStyle(2);
+  l9->SetLineColor(1);
+
+  for(int i=1; i<11; i++)
+  {
+    c9->cd(i);
+    c9->cd(i)->SetLogx();
+
+    if(i<6)
+    {
+      c9->cd(i)->SetLogy();
+
+      if(i!=1)
+      {
+        pp5TeV_genMC[i-1]->GetYaxis()->SetTitle("");
+        pp5TeV_genMC[i-1]->GetYaxis()->SetLabelSize(0);      
+      }
+
+      pp5TeV_genMC[i-1]->GetXaxis()->SetRange(1,39);
+      pp5TeV_genMC[i-1]->GetYaxis()->SetTitleSize(0.06);     
+
+      pp5TeV_genMC[i-1]->SetMarkerSize(0.8);
+      pp5TeV_genMC[i-1]->SetLineWidth(1);
+      pp5TeV_genMC[i-1]->SetMarkerStyle(21);
+      pp5TeV_genMC[i-1]->SetMarkerColor(kRed+1);
+      pp5TeV_genMC[i-1]->SetLineColor(kRed+1);
+      pp5TeV_genMC[i-1]->SetMaximum(10);
+      pp5TeV_genMC[i-1]->SetMinimum(0.00001);
+
+      pPb5Pbp5TeV_genMC_interp[i-1][0]->SetMarkerSize(0.8);
+      pPb5Pbp5TeV_genMC_interp[i-1][0]->SetLineWidth(1);
+
+      pp5TeV_genMC[i-1]->Draw();
+      pPb5Pbp5TeV_genMC_interp[i-1][0]->Draw("same"); 
+
+      tlat->DrawLatex(0.6,0.00002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i-1],(int)FF_Bound[i]));
+    }
+    else
+    {
+      if(i!=6)
+      {
+        pp5_FF_genMC[i-6]->GetYaxis()->SetTitle("");
+        pp5_FF_genMC[i-6]->GetYaxis()->SetLabelSize(0);
+      }
+
+      pp5_FF_genMC[i-6]->GetXaxis()->SetRange(1,39);
+      pp5_FF_genMC[i-6]->GetXaxis()->SetTitleSize(0.06);
+      pp5_FF_genMC[i-6]->GetXaxis()->SetTitle("p_{T}^{track} (GeV/c)");
+      if(i==6) pp5_FF_genMC[i-6]->GetYaxis()->SetTitle("D_{5}/D_{interp}"); 
+      pp5_FF_genMC[i-6]->GetXaxis()->SetTitleOffset(1.2);
+      pp5_FF_genMC[i-6]->GetYaxis()->SetTitleSize(0.06);
+
+      pp5_FF_genMC[i-6]->SetMaximum(2);
+      pp5_FF_genMC[i-6]->SetMinimum(0);
+      pp5_FF_genMC[i-6]->SetMarkerSize(1);
+      pp5_FF_genMC[i-6]->SetLineWidth(1);
+
+      pp5_FF_genMC[i-6]->Draw();
+      l9->Draw("same");
+    }
+  }
+  c9->cd(1);
+  TLegend * leg9 = new TLegend(0.3,0.2,0.9,0.3);
+  leg9->AddEntry(pp5TeV_genMC[1],"5TeV PYTHIA Signal Gen");
+  leg9->AddEntry(pPb5TeV_genMC_interp[1][0],"PYTHIA Gen Interpolation");
+  leg9->Draw();
+
+  c9->SaveAs(Form("plots//pp5_FF_genMC_UE%d%s.png",UEtype,tag));
+  c9->SaveAs(Form("plots//pp5_FF_genMC_UE%d%s.pdf",UEtype,tag)); 
 }

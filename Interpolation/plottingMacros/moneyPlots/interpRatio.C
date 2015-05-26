@@ -93,7 +93,7 @@ void interpRatio(int UEtype, int turnOffPoints = 0)
     
     if(i>9)
     {
-      hist[i]->SetMaximum(2.4);
+      hist[i]->SetMaximum(2.9);
       hist[i]->SetMinimum(0.1);
     }
 

@@ -2,6 +2,7 @@
 #include "TF1.h"
 #include "TH1D.h"
 #include "TFile.h"
+#include "TRandom.h"
 
 bool isJER_Initialized = false;
 TH1D * JER_pp2;
@@ -26,6 +27,7 @@ double getJERCorrected(const char * mode, double jetpt, double percentage = 0.02
 {
   if(!isJER_Initialized)
   {
+    gRandom->SetSeed(0);
     initializeJER();
     isJER_Initialized = true;
   }
