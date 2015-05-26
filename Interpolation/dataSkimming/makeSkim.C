@@ -167,7 +167,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
           }    
         }
       }
-
+      if(strcmp("pp7",mode)==0 && strcmp("MB",trigger)==0 && !isMC) vz=zVtx[maxPtVtx];
       track->Fill();
       ak3PF->Fill();
       evt->Fill();

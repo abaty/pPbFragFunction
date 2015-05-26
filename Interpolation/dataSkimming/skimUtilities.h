@@ -52,6 +52,8 @@ float mtrkDz1[2*maxTrack];
 float mtrkDzError1[2*maxTrack];
 float mtrkDxy1[2*maxTrack];
 float mtrkDxyError1[2*maxTrack];
+float zVtx[100];
+int maxPtVtx;
 
 const int maxJet = 500;
 int nref;
@@ -118,7 +120,7 @@ void openOutFile(const char * mode, const char * trigger, int isMC, int date,int
   track->Branch("trkDxy1",&trkDxy1,"trkDxy1[nTrk]/F");
   track->Branch("trkCharge",&trkCharge,"trkCharge[nTrk]/I");
   track->Branch("highPurity",&highPurity,"highPurity[nTrk]/O");
-  track->Branch("nVtx",&nVtx,"nVtx/I"); 
+  track->Branch("nVtx",&nVtx,"nVtx/I");
   //track->Branch("trkRmin",&trkRmin,"trkRmin[nTrk]/F");
 
   ak3PF->Branch("nref",&nref,"nref/I");
@@ -202,6 +204,8 @@ int openInFile(const char * name, const char * trigger, const char * mode, int i
   trackIn->SetBranchAddress("trkCharge",&trkCharge);
   trackIn->SetBranchAddress("highPurity",&highPurity);
   trackIn->SetBranchAddress("nVtx",&nVtx);
+  trackIn->SetBranchAddress("zVtx",&zVtx);
+  trackIn->SetBranchAddress("maxPtVtx",&maxPtVtx); 
 
   ak3PFIn->SetBranchAddress("nref",&nref);
   ak3PFIn->SetBranchAddress("rawpt",&rawpt);

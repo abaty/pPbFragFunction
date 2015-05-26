@@ -164,9 +164,12 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       if(v==31 && nVtx>=7) continue;
       if(v==32 && nVtx<5) continue;
       if(v==33 && nVtx>=5 && nVtx<7) continue;
-      totalEvts->Fill(1,weight);       
+      
+      //vz cut
+      if(TMath::Abs(vz)>15) continue;
+      totalEvts->Fill(1,weight);     
+  
       if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
-         
       //finding a MB event to mix with if needed 
       if(typeUE==2)
       {
@@ -185,14 +188,16 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           //finding matching event
           lastMixEvt++;
           if(lastMixEvt>startMixEvt+maxIter) lastMixEvt = startMixEvt;
-          evtMix->GetEntry(lastMixEvt);  
+          //evtMix->GetEntry(lastMixEvt);  
+          getInputEntryMix(lastMixEvt);
           if(v==31 && nVtx>=7) continue;
           if(v==32 && nVtx<5) continue;
           if(v==33 && nVtx>=5 && nVtx<7) continue;
+          //std::cout << vz << " " << vzMix << " " << nVtx << " " << nVtxMix << std::endl;
           if((strcmp(mode,"pPb5")==0 || strcmp(mode,"pp5")==0) && TMath::Floor(vzMix)==TMath::Floor(vz) && TMath::Abs(hiHFplusMix-hiHFplus)<5) break;
           else if(strcmp(mode,"Pbp5")==0 && TMath::Floor(vzMix)==TMath::Floor(vz) && TMath::Abs(hiHFminusMix-hiHFminus)<5) break;
-          else if(strcmp(mode,"pp2")==0 && TMath::Floor(vzMix)==TMath::Floor(vz)) break;
-          else if(strcmp(mode,"pp7")==0 && TMath::Floor(vzMix)==TMath::Floor(vz)) break;
+          else if(strcmp(mode,"pp2")==0 && TMath::Floor(vzMix)==TMath::Floor(vz) && TMath::Abs((hiHFplusMix+hiHFminusMix)-(hiHFplus+hiHFminus))/2.0<5) break;
+          else if(strcmp(mode,"pp7")==0 && TMath::Floor(vzMix)==TMath::Floor(vz) && (nVtx<13 ? nVtx==nVtxMix : (nVtxMix>=13))) break;
         }
       }
   
