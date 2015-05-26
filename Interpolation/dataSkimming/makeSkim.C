@@ -19,7 +19,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     std::cout << "invalid trigger, terminating execution" << std::endl;
     return;
   }
-  if(!(strcmp(trigger,"jet30") == 0 || strcmp(trigger,"jet60") == 0 || strcmp(trigger,"110") == 0 || strcmp(trigger,"MB")) && strcmp(mode,"pp7") == 0)
+  if(!(strcmp(trigger,"jet30") == 0 || strcmp(trigger,"jet60") == 0 || strcmp(trigger,"110") == 0 || strcmp(trigger,"MB") == 0) && strcmp(mode,"pp7") == 0)
   {
     std::cout << "invalid trigger, terminating execution" << std::endl;
     return;
@@ -35,7 +35,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
 
   //some parameters for  files
   //max output file size
-  const int maxOutputFileSize = 50000;
+  const int maxOutputFileSize = 200000;
   //if(isMC) 
 
 //setting up files 
@@ -58,7 +58,8 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     if(strcmp("pp2",mode)==0 && strcmp(trigger,"jet80")==0) fileList.push_back("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root");
     if(strcmp("pp2",mode)==0 && strcmp(trigger,"jet40")==0) fileList.push_back("/mnt/hadoop/cms/store/user/abaty/FF_forests/data/pp_2_76TeV_pp2013/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root");
     if(strcmp("pp2",mode)==0 && strcmp(trigger,"MB")==0) fileList.push_back("/mnt/hadoop/cms/store/user/luck/pp_minbiasSkim_forest_53x_2013-08-15-0155/pp_minbiasSkim_forest_53x_2013-08-15-0155.root");
-    if(strcmp("pp7",mode)==0) fileList = readInputFileList("pp7Files.txt");
+    if(strcmp("pp7",mode)==0 && strcmp(trigger,"MB")==0) fileList.push_back("/mnt/hadoop/cms/store/user/velicanu/Run2011A/MinimumBias2/FOREST/12Oct2013-v1-merged/pp_7TeV_2011A_12Oct2013-v1.root");
+    else if(strcmp("pp7",mode)==0) fileList = readInputFileList("pp7Files.txt");
   }
   int nFiles = fileList.size();
 
@@ -91,7 +92,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
   //change f= at 2 spots to change starting point, as well as skim outFileNum
   for(int f = 0; f<nFiles; f++)
   {   
-    int isGoodFile = openInFile(fileList[f].data(),mode,isMC);
+    int isGoodFile = openInFile(fileList[f].data(),trigger,mode,isMC);
      std::cout << 1 << std::endl;
     if(f==0) openOutFile(mode,trigger,isMC,date,outFileNum);
     std::cout << 0 << std::endl;
@@ -108,7 +109,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
     {
       totalEvents++;
       if(i%10000==0) std::cout <<"file: " << f << " event: " << i << "/" << nEntries << std::endl;
-      if(strcmp(mode,"pp7")!=0 || !isMC) evtIn->GetEntry(i);
+      if(strcmp(mode,"pp7")!=0 || (!isMC && strcmp(trigger,"MB")!=0)) evtIn->GetEntry(i);
       skimIn->GetEntry(i);
 
       //event and run selections (veto the other-going way as well as first 7 runs for misalignment)
@@ -125,7 +126,7 @@ void makeSkim(const char * mode = "pp2", const char * trigger = "jet80",int isMC
  
       //trigger selection
       hltIn->GetEntry(i);
-      if(strcmp(mode,"pp5")!=0)
+      if(strcmp(mode,"pp5")!=0 && !(strcmp(mode,"pp7")==0 && strcmp(trigger,"MB")==0))
       {
         if(strcmp(trigger,"jet80") == 0 && HLT_PAJet80_NoJetID_v1 == 0) continue;
         if(strcmp(trigger,"jet40") == 0 && HLT_PAJet40_NoJetID_v1 == 0) continue;

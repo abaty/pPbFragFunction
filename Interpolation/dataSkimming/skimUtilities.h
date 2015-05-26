@@ -174,7 +174,7 @@ void openOutFile(const char * mode, const char * trigger, int isMC, int date,int
   return;
 }
 
-int openInFile(const char * name, const char * mode, int isMC)
+int openInFile(const char * name, const char * trigger, const char * mode, int isMC)
 {
   //inf = new TFile(name,"read");  
   inf = TFile::Open(name,"read"); 
@@ -210,7 +210,7 @@ int openInFile(const char * name, const char * mode, int isMC)
   ak3PFIn->SetBranchAddress("jtphi",&jtphi);
   ak3PFIn->SetBranchAddress("chargedSum",&chargedSum);
 
-  if(strcmp(mode,"pp7")!=0 || !isMC)
+  if(strcmp(mode,"pp7")!=0 || (!isMC && strcmp(trigger,"MB")!=0))
   {
     evtIn->SetBranchAddress("run",&run);
     evtIn->SetBranchAddress("lumi",&lumi);
@@ -235,7 +235,7 @@ int openInFile(const char * name, const char * mode, int isMC)
     hltIn->SetBranchAddress("HLT_PAJet80_NoJetID_v1_Prescl",&HLT_PAJet80_NoJetID_v1_Prescl);
     hltIn->SetBranchAddress("HLT_PAJet40_NoJetID_v1_Prescl",&HLT_PAJet40_NoJetID_v1_Prescl);
   }
-
+ 
   if(strcmp(mode,"pp7")==0)
   {
     for(int vNum = 0; vNum<100; vNum++)

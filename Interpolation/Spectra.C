@@ -189,9 +189,10 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           if(v==31 && nVtx>=7) continue;
           if(v==32 && nVtx<5) continue;
           if(v==33 && nVtx>=5 && nVtx<7) continue;
-          if(strcmp(mode,"pPb5")==0 && TMath::Floor(vzMix)==TMath::Floor(vz) && TMath::Abs(hiHFplusMix-hiHFplus)<5) break;
+          if((strcmp(mode,"pPb5")==0 || strcmp(mode,"pp5")==0) && TMath::Floor(vzMix)==TMath::Floor(vz) && TMath::Abs(hiHFplusMix-hiHFplus)<5) break;
           else if(strcmp(mode,"Pbp5")==0 && TMath::Floor(vzMix)==TMath::Floor(vz) && TMath::Abs(hiHFminusMix-hiHFminus)<5) break;
           else if(strcmp(mode,"pp2")==0 && TMath::Floor(vzMix)==TMath::Floor(vz)) break;
+          else if(strcmp(mode,"pp7")==0 && TMath::Floor(vzMix)==TMath::Floor(vz)) break;
         }
       }
   
