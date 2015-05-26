@@ -93,6 +93,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     if(strcmp(mode,"pp7")==0 && !(v==0 || v==3 || v==4 || v==8 ||v==11 || v==13 || v==22 || v==23 || v==26 || v==27 || v==28 || v==29 || v==30 || v==31 || v==32 || v==33)) continue;
     if((strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0) && !(v==0 || v==5 || v==6 || v==9 || v==12 || v==13 || v==24 || v==25 || v==26 || v==27 || v==28 || v==29 || v==30)) continue;
     if(typeUE!=0 && v==26) continue;
+    if(typeUE==2 && (v!=0)) continue;
     float xtScaling = 1;
     if(v==29 && strcmp(mode,"pp2")==0) xtScaling = 5.02/2.76;
     if(v==29 && strcmp(mode,"pp7")==0) xtScaling = 5.02/7.00;
