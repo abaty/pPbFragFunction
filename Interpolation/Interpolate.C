@@ -490,6 +490,7 @@ void Interpolate()
     {
       makeFF(v,0);
       if(v!=26) makeFF(v,3);
+      if(v==0)  makeFF(v,2);
     }
   }
   systematics(0);

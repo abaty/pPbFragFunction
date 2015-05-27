@@ -21,6 +21,15 @@ hadd $now/pPb5MC_UE3_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage
 hadd $now/Pbp5MC_UE3_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage/spectraPbp5*_1_UE3_0_15.root
 hadd $now/pp7MC_UE3_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage/spectrapp7*_1_UE3_0_15.root
 hadd $now/pp5MC_UE3_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage/spectrapp5*_1_UE3_0_15.root
+hadd $now/pp2_UE2_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage/spectrapp2*_0_UE2_0_15.root
+hadd $now/pPb5_UE2_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage/spectrapPb5*_0_UE2_0_15.root
+hadd $now/Pbp5_UE2_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage/spectraPbp5*_0_UE2_0_15.root
+hadd $now/pp7_UE2_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage/spectrapp7*_0_UE2_0_15.root
+hadd $now/pp2MC_UE2_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage/spectrapp2*_1_UE2_0_15.root
+hadd $now/pPb5MC_UE2_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage/spectrapPb5*_1_UE2_0_15.root
+hadd $now/Pbp5MC_UE2_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage/spectraPbp5*_1_UE2_0_15.root
+hadd $now/pp7MC_UE2_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage/spectrapp7*_1_UE2_0_15.root
+hadd $now/pp5MC_UE2_0_15.root /mnt/hadoop/cms/store/user/abaty/temporaryStorage/spectrapp5*_1_UE2_0_15.root
 echo 'removing files in 30 seconds'
 sleep 15
 echo 'removing files in 15 seconds'
