@@ -189,16 +189,20 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           //finding matching event
           lastMixEvt++;
           if(lastMixEvt>startMixEvt+maxIter) lastMixEvt = startMixEvt;
-          //evtMix->GetEntry(lastMixEvt);  
-          getInputEntryMix(lastMixEvt);
-          if(v==31 && nVtx>=7) continue;
-          if(v==32 && nVtx<5) continue;
-          if(v==33 && nVtx>=5 && nVtx<7) continue;
+          evtMix->GetEntry(lastMixEvt);  
           //std::cout << vz << " " << vzMix << " " << nVtx << " " << nVtxMix << std::endl;
           if((strcmp(mode,"pPb5")==0 || strcmp(mode,"pp5")==0) && TMath::Floor(vzMix)==TMath::Floor(vz) && TMath::Abs(hiHFplusMix-hiHFplus)<5) break;
           else if(strcmp(mode,"Pbp5")==0 && TMath::Floor(vzMix)==TMath::Floor(vz) && TMath::Abs(hiHFminusMix-hiHFminus)<5) break;
           else if(strcmp(mode,"pp2")==0 && TMath::Floor(vzMix)==TMath::Floor(vz) && TMath::Abs((hiHFplusMix+hiHFminusMix)-(hiHFplus+hiHFminus))/2.0<5) break;
-          else if(strcmp(mode,"pp7")==0 && TMath::Floor(vzMix)==TMath::Floor(vz) && (nVtx<13 ? nVtx==nVtxMix : (nVtxMix>=13))) break;
+          else if(strcmp(mode,"pp7")==0)
+          {  
+            trackMix->GetEntry(lastMixEvt);
+            //only used if needing to evaluate PU systematics 
+            //if(v==31 && nVtx>=7) continue;
+            //if(v==32 && nVtx<5) continue;
+            //if(v==33 && nVtx>=5 && nVtx<7) continue;
+            if(TMath::Floor(vzMix)==TMath::Floor(vz) && (nVtx<13 ? nVtx==nVtxMix : (nVtxMix>=13))) break;
+          }
         }
       }
   
