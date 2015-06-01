@@ -4,7 +4,7 @@
 #include <cmath>
 #include <iostream>
 
-double getJEC_L2L3res(const char * mode, double jetPt)
+double getJEC_L2L3res(double jetPt)
 {
   double correction = 1;
   //2014 Winter L2L3 Residual Correction

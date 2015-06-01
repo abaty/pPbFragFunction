@@ -59,7 +59,7 @@ double getJEC_SystError(const char * mode, double jetPt, double eta, double resC
       {
         for(int j = 3; j<117; j=j+3)
         {
-          if(jetPt>syst5TeV[i][j] && jetPt<=syst5TeV[i][j+3]) return jetPt*TMath::Power(0.004*0.004+syst5TeV[i][j+1]*syst5TeV[i][j+1]+TMath::Power(resCorrTemp,2),0.5); 
+          if(jetPt>syst5TeV[i][j] && jetPt<=syst5TeV[i][j+3]) return jetPt*TMath::Power(0.004*0.004+syst5TeV[i][j+1]*syst5TeV[i][j+1],0.5); 
         }
       }
     }
@@ -73,7 +73,7 @@ double getJEC_SystError(const char * mode, double jetPt, double eta, double resC
       {
         for(int j = 3; j<132; j=j+3)
         {
-          if(jetPt>syst7TeV[i][j] && jetPt<=syst7TeV[i][j+3]) return jetPt*TMath::Power(0.004*0.004+syst7TeV[i][j+1]*syst7TeV[i][j+1]+TMath::Power(resCorrTemp,2),0.5); 
+          if(jetPt>syst7TeV[i][j] && jetPt<=syst7TeV[i][j+3]) return jetPt*TMath::Power(0.004*0.004+syst7TeV[i][j+1]*syst7TeV[i][j+1],0.5); 
         }
       }
     }
@@ -103,7 +103,7 @@ double getJEC_SystError(const char * mode, double jetPt, double eta, double resC
         }
       }
     }
-    return jetPt*TMath::Power(TMath::Abs(error7 - error5)+TMath::Power(resCorrTemp,2),0.5);
+    return jetPt*TMath::Power(TMath::Abs(error7 - error5),0.5);
   }
   return jetPt;
 }
