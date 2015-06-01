@@ -399,6 +399,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
   }
   else if(strcmp(mode,"FFratio")==0) 
   {
+    track = 0.05515432893; //3.9% times sqrt(2)
     pp2JESUP = getRatio(mode,20,UEtype);
     pp2JESDOWN = getRatio(mode,21,UEtype);
     pp2JER = getRatio(mode,7,UEtype);

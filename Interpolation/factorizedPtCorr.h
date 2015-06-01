@@ -129,6 +129,7 @@ void InitCorrFiles(sampleType sType = kHIDATA)
     FakeVsCaloFile_p[28] = new TFile("fake_pt800_30000_cent0_100.root", "READ");
   }
   else if(sType == kPPDATA || sType == kPPMC){
+    /*
     CaloFile_p[0] = new TFile("eff_pt0_1_ak3Calo_dogenjet0.root", "READ");
     CaloFile_p[1] = new TFile("eff_pt1_3_ak3Calo_dogenjet0.root", "READ");
     CaloFile_p[2] = new TFile("eff_pt3_8_ak3Calo_dogenjet0.root", "READ");
@@ -137,7 +138,17 @@ void InitCorrFiles(sampleType sType = kHIDATA)
     FakeCaloFile_p[0] = new TFile("fake_pt0_1_ak3Calo_dogenjet0.root", "READ");
     FakeCaloFile_p[1] = new TFile("fake_pt1_3_ak3Calo_dogenjet0.root", "READ");
     FakeCaloFile_p[2] = new TFile("fake_pt3_8_ak3Calo_dogenjet0.root", "READ");
-    FakeCaloFile_p[3] = new TFile("fake_pt8_300_ak3Calo_dogenjet0.root", "READ");
+    FakeCaloFile_p[3] = new TFile("fake_pt8_300_ak3Calo_dogenjet0.root", "READ");*/
+
+    CaloFile_p[0] = new TFile("eff_pt0_1_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+    CaloFile_p[1] = new TFile("eff_pt1_3_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+    CaloFile_p[2] = new TFile("eff_pt3_8_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+    CaloFile_p[3] = new TFile("eff_pt8_300_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+
+    FakeCaloFile_p[0] = new TFile("fake_pt0_1_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+    FakeCaloFile_p[1] = new TFile("fake_pt1_3_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+    FakeCaloFile_p[2] = new TFile("fake_pt3_8_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+    FakeCaloFile_p[3] = new TFile("fake_pt8_300_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
 
     SecondCaloFile_p = new TFile("secondary_pp.root", "READ");
     MultCaloFile_p   = new TFile("multiplereco_pp.root", "READ");
@@ -166,11 +177,11 @@ void InitCorrHists(sampleType sType = kHIDATA)
     for(Int_t hIter = 0; hIter < nHistPP; hIter++){
       CalophiEta_p[hIter] = (TProfile2D*)CaloFile_p[hIter]->Get("p_eff_acceptance");
       Calopt_p[hIter] = (TProfile*)CaloFile_p[hIter]->Get("p_eff_pt");
-      CalodelR_p[hIter] = (TProfile*)CaloFile_p[hIter]->Get("p_eff_rmin");
+      CalodelR_p[hIter] = (TProfile*)CaloFile_p[hIter]->Get("p_eff_jtpt");
 
       FakeCalophiEta_p[hIter] = (TProfile2D*)FakeCaloFile_p[hIter]->Get("p_fake_acceptance");
       FakeCalopt_p[hIter] = (TProfile*)FakeCaloFile_p[hIter]->Get("p_fake_pt");
-      FakeCalodelR_p[hIter] = (TProfile*)FakeCaloFile_p[hIter]->Get("p_fake_rmin");
+      FakeCalodelR_p[hIter] = (TProfile*)FakeCaloFile_p[hIter]->Get("p_fake_jtpt");
     }
 
     SecondCaloptEta_p = (TH2D*)SecondCaloFile_p->Get("hpt_eta");
@@ -252,7 +263,6 @@ Float_t getEffCorr(Int_t corrBin, Int_t hiBin, Float_t pt, Float_t phi, Float_t 
     effCorr = effCorr*(Calopt_p[corrBin]->GetBinContent(Calopt_p[corrBin]->FindBin(pt)));
     effCorr = effCorr*(CalodelR_p[corrBin]->GetBinContent(CalodelR_p[corrBin]->FindBin(rmin)));
   }
-
   return effCorr;
 }
 
