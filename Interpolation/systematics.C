@@ -380,6 +380,7 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
 
   //estimating 5% tracking errors
   double track = 0.039;
+  double pdf_uncert = 0.05;
  
   if(strcmp(mode,"interp")==0) 
   {
@@ -505,8 +506,8 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
         JESTotDOWN[i]->SetBinContent(j,TMath::Power(TMath::Power(pp2JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(pp7JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(pPb5JESTotDOWN[i]->GetBinContent(j),2),0.5));    
         JERTot[i]->SetBinContent(j,TMath::Power(TMath::Power(pp2JER[i]->GetBinContent(j)-1,2)+TMath::Power(pp7JER[i]->GetBinContent(j)-1,2)+TMath::Power(pPb5JER[i]->GetBinContent(j)-1,2),0.5)); 
 
-        TotUP[i]->SetBinContent(j,TMath::Power(JESTotUP[i]->GetBinContent(j),2)+TMath::Power(JERTot[i]->GetBinContent(j),2)+track*track);     
-        TotDOWN[i]->SetBinContent(j,TMath::Power(JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(JERTot[i]->GetBinContent(j),2)+track*track);
+        TotUP[i]->SetBinContent(j,TMath::Power(JESTotUP[i]->GetBinContent(j),2)+TMath::Power(JERTot[i]->GetBinContent(j),2)+track*track+pdf_uncert*pdf_uncert);     
+        TotDOWN[i]->SetBinContent(j,TMath::Power(JESTotDOWN[i]->GetBinContent(j),2)+TMath::Power(JERTot[i]->GetBinContent(j),2)+track*track+pdf_uncert*pdf_uncert);
         TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(pPbPbpDiff[i]->GetBinContent(j),2));
         TotDOWN[i]->SetBinContent(j,TotDOWN[i]->GetBinContent(j)+TMath::Power(pPbPbpDiff[i]->GetBinContent(j),2));
         if(MCDiff[i]->GetBinContent(j)<0) TotUP[i]->SetBinContent(j,TotUP[i]->GetBinContent(j)+TMath::Power(MCDiff[i]->GetBinContent(j),2));
