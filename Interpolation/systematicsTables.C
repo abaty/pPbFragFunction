@@ -173,6 +173,7 @@ void getTable(int UE = 0)
       << "\\hline \n";
       if(i!=4) cout << "Tracking & 3.9\\%& 3.9\\%& 3.9\\%& 3.9\\%& 3.9\\%& 3.9\\% \\\\ \n";
       else cout << "Tracking & 5.5\\%& 5.5\\%& 5.5\\%& 5.5\\%& 5.5\\%& 5.5\\% \\\\ \n";
+      if(i!=3 || i!=4)cout << "PDF + Gen Interpolation & 0.5\\%& 0.5\\%& 0.5\\%& 0.5\\%& 0.5\\%& 0.5\\% \\\\ \n";
       for(int k = 0; k<9; k++)
       {
         if(i<2 && k==1) continue;
