@@ -193,7 +193,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           //std::cout << vz << " " << vzMix << " " << nVtx << " " << nVtxMix << std::endl;
           if((strcmp(mode,"pPb5")==0 || strcmp(mode,"pp5")==0) && TMath::Floor(vzMix)==TMath::Floor(vz)) break;
           else if(strcmp(mode,"Pbp5")==0 && TMath::Floor(vzMix)==TMath::Floor(vz)) break;
-          else if(strcmp(mode,"pp2")==0 && TMath::Floor(vzMix)==TMath::Floor(vz)) break;
+          else if(strcmp(mode,"pp2")==0 && TMath::Abs((hiHFplusMix+hiHFminusMix)-(hiHFplus+hiHFminus))<1) break;
           else if(strcmp(mode,"pp7")==0)
           {  
             trackMix->GetEntry(lastMixEvt);
@@ -201,7 +201,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
             //if(v==31 && nVtx>=7) continue;
             //if(v==32 && nVtx<5) continue;
             //if(v==33 && nVtx>=5 && nVtx<7) continue;
-            if(TMath::Floor(vzMix)==TMath::Floor(vz) && (nVtx<13 ? nVtx==nVtxMix : (nVtxMix>=13))) break;
+            if((nVtx<13 ? nVtx==nVtxMix : (nVtxMix>=13))) break;
           }
         }
       }
