@@ -156,7 +156,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     int lastMixEvt = 1;
     //mixing variable for pPb systems
     float mixHFProxy[100000] = {0};
-    if(strcmp(mode,"pPb5") == 0 || strcmp(mode,"pp5") == 0 || strcmp(mode,"Pbp5") == 0)
+    if(typeUE==2 && (strcmp(mode,"pPb5") == 0 || strcmp(mode,"pp5") == 0 || strcmp(mode,"Pbp5") == 0))
     {
       for(int i = 0; i<trackMix->GetEntries();i++)
       {
