@@ -154,6 +154,28 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     //variables for mixing
     int startMixEvt = 0;
     int lastMixEvt = 1;
+    //mixing variable for pPb systems
+    float mixHFProxy[100000] = {0};
+    if(strcmp(mode,"pPb5") == 0 || strcmp(mode,"pp5") == 0 || strcmp(mode,"Pbp5") == 0)
+    {
+      for(int i = 0; i<trackMix->GetEntries();i++)
+      {
+        if(i%10000==0) std::cout << i << "/" << trackMix->GetEntries() << " Calculating sideband multiplicities for MB matching..." std::endl;
+        trackMix->GetEntry(i);
+        for(int t = 0; t<nTrkMix; t++)
+        {
+          if(strcmp(mode,"pPb5") == 0 || strcmp(mode,"pp5") == 0)
+          {
+            if(trkEtaMix[t]>2 && trkEtaMix[t]<2.4 && trkPtMix[t]>0.5 && trkPtMix[t]<3 && highPurityMix[t]) mixHFProxy[i]++;
+          }
+          else if(strcmp(mode,"Pbp5") == 0)
+          {
+            if(trkEtaMix[t]<-2 && trkEtaMix[t]>-2.4 && trkPtMix[t]>0.5 && trkPtMix[t]<3 && highPurityMix[t]) mixHFProxy[i]++;
+          }
+        }
+      }
+    }
+
     //if(strcmp(mode, "Pbp5")==0) startMixEvt = 6743253;
     if(typeUE==2) lastMixEvt = trackMix->GetEntries();
   
@@ -170,10 +192,28 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       if(TMath::Abs(vz)>15) continue;
       totalEvts->Fill(1,weight);     
   
-      if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
+      f(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
       //finding a MB event to mix with if needed 
       if(typeUE==2)
       {
+        //calculating mutliplicity mixing variable for pPb
+        float HFProxy = 0;
+        if(strcmp(mode,"pPb5") == 0 || strcmp(mode,"pp5") == 0 || strcmp(mode,"Pbp5") == 0)
+        {
+          track->GetEntry(i);
+          for(int t = 0; t<nTrk; t++)
+          {
+            if(strcmp(mode,"pPb5") == 0 || strcmp(mode,"pp5") == 0)
+            {
+              if(trkEta[t]>2 && trkEta[t]<2.4 && trkPt[t]>0.5 && trkPt[t]<3 && highPurity[t]) HFProxy++;
+            }
+            else if(strcmp(mode,"Pbp5") == 0)
+            {
+              if(trkEta[t]<-2 && trkEta[t]>-2.4 && trkPt[t]>0.5 && trkPt[t]<3 && highPurity[t]) HFProxy++;
+            }
+          }
+        }
+        
         int loopIter=0;
         int maxIter = trackMix->GetEntries(); 
         while(true)
@@ -190,9 +230,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
           lastMixEvt++;
           if(lastMixEvt>startMixEvt+maxIter) lastMixEvt = startMixEvt;
           evtMix->GetEntry(lastMixEvt);  
-          //std::cout << vz << " " << vzMix << " " << nVtx << " " << nVtxMix << std::endl;
-          if((strcmp(mode,"pPb5")==0 || strcmp(mode,"pp5")==0) && TMath::Floor(vzMix)==TMath::Floor(vz)) break;
-          else if(strcmp(mode,"Pbp5")==0 && TMath::Floor(vzMix)==TMath::Floor(vz)) break;
+          if((strcmp(mode,"pPb5")==0 || strcmp(mode,"pp5")==0) && (HFProxy<18 ? HFProxy==mixHFProxy[lastMixEvt] : mixHFProxy[lastMixEvt]>=18)) break;
+          else if(strcmp(mode,"Pbp5")==0 && (HFProxy<18 ? HFProxy==mixHFProxy[lastMixEvt] : mixHFProxy[lastMixEvt]>=18)) break;
           else if(strcmp(mode,"pp2")==0 && TMath::Abs((hiHFplusMix+hiHFminusMix)-(hiHFplus+hiHFminus))<1) break;
           else if(strcmp(mode,"pp7")==0)
           {  
