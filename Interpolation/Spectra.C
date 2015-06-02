@@ -160,7 +160,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     {
       for(int i = 0; i<trackMix->GetEntries();i++)
       {
-        if(i%10000==0) std::cout << i << "/" << trackMix->GetEntries() << " Calculating sideband multiplicities for MB matching..." std::endl;
+        if(i%10000==0) std::cout << i << "/" << trackMix->GetEntries() << " Calculating sideband multiplicities for MB matching..." << std::endl;
         trackMix->GetEntry(i);
         for(int t = 0; t<nTrkMix; t++)
         {
@@ -192,7 +192,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       if(TMath::Abs(vz)>15) continue;
       totalEvts->Fill(1,weight);     
   
-      f(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
+      if(i%10000 == 0) std::cout << i << "/" << nEntry << std::endl;
       //finding a MB event to mix with if needed 
       if(typeUE==2)
       {
