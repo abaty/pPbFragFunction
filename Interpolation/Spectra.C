@@ -50,7 +50,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   TDatime * dateTime = new TDatime();
   TRandom * rand = new TRandom(dateTime->GetTime());
   const sampleType sType = kPPDATA;
-  InitCorrFiles(sType);
+  InitCorrFiles(sType,mode);
   InitCorrHists(sType);
 
   //tracking variables calc
@@ -71,6 +71,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
   TH1D * totalRecoTRecoJ_Tracking_eta = new TH1D("totalRecoTRecoJ_Tracking_eta","",10,-2.4,2.4);
   TH1D * totalGenTRecoJ_Tracking_largeEta = new TH1D("totalGenTRecoJ_Tracking_largeEta","",ny,trkx);
   TH1D * totalRecoTRecoJ_Tracking_largeEta = new TH1D("totalRecoTRecoJ_Tracking_largeEta","",ny,trkx);
+  TH1D * totalGenTRecoJ_Tracking_lowEta = new TH1D("totalGenTRecoJ_Tracking_lowEta","",ny,trkx);
+  TH1D * totalRecoTRecoJ_Tracking_lowEta = new TH1D("totalRecoTRecoJ_Tracking_lowEta","",ny,trkx);
   TH1D * totalGenTRecoJ_Tracking_largePt = new TH1D("totalGenTRecoJ_Tracking_largePt","",10,-2.4,2.4);
   TH1D * totalRecoTRecoJ_Tracking_largePt = new TH1D("totalRecoTRecoJ_Tracking_largePt","",10,-2.4,2.4);
 
@@ -262,11 +264,11 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
         jtpt[j] = getCorrectedJetPt(mode,isMC,jtpt[j],jteta[j]);
         //double resCorrTemp = getJEC_L2L3res(jtpt[j])/jtpt[j]-1;
         if(!isMC)  jtpt[j] = getJEC_L2L3res(jtpt[j]);
-        if(v==1 || v==3 || v==5)jtpt[j] = jtpt[j]+getJEC_SystError(mode,jtpt[j],jteta[j],false);
-        if(v==20 || v==22 || v==24)jtpt[j] = jtpt[j]+getJEC_SystError(mode,jtpt[j],jteta[j],true);
+        if(v==1 || v==3 || v==5)jtpt[j] = jtpt[j]+getJEC_SystError(mode,rawpt[j],jtpt[j],jteta[j],false);
+        if(v==20 || v==22 || v==24)jtpt[j] = jtpt[j]+getJEC_SystError(mode,rawpt[j],jtpt[j],jteta[j],true);
         //if(v==14 || v==16 || v==18)jtpt[j] = jtpt[j]*1.01;
-        if(v==2 || v==4 || v==6)jtpt[j] = jtpt[j]-getJEC_SystError(mode,jtpt[j],jteta[j],false);
-        if(v==21 || v==23 || v==25)jtpt[j] = jtpt[j]-getJEC_SystError(mode,jtpt[j],jteta[j],true);
+        if(v==2 || v==4 || v==6)jtpt[j] = jtpt[j]-getJEC_SystError(mode,rawpt[j],jtpt[j],jteta[j],false);
+        if(v==21 || v==23 || v==25)jtpt[j] = jtpt[j]-getJEC_SystError(mode,rawpt[j],jtpt[j],jteta[j],true);
         //if(v==15 || v==17 || v==19)jtpt[j] = jtpt[j]*0.99;
         if(v==7 || v==8 || v==9)jtpt[j] = getJERCorrected(mode,jtpt[j],0.05);
         if(v==10 || v==11 || v==12)jtpt[j] = getJERCorrected(mode,jtpt[j],0.02);
@@ -310,6 +312,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
               totalRecoTRecoJ_Tracking->Fill(trkPt[t],weight*trkCorr);
               totalRecoTRecoJ_Tracking_eta->Fill(trkEta[t],weight*trkCorr);
               if(TMath::Abs(trkEta[t])>1.9)totalRecoTRecoJ_Tracking_largeEta->Fill(trkPt[t],weight*trkCorr);
+              if(TMath::Abs(trkEta[t])<1.9)totalRecoTRecoJ_Tracking_lowEta->Fill(trkPt[t],weight*trkCorr);
               if(trkPt[t]>10)totalRecoTRecoJ_Tracking_largePt->Fill(trkEta[t],weight*trkCorr);
               h_track->Fill(xtScaling*jtpt[j],trkPt[t],trkCorr*weight);
               h_track_xi->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],trkPt[t],trkEta[t]+boost,trkPhi[t]),trkCorr*weight);
@@ -433,6 +436,7 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
               totalGenTRecoJ_Tracking->Fill(pPt[t],weight);
               totalGenTRecoJ_Tracking_eta->Fill(pEta[t],weight);
               if(TMath::Abs(pEta[t])>1.9)totalGenTRecoJ_Tracking_largeEta->Fill(pPt[t],weight);
+              if(TMath::Abs(pEta[t])<1.9)totalGenTRecoJ_Tracking_lowEta->Fill(pPt[t],weight);
               if(pPt[t]>10)totalGenTRecoJ_Tracking_largePt->Fill(pEta[t],weight);
               h_track_rJgT->Fill(xtScaling*jtpt[j],pPt[t],weight);
               h_track_xi_rJgT->Fill(xtScaling*jtpt[j],getXi(jtpt[j],jteta[j]+boost,jtphi[j],pPt[t],pEta[t]+boost,pPhi[t]),weight);
@@ -792,6 +796,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
       totalRecoTRecoJ_Tracking_eta->Write(Form("totalRecoTRecoJ_Tracking_eta%s",variationTag[v]));
       totalRecoTRecoJ_Tracking_largeEta->Write(Form("totalRecoTRecoJ_Tracking_largeEta%s",variationTag[v]));
       totalGenTRecoJ_Tracking_largeEta->Write(Form("totalGenTRecoJ_Tracking_largeEta%s",variationTag[v]));
+      totalRecoTRecoJ_Tracking_lowEta->Write(Form("totalRecoTRecoJ_Tracking_lowEta%s",variationTag[v]));
+      totalGenTRecoJ_Tracking_lowEta->Write(Form("totalGenTRecoJ_Tracking_lowEta%s",variationTag[v]));
       totalRecoTRecoJ_Tracking_largePt->Write(Form("totalRecoTRecoJ_Tracking_largePt%s",variationTag[v]));
       totalGenTRecoJ_Tracking_largePt->Write(Form("totalGenTRecoJ_Tracking_largePt%s",variationTag[v]));
     }
@@ -803,6 +809,8 @@ void Spectra(const char* inputJets, const char* inputMB, const char* mode = "pp2
     totalGenTRecoJ_Tracking_eta->Reset();
     totalRecoTRecoJ_Tracking_largeEta->Reset();
     totalGenTRecoJ_Tracking_largeEta->Reset();
+    totalRecoTRecoJ_Tracking_lowEta->Reset();
+    totalGenTRecoJ_Tracking_lowEta->Reset();
     totalRecoTRecoJ_Tracking_largePt->Reset();
     totalGenTRecoJ_Tracking_largePt->Reset();
   

@@ -51,7 +51,7 @@ TH2D* SecondCaloptEta_p;
 TFile* MultCaloFile_p;
 TH2D* MultCaloptEta_p;
 
-void InitCorrFiles(sampleType sType = kHIDATA)
+void InitCorrFiles(sampleType sType = kHIDATA, const char * mode = "pp2")
 {
   //File names w/ various binnings, ordered by pt and then centrality. Each Jet Algorithm gets a file array
 
@@ -139,16 +139,30 @@ void InitCorrFiles(sampleType sType = kHIDATA)
     FakeCaloFile_p[1] = new TFile("fake_pt1_3_ak3Calo_dogenjet0.root", "READ");
     FakeCaloFile_p[2] = new TFile("fake_pt3_8_ak3Calo_dogenjet0.root", "READ");
     FakeCaloFile_p[3] = new TFile("fake_pt8_300_ak3Calo_dogenjet0.root", "READ");*/
+    if(strcmp(mode,"pPb5")==0 || strcmp(mode,"Pbp5")==0 || strcmp(mode,"pp5")==0 || strcmp(mode,"pp7")==0)
+    {
+      CaloFile_p[0] = new TFile("eff_pt0_1_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1_pPb.root", "READ");
+      CaloFile_p[1] = new TFile("eff_pt1_3_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1_pPb.root", "READ");
+      CaloFile_p[2] = new TFile("eff_pt3_8_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1_pPb.root", "READ");
+      CaloFile_p[3] = new TFile("eff_pt8_300_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1_pPb.root", "READ");
 
-    CaloFile_p[0] = new TFile("eff_pt0_1_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
-    CaloFile_p[1] = new TFile("eff_pt1_3_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
-    CaloFile_p[2] = new TFile("eff_pt3_8_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
-    CaloFile_p[3] = new TFile("eff_pt8_300_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+      FakeCaloFile_p[0] = new TFile("fake_pt0_1_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1_pPb.root", "READ");
+      FakeCaloFile_p[1] = new TFile("fake_pt1_3_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1_pPb.root", "READ");
+      FakeCaloFile_p[2] = new TFile("fake_pt3_8_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1_pPb.root", "READ");
+      FakeCaloFile_p[3] = new TFile("fake_pt8_300_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1_pPb.root", "READ");
+    }
+    else
+    {
+      CaloFile_p[0] = new TFile("eff_pt0_1_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+      CaloFile_p[1] = new TFile("eff_pt1_3_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+      CaloFile_p[2] = new TFile("eff_pt3_8_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+      CaloFile_p[3] = new TFile("eff_pt8_300_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
 
-    FakeCaloFile_p[0] = new TFile("fake_pt0_1_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
-    FakeCaloFile_p[1] = new TFile("fake_pt1_3_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
-    FakeCaloFile_p[2] = new TFile("fake_pt3_8_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
-    FakeCaloFile_p[3] = new TFile("fake_pt8_300_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+      FakeCaloFile_p[0] = new TFile("fake_pt0_1_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+      FakeCaloFile_p[1] = new TFile("fake_pt1_3_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+      FakeCaloFile_p[2] = new TFile("fake_pt3_8_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+      FakeCaloFile_p[3] = new TFile("fake_pt8_300_accept4pt4jtpt4_ak3PF_dogenjet0_doJtPt1.root", "READ");
+    }
 
     SecondCaloFile_p = new TFile("secondary_pp.root", "READ");
     MultCaloFile_p   = new TFile("multiplereco_pp.root", "READ");
