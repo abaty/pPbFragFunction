@@ -23,22 +23,22 @@ void trackingClosure()
   TFile * inFilepPb5 = TFile::Open(Form("../%s/pPb5MC_UE3_0_15.root",filePath));
   TFile * inFilePbp5 = TFile::Open(Form("../%s/Pbp5MC_UE3_0_15.root",filePath));
 
-  TH1D * pp2Reco[4];
-  TH1D * pp7Reco[4];
-  TH1D * pp7Reco_lowPU[4];
-  TH1D * pp7Reco_highPU[4];
-  TH1D * pPb5Reco[4];
-  TH1D * Pbp5Reco[4];
-  TH1D * pp2Gen[4];
-  TH1D * pp7Gen[4];
-  TH1D * pp7Gen_lowPU[4];
-  TH1D * pp7Gen_highPU[4];
-  TH1D * pPb5Gen[4];
-  TH1D * Pbp5Gen[4];
+  TH1D * pp2Reco[5];
+  TH1D * pp7Reco[5];
+  TH1D * pp7Reco_lowPU[5];
+  TH1D * pp7Reco_highPU[5];
+  TH1D * pPb5Reco[5];
+  TH1D * Pbp5Reco[5];
+  TH1D * pp2Gen[5];
+  TH1D * pp7Gen[5];
+  TH1D * pp7Gen_lowPU[5];
+  TH1D * pp7Gen_highPU[5];
+  TH1D * pPb5Gen[5];
+  TH1D * Pbp5Gen[5];
 
-  const char * suffix[4] = {"","_largeEta","_eta","_largePt"}; 
+  const char * suffix[5] = {"","_largeEta","_eta","_largePt","_lowEta"}; 
 
-  for(int i = 0; i<4; i++)
+  for(int i = 0; i<5; i++)
   {
     //if(i==2) continue;
     pp2Reco[i] = (TH1D*) inFilepp2->Get(Form("totalRecoTRecoJ_Tracking%s",suffix[i]));
@@ -102,7 +102,7 @@ void trackingClosure()
     pp2Reco[i]->GetYaxis()->SetTitleSize(0.06);
     pPb5Reco[i]->GetYaxis()->SetTitle("N_{trk}^{Corrected Reco}/N_{trk}^{Gen}");
     pPb5Reco[i]->GetYaxis()->SetTitleSize(0.06);
-    if(i<2)
+    if(i<2 || i==4)
     {
       pp2Reco[i]->GetXaxis()->SetTitle("p_{T}^{trk}");
       pPb5Reco[i]->GetXaxis()->SetTitle("p_{T}^{trk}");
@@ -120,11 +120,11 @@ void trackingClosure()
     }
   }
  
-  TCanvas * c1[6];
-  for(int i =0; i<4; i++)
+  TCanvas * c1[7];
+  for(int i =0; i<5; i++)
   {
     //if(i==2) continue;
-    if(i!=1)
+    if(i!=1 && i!=4)
     {
       c1[i] = new TCanvas(Form("c%d",i),Form("c%d",i),900,400); 
       c1[i]->Divide(3,1,0,0);
@@ -204,7 +204,7 @@ void trackingClosure()
     }
     if(i==1)
     {
-      c1[i] = new TCanvas(Form("c%d",i),Form("c%d",i),400,400); 
+      c1[i] = new TCanvas(Form("c%d",i),Form("c%d",i),400,400);
       c1[i]->cd(1);
       if(i<2) c1[i]->cd(1)->SetLogx();
       pPb5Reco[i]->DrawCopy();
@@ -220,9 +220,27 @@ void trackingClosure()
       lat->DrawLatex(0.6,1.23,"5.02 TeV PYTHIA+HIJING");
       lat->DrawLatex(0.6,1.18,"Tracks within R<0.3 of reco jet.");
     }
+    if(i==4)
+    {
+      c1[6] = new TCanvas(Form("c%d",i+2),Form("c%d",i+2),400,400);
+      c1[6]->cd(1);
+      c1[6]->cd(1)->SetLogx();
+      pPb5Reco[i]->DrawCopy();
+      pPb5Reco[0]->SetMarkerColor(kRed+1);
+      pPb5Reco[0]->SetLineColor(kRed+1);
+      pPb5Reco[0]->DrawCopy("same");
+
+      TLegend * leg3 = new TLegend(0.15,0.15,0.5,0.4);
+      leg3->AddEntry(pPb5Reco[i],"|#eta|<1.9","p");
+      leg3->AddEntry(pPb5Reco[0],"Inclusive","p");
+      leg3->Draw("same");
+
+      lat->DrawLatex(0.6,1.23,"5.02 TeV PYTHIA+HIJING");
+      lat->DrawLatex(0.6,1.18,"Tracks within R<0.3 of reco jet.");
+    }
   }
   
-  for(int i =0 ; i<6; i++)
+  for(int i =0 ; i<7; i++)
   {
     c1[i]->SaveAs(Form("../plots/TrackingClosureCheck%d.pdf",i));
     c1[i]->SaveAs(Form("../plots/TrackingClosureCheck%d.png",i));
