@@ -18,12 +18,12 @@ const int FF_Bins = 5;
 double FF_Bound[FF_Bins+1] = {60,80,100,120,140,200};*/
 
 
-TH1D** getRatio(const char * mode = "pp2", int v=0, int UEtype=3)
+TH1D** getRatio(const char * mode = "pp2", int v=0, int UEtype1=3, int UEtype2=3)
 {
   TH1D** ratioArray = new TH1D*[FF_Bins*2];
 
-  TFile * inf1 = TFile::Open(Form("FragmentationFunctions%sUE%d.root",variationTag[v],UEtype),"read");
-  TFile * inf2 = TFile::Open(Form("FragmentationFunctionsUE%d.root",UEtype),"read");
+  TFile * inf1 = TFile::Open(Form("FragmentationFunctions%sUE%d.root",variationTag[v],UEtype1),"read");
+  TFile * inf2 = TFile::Open(Form("FragmentationFunctionsUE%d.root",UEtype2),"read");
   for(int i =0; i<FF_Bins*2; i++)
   {
     std::string  isXi = "";
@@ -239,31 +239,34 @@ void FFSystematics(const char * mode, int UEtype)
 
   if(strcmp(mode,"pPb5")==0)
   {
-    JESUP = getRatio(mode,5,UEtype);
-    JESDOWN = getRatio(mode,6,UEtype);
-    JER = getRatio(mode,9,UEtype);
+    JESUP = getRatio(mode,5,UEtype,UEtype);
+    JESDOWN = getRatio(mode,6,UEtype,UEtype);
+    JER = getRatio(mode,9,UEtype,UEtype);
     pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
     MCDiff = getMCDiff(mode,30,UEtype);
     ChargeCutDiff = getChargeCutDiff(mode,UEtype);
-    if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
+//    if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
+    if(UEtype==0) UEDiff = getRatio(mode,0,2,UEtype);
   }
   if(strcmp(mode,"pp2")==0)
   {
-    JESUP = getRatio(mode,1,UEtype);
-    JESDOWN = getRatio(mode,2,UEtype);
-    JER = getRatio(mode,7,UEtype);
+    JESUP = getRatio(mode,1,UEtype,UEtype);
+    JESDOWN = getRatio(mode,2,UEtype,UEtype);
+    JER = getRatio(mode,7,UEtype,UEtype);
     MCDiff = getMCDiff(mode,30,UEtype); 
     ChargeCutDiff = getChargeCutDiff(mode,UEtype);
-    if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
+    //if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
+    if(UEtype==0) UEDiff = getRatio(mode,0,2,UEtype);
   }
   if(strcmp(mode,"pp7")==0)
   {
-    JESUP = getRatio(mode,3,UEtype);
-    JESDOWN = getRatio(mode,4,UEtype);
-    JER = getRatio(mode,8,UEtype);
+    JESUP = getRatio(mode,3,UEtype,UEtype);
+    JESDOWN = getRatio(mode,4,UEtype,UEtype);
+    JER = getRatio(mode,8,UEtype,UEtype);
     MCDiff = getMCDiff(mode,30,UEtype);
     ChargeCutDiff = getChargeCutDiff(mode,UEtype);
-    if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
+    //if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
+    if(UEtype==0) UEDiff = getRatio(mode,0,2,UEtype); 
   }
 
   TFile * output;
@@ -380,40 +383,42 @@ void Interpolation_and_Ratio_Systematics(const char * mode = "interp", int UEtyp
 
   //estimating 5% tracking errors
   double track = 0.039;
-  double pdf_uncert = 0.05;
+  double pdf_uncert = 0.005;
  
   if(strcmp(mode,"interp")==0) 
   {
-    pp2JESUP = getRatio(mode,1,UEtype);
-    pp2JESDOWN = getRatio(mode,2,UEtype);
-    pp2JER = getRatio(mode,7,UEtype);
-    pp7JESUP = getRatio(mode,3,UEtype);
-    pp7JESDOWN = getRatio(mode,4,UEtype);
-    pp7JER = getRatio(mode,8,UEtype);
-    pPb5JESUP = getRatio(mode,5,UEtype);
-    pPb5JESDOWN = getRatio(mode,6,UEtype);
-    pPb5JER = getRatio(mode,9,UEtype);
+    pp2JESUP = getRatio(mode,1,UEtype,UEtype);
+    pp2JESDOWN = getRatio(mode,2,UEtype,UEtype);
+    pp2JER = getRatio(mode,7,UEtype,UEtype);
+    pp7JESUP = getRatio(mode,3,UEtype,UEtype);
+    pp7JESDOWN = getRatio(mode,4,UEtype,UEtype);
+    pp7JER = getRatio(mode,8,UEtype,UEtype);
+    pPb5JESUP = getRatio(mode,5,UEtype,UEtype);
+    pPb5JESDOWN = getRatio(mode,6,UEtype,UEtype);
+    pPb5JER = getRatio(mode,9,UEtype,UEtype);
     pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
     MCDiff = getMCDiff(mode,30,UEtype);
     ChargeCutDiff = getChargeCutDiff(mode,UEtype);
-    if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
+    //if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
+    if(UEtype==0) UEDiff = getRatio(mode,0,2,UEtype);
   }
   else if(strcmp(mode,"FFratio")==0) 
   {
     track = 0.05515432893; //3.9% times sqrt(2)
-    pp2JESUP = getRatio(mode,20,UEtype);
-    pp2JESDOWN = getRatio(mode,21,UEtype);
-    pp2JER = getRatio(mode,7,UEtype);
-    pp7JESUP = getRatio(mode,22,UEtype);
-    pp7JESDOWN = getRatio(mode,23,UEtype);
-    pp7JER = getRatio(mode,8,UEtype);
-    pPb5JESUP = getRatio(mode,24,UEtype);
-    pPb5JESDOWN = getRatio(mode,25,UEtype);
-    pPb5JER = getRatio(mode,9,UEtype); 
+    pp2JESUP = getRatio(mode,20,UEtype,UEtype);
+    pp2JESDOWN = getRatio(mode,21,UEtype,UEtype);
+    pp2JER = getRatio(mode,7,UEtype,UEtype);
+    pp7JESUP = getRatio(mode,22,UEtype,UEtype);
+    pp7JESDOWN = getRatio(mode,23,UEtype,UEtype);
+    pp7JER = getRatio(mode,8,UEtype,UEtype);
+    pPb5JESUP = getRatio(mode,24,UEtype,UEtype);
+    pPb5JESDOWN = getRatio(mode,25,UEtype,UEtype);
+    pPb5JER = getRatio(mode,9,UEtype,UEtype); 
     pPbPbpDiff = getpPbPbpDiff(mode,0,UEtype);
     MCDiff = getMCDiff(mode,30,UEtype);
     ChargeCutDiff = getChargeCutDiff(mode,UEtype);
-    if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
+    //if(UEtype==0) UEDiff = getRatio(mode,26,UEtype);
+    if(UEtype==0) UEDiff = getRatio(mode,0,2,UEtype);
   }
 
   TFile * output = new TFile(Form("SystematicsUE%d.root",UEtype),"update");

@@ -9,8 +9,8 @@
 #include "TLatex.h"
 #include "TAttAxis.h"
 
-const char * files1[9] = {"pp2TeV_NoReweight","pPb5Pbp5TeV_fulldata","pp7TeV_NoReweight","pp5TeV_genMC","pPb5Pbp5TeV_recoMC","pp7TeV_reco_NoReweight","pp2TeV_gen_NoReweight","pPb5Pbp5TeV_genMC","pp7TeV_gen_NoReweight"};
-const char * files2[9] = {"pp2TeV_NoReweight","pPb5Pbp5TeV_fulldata","pp7TeV_NoReweight","pPb5Pbp5TeV_genMC","pPb5Pbp5TeV_recoMC","pp7TeV_reco_NoReweight","pp2TeV_gen_NoReweight","pPb5Pbp5TeV_genMC","pp7TeV_gen_NoReweight"};
+const char * files1[9] = {"pp2TeV_NoReweight","pPb5Pbp5TeV_fulldata","pp7TeV_NoReweight","pp5TeV_genMC","pp5TeV_genMC","pp7TeV_reco_NoReweight","pp2TeV_gen_NoReweight","pPb5Pbp5TeV_genMC","pp7TeV_gen_NoReweight"};
+const char * files2[9] = {"pp2TeV_NoReweight","pPb5Pbp5TeV_fulldata","pp7TeV_NoReweight","pPb5Pbp5TeV_genMC","pPb5Pbp5TeV_genMC","pp7TeV_reco_NoReweight","pp2TeV_gen_NoReweight","pPb5Pbp5TeV_genMC","pp7TeV_gen_NoReweight"};
 
 void getComparison(int mode, int UE)
 {
@@ -28,8 +28,9 @@ void getComparison(int mode, int UE)
   TH1D * PbpFF[5];
   for(int i = 0; i<5; i++)
   {
-    if(mode!=3) pPbFF[i] = (TH1D*)infpPb->Get(Form("%s_%d_%d",files1[mode],bins[i],bins[i+1]));
-    else pPbFF[i] = (TH1D*)infPbp->Get(Form("%s_%d_%d",files1[mode],bins[i],bins[i+1]));
+    if(mode==3) pPbFF[i] = (TH1D*)infPbp->Get(Form("%s_%d_%d",files1[mode],bins[i],bins[i+1]));
+    //else if(mode==4) pPbFF[i] = (TH1D*)infpPb->Get(Form("%s_%d_%d",files1[mode],bins[i],bins[i+1]));
+    else pPbFF[i] = (TH1D*)infpPb->Get(Form("%s_%d_%d",files1[mode],bins[i],bins[i+1]));
     PbpFF[i] = (TH1D*)infPbp->Get(Form("%s_%d_%d",files2[mode],bins[i],bins[i+1]));
     //PbpFF[i] = (TH1D*)infMC->Get(Form("pPb5TeV_data_%d_%d",bins[i],bins[i+1]));
   }  
@@ -91,19 +92,22 @@ void getComparison(int mode, int UE)
   lat->DrawLatex(0.6,0.000002,Form("%d GeV/c < p_{T}^{jet} < %d GeV/c",(int)bins[i],(int)bins[i+1]));
   }
   c2->cd(1);
-  TLegend * leg = new TLegend(0.2,0.1,0.7,0.5);
+  TLegend * leg = new TLegend(0.2,0.1,0.8,0.5);
  // leg->AddEntry((TObject*)0, "140 < p_{t}^{jet} < 200 GeV/c", "");
   if(mode==0) leg->AddEntry((TObject*)0,"2.76 TeV pp","");
   if(mode==1) leg->AddEntry((TObject*)0,"5.02 TeV pPb","");
   if(mode==2) leg->AddEntry((TObject*)0,"7 TeV pp","");
   if(mode==3) leg->AddEntry((TObject*)0,"Gen MC","");
-  if(mode==4) leg->AddEntry((TObject*)0,"5.02 TeV reco PYTHIA+HIJING","");
+  if(mode==4) leg->AddEntry((TObject*)0,"Gen MC","");
   if(mode==5) leg->AddEntry((TObject*)0,"7 TeV reco PYTHIA","");
   if(mode==6) leg->AddEntry((TObject*)0,"2.76 TeV gen PYTHIA","");
   if(mode==7) leg->AddEntry((TObject*)0,"5.02 TeV gen PYTHIA+HIJING","");
   if(mode==8) leg->AddEntry((TObject*)0,"7 TeV gen PYTHIA","");
-  leg->AddEntry(pPbFF[0], "no UE subtr.", "p");
-  if(UE==0) leg->AddEntry(PbpFF[0], "90 degree UE subtr.", "p");
+  if(mode!=3 && mode!=4) leg->AddEntry(pPbFF[0], "no UE subtr.", "p");
+  else if(mode==4) leg->AddEntry(pPbFF[0], "no UE subtr. 5 TeV P", "p");
+  else leg->AddEntry(pPbFF[0], "Cone UE subtr. 5 TeV P", "p");
+  if(UE==0 && (mode!=3 && mode!=4)) leg->AddEntry(PbpFF[0], "90 degree UE subtr.", "p");
+  if(UE==0 && (mode==3 || mode==4)) leg->AddEntry(PbpFF[0], "Cone UE subtr. P+H", "p");
   if(UE==2) leg->AddEntry(PbpFF[0], "MB mixing UE subtr.", "p");
   //leg->AddEntry(PbpFF[0],"pPb FF MC","p");
   leg->Draw();
@@ -116,7 +120,8 @@ void getComparison(int mode, int UE)
   c2->cd(i+6);
   c2->cd(i+6)->SetLogx();
   PbpFF[i]->SetMaximum(1.2);
-  PbpFF[i]->SetMinimum(0.4);
+  if(mode!=3) PbpFF[i]->SetMinimum(0.4);
+  else PbpFF[i]->SetMinimum(0.7);
   PbpFF[i]->Divide(pPbFF[i]);
   //pPbFF[i]->SetMaximum(1.5);
   //pPbFF[i]->SetMinimum(0.5);
@@ -129,8 +134,8 @@ void getComparison(int mode, int UE)
   //pPbFF[i]->DrawCopy("e");
   l->Draw("same");
   }
-  c2->SaveAs(Form("../plots/UE%d_Comparison_%s.png",UE,files1[mode]));
-  c2->SaveAs(Form("../plots/UE%d_Comparison_%s.pdf",UE,files1[mode]));
+  c2->SaveAs(Form("../plots/UE%d_Comparison_%s%d.png",UE,files1[mode],mode));
+  c2->SaveAs(Form("../plots/UE%d_Comparison_%s%d.pdf",UE,files1[mode],mode));
   delete l;
   delete lat;
   delete c2;
@@ -144,6 +149,7 @@ void UE_Comparison()
   getComparison(1,0);
   getComparison(2,0);
   getComparison(3,0);
+  getComparison(4,0);
   getComparison(0,2);
   getComparison(1,2);
   getComparison(2,2);

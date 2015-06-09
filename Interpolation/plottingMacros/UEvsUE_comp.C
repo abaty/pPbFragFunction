@@ -57,8 +57,11 @@ void getComparison(int mode, int UE)
   }
   else 
   {
+    c2->cd(i+1)->SetLogy();
     pPbFF[i]->SetMaximum(5);
-    pPbFF[i]->SetMinimum(0.0000001);
+    PbpFF[i]->SetMaximum(5);
+    pPbFF[i]->SetMinimum(0.000001);
+    PbpFF[i]->SetMinimum(0.000001);
   }
   pPbFF[i]->GetYaxis()->SetTitle("FF Ratio");
   if(mode!=0) pPbFF[i]->GetYaxis()->SetTitle("FF");
@@ -84,8 +87,6 @@ void getComparison(int mode, int UE)
   PbpFF[i]->SetLineColor(kRed+1);
   PbpFF[i]->SetLineWidth(1);
   PbpFF[i]->SetLineStyle(1);
-  PbpFF[i]->SetMaximum(5);
-  PbpFF[i]->SetMinimum(0.00001);
   PbpFF[i]->GetYaxis()->SetTitleColor(1);
   PbpFF[i]->GetYaxis()->SetTitleSize(0.07);
   if(i!=0)  PbpFF[i]->GetYaxis()->SetTitleSize(0);
