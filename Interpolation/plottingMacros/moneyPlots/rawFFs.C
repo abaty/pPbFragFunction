@@ -174,4 +174,5 @@ void rawFFs(int UEtype)
   }
   c->SaveAs(Form("../../plots/prettyRawFFs_UE%d.png",UEtype));
   c->SaveAs(Form("../../plots/prettyRawFFs_UE%d.pdf",UEtype));
+  c->SaveAs(Form("../../plots/prettyRawFFs_UE%d.C",UEtype));
 }

@@ -201,4 +201,5 @@ void interpRatio(int UEtype, int turnOffPoints = 0)
   }
   c->SaveAs(Form("../../plots/prettyInterpRatio_UE%d.png",UEtype));
   c->SaveAs(Form("../../plots/prettyInterpRatio_UE%d.pdf",UEtype));
+  c->SaveAs(Form("../../plots/prettyInterpRatio_UE%d.C",UEtype));
 }
