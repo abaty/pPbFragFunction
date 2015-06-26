@@ -33,6 +33,7 @@ TBox* makeBox(double x1, double y1, double x2, double y2)
 void rawFFs_xi(int UEtype)
 { 
   TLatex * tlat = new TLatex(0.6,0.6,"test");
+  tlat->SetTextFont(42);
 
   TFile * inf1 = TFile::Open(Form("../../FragmentationFunctionsUE%d.root",UEtype),"read");
   TH1D * hist[15];
@@ -98,6 +99,7 @@ void rawFFs_xi(int UEtype)
     { 
       hist[i]->SetMarkerStyle(8);
       hist[i]->SetMarkerSize(0.7);
+      hist[i]->GetXaxis()->SetLabelSize(0);
     }
     else if(i<10)
     {
@@ -115,20 +117,21 @@ void rawFFs_xi(int UEtype)
       hist[i]->GetYaxis()->SetLabelOffset(0.003);
       hist[i]->GetYaxis()->SetLabelSize(0.06);
       hist[i]->GetYaxis()->SetNdivisions(505,true);
+      tlat->SetTextSize(0.068);
       if(i==5)
       {
         hist[i]->GetYaxis()->SetLabelSize(0.054);
         hist[i]->GetYaxis()->SetTitleSize(0.062);
         hist[i]->GetYaxis()->SetTitleOffset(1.8);
+        tlat->SetTextSize(0.06);
       }
 
-      tlat->SetTextSize(0.058);
     } 
     else 
     {
       hist[i]->GetYaxis()->SetTitleSize(0);
       hist[i]->GetYaxis()->SetLabelSize(0);
-      tlat->SetTextSize(0.07);
+      tlat->SetTextSize(0.085);
     } 
     if(i>4)
     {
@@ -155,27 +158,54 @@ void rawFFs_xi(int UEtype)
       if(boxArray[i][j]->GetY2()!=0) boxArray[i][j]->Draw("l");
     }
     hist[i]->Draw("same");
-    if(i<5) tlat->DrawLatex(0.8,0.002,Form("%d < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i],(int)FF_Bound[i+1]));
-    if(i==0) tlat->DrawLatex(0.8,0.007,"5.3 pb^{-1} (2.76 TeV pp)");
-    if(i==1) tlat->DrawLatex(0.8,0.007,"p_{T}^{trk} > 0.5 GeV/c");
-    if(i==2) tlat->DrawLatex(0.8,0.007,"ak3PF jets");
-    if(i==3) tlat->DrawLatex(0.8,0.007,"|#eta_{CM}^{jet}|<1.5");
-    if(i==4) tlat->DrawLatex(0.8,0.007,"CMS Preliminary");
-    if(i==5) tlat->DrawLatex(0.8,0.007,"2.5 fb^{-1} (7 TeV pp)");
+    if(i<5) tlat->DrawLatex(0.5,0.002,Form("%d < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i],(int)FF_Bound[i+1]));
+    if(i==0) tlat->DrawLatex(0.5,0.0045,"5.3 pb^{-1} (2.76 TeV pp)");
+    if(i==2) tlat->DrawLatex(0.5,0.0045,"p_{T}^{trk} > 0.5 GeV/c");
+    if(i==1) tlat->DrawLatex(0.5,0.009,"anti-k_{t} particle flow jets");
+    if(i==1) tlat->DrawLatex(0.5,0.0045,"R=0.3");
+    if(i==3) tlat->DrawLatex(0.5,0.0045,"|#eta_{CM}^{jet}|<1.5");
+    if(i==4)
+    {
+      tlat->SetTextFont(61);
+      tlat->SetTextSize(1.0/0.76*tlat->GetTextSize());
+      tlat->DrawLatex(2.25,0.37,"CMS");
+      tlat->SetTextFont(52);
+      tlat->SetTextSize(0.76*tlat->GetTextSize());
+      tlat->DrawLatex(2.25,0.2,"Preliminary");
+      tlat->SetTextFont(42);
+    }
+    if(i==5) tlat->DrawLatex(0.8,0.0045,"2.5 fb^{-1} (7 TeV pp)");
     //if(i==0) tlat->DrawLatex(0.8,0.01,"#int_{2.76 TeV pp}Ldt = 5.3 pb^{-1}");
+    if(i==6 && UEtype==3)
+    {
+      tlat->DrawLatex(1,0.009,"No Underlying Event");
+      tlat->DrawLatex(1.7,0.0045,"Subtraction");
+    }
 
-    tlat->SetTextSize(0.057);
     //if(i==5) tlat->DrawLatex(0.8,0.01,"#int_{7 TeV pp}Ldt = 2.5 fb^{-1}");
+    TLegend * leg;
+    TLegend * leg2;
     if(i==0)
     { 
-      TLegend * leg = new TLegend(0.4,0.5,1,0.7);
+      leg = new TLegend(0.4,0.5,1,0.7);
       leg->AddEntry(hist[0],"2.76 TeV pp","p");
-      leg->AddEntry(hist[5],"7 TeV pp","p");
+      //leg->AddEntry(hist[5],"7 TeV pp","p");
       //leg->AddEntry(hist[10],"5.02 TeV pPb","p");
-      leg->SetTextSize(0.058);
+      leg->SetTextSize(1.2*tlat->GetTextSize());
       leg->SetBorderSize(0);
       leg->SetTextFont(tlat->GetTextFont());
       leg->Draw();
+    }
+    if(i==5)
+    { 
+      leg2 = new TLegend(0.4,0.5,1,0.7);
+      //leg2->AddEntry(hist[],"7 TeV pp","p");
+      leg2->AddEntry(hist[5],"7 TeV pp","p");
+      //leg->AddEntry(hist[10],"5.02 TeV pPb","p");
+      leg2->SetTextSize(1.2*tlat->GetTextSize());
+      leg2->SetBorderSize(0);
+      leg2->SetTextFont(tlat->GetTextFont());
+      leg2->Draw();
     }
   }
   c->SaveAs(Form("../../plots/prettyRawFFs_UE%d_xi.png",UEtype));

@@ -33,6 +33,7 @@ TBox* makeBox(double x1, double y1, double x2, double y2)
 void interpRatio_xi(int UEtype, int turnOffPoints = 0)
 {  
   TLatex * tlat = new TLatex(0.6,0.6,"test");
+  tlat->SetTextFont(42);
 
   TFile * inf1 = TFile::Open(Form("../../FragmentationFunctionsUE%d.root",UEtype),"read");
   TH1D * hist[15];
@@ -91,7 +92,7 @@ void interpRatio_xi(int UEtype, int turnOffPoints = 0)
     if(i<10) c->cd(i+1)->SetLogy();
     else c1->cd(i-9);
 
-    hist[i]->SetMaximum(6);
+    hist[i]->SetMaximum(9);
     hist[i]->SetMinimum(0.0005);
     hist[i]->GetXaxis()->SetNdivisions(505);   
  
@@ -134,14 +135,14 @@ void interpRatio_xi(int UEtype, int turnOffPoints = 0)
       hist[i]->GetYaxis()->SetLabelOffset(0.003);
       hist[i]->GetYaxis()->SetLabelSize(0.05);
 
-      tlat->SetTextSize(0.058);
+      tlat->SetTextSize(0.062);
     } 
     else 
     {
       hist[i]->GetYaxis()->SetTitleSize(0);
       hist[i]->GetYaxis()->SetLabelSize(0);
 
-      tlat->SetTextSize(0.07);
+      tlat->SetTextSize(0.085);
     } 
     if(i>4)
     {
@@ -179,15 +180,47 @@ void interpRatio_xi(int UEtype, int turnOffPoints = 0)
     if(i==10) tlat->DrawLatex(0.5,1.75,"30.9 nb^{-1} (5.02 TeV pPb)");
     if(i==10) tlat->DrawLatex(0.5,1.9,"5.3 pb^{-1} (2.76 TeV pp)");
     if(i==10) tlat->DrawLatex(0.5,1.6,"2.5 fb^{-1} (7 TeV pp)");
-    if(i==12) tlat->DrawLatex(0.5,1.9,"ak3PF jets");
-    if(i==11) tlat->DrawLatex(0.5,1.9,"p_{T}^{trk} > 0.5 GeV/c");
+    if(i==11) tlat->DrawLatex(0.5,1.9,"anti-k_{t} particle flow jets");
+    if(i==11) tlat->DrawLatex(0.5,1.7,"R=0.3");
+    if(i==12) tlat->DrawLatex(0.5,1.9,"p_{T}^{trk} > 0.5 GeV/c");
     if(i==13) tlat->DrawLatex(0.5,1.9,"|#eta_{CM}^{jet}|<1.5");
-    if(i==14) tlat->DrawLatex(0.5,1.9,"CMS Preliminary");    
+    //if(i==14) tlat->DrawLatex(0.5,1.9,"CMS Preliminary");    
  
-    if(i==1) tlat->DrawLatex(0.5,0.002,"p_{T}^{trk} > 0.5 GeV/c");
-    if(i==2) tlat->DrawLatex(0.5,0.002,"ak3PF jets");
+    if(i==2) tlat->DrawLatex(0.5,0.002,"p_{T}^{trk} > 0.5 GeV/c");
+    if(i==1) tlat->DrawLatex(0.5,0.007,"anti-k_{t} particle flow jets");
+    if(i==1) tlat->DrawLatex(0.5,0.002,"R=0.3");
     if(i==3) tlat->DrawLatex(0.5,0.002,"|#eta_{CM}^{jet}|<1.5");
-    if(i==4) tlat->DrawLatex(0.5,0.002,"CMS Preliminary");
+    if(i==4)
+    {
+      tlat->SetTextFont(61);
+      tlat->SetTextSize(1.0/0.76*tlat->GetTextSize());
+      tlat->DrawLatex(2.25,0.37,"CMS");
+      tlat->SetTextFont(52);
+      tlat->SetTextSize(0.76*tlat->GetTextSize());
+      tlat->DrawLatex(2.25,0.2,"Preliminary");
+      tlat->SetTextFont(42);
+    }
+    if(i==6 && UEtype==3)
+    {
+      tlat->DrawLatex(0.8,0.007,"No Underlying Event");
+      tlat->DrawLatex(1.5,0.002,"Subtraction");
+    }
+    if(i==11 && UEtype==3)
+    {
+      tlat->DrawLatex(0.8,1.4,"No Underlying Event");
+      tlat->DrawLatex(1.5,1.3,"Subtraction");
+    }
+     if(i==14)
+    {
+      tlat->SetTextFont(61);
+      tlat->SetTextSize(1.0/0.76*tlat->GetTextSize());
+      tlat->DrawLatex(3.5,1.9,"CMS");
+      tlat->SetTextFont(52);
+      tlat->SetTextSize(0.76*tlat->GetTextSize());
+      tlat->DrawLatex(2.75,1.8,"Preliminary");
+      tlat->SetTextFont(42);
+    }
+    if(i>9) tlat->DrawLatex(0.5,0.5,Form("%d < p_{T}^{jet} < %d GeV/c",(int)FF_Bound[i-10],(int)FF_Bound[i+1-10]));
 
     if(i>9)
     {
@@ -198,16 +231,28 @@ void interpRatio_xi(int UEtype, int turnOffPoints = 0)
       l->Draw("same");
     }
 
+    TLegend * leg;
+    TLegend * leg2;
     if(i==0)
     {
-      TLegend * leg = new TLegend(0.4,0.5,1,0.7);
+      leg = new TLegend(0.35,0.3,0.9,0.7);
       leg->AddEntry(hist[0],"5.02 TeV pPb","p");
-      leg->AddEntry(hist[5],"pp interpolation","p");
+      //leg->AddEntry(hist[5],"pp interpolation","p");
       //leg->AddEntry(hist[10],"Fragmentation Function Ratio","p");
-      leg->SetTextSize(0.058);
       leg->SetBorderSize(0);
+      leg->SetTextSize(1.2*tlat->GetTextSize());
       leg->SetTextFont(tlat->GetTextFont());
       leg->Draw();
+    }
+    if(i==5)
+    {
+      leg2 = new TLegend(0.3,0.25,0.85,0.7);
+      leg2->AddEntry(hist[5],"pp interpolation","p");
+      //leg->AddEntry(hist[10],"Fragmentation Function Ratio","p");
+      leg2->SetTextSize(1.2*tlat->GetTextSize());
+      leg2->SetBorderSize(0);
+      leg2->SetTextFont(tlat->GetTextFont());
+      leg2->Draw();
     }
   }
   c->SaveAs(Form("../../plots/prettyInterp_UE%d_xi.png",UEtype));
