@@ -7,13 +7,17 @@
 #include "TColor.h"
 #include "TAttPad.h"
 #include "TAttLine.h"
+#include "TAttText.h"
 #include "TAxis.h"
+#include "TLatex.h"
 #include "TLegend.h"
 
 void plotGluonFraction(const char * tag,int UEtype)
 {
   TF1 *pp5GluonFitGen = new TF1("pp5GluonFitGen","pol2",60,200);
   TF1 *pp5SignalGluonFitGen = new TF1("pp5SignalGluonFitGen","pol2",60,200);
+
+  TLatex * tlat = new TLatex(0.5,0.5,"test");
 
   TCanvas * cg1 = new TCanvas("cg1","",800,600);
   cg1->SetLeftMargin(0.2);
@@ -63,23 +67,35 @@ void plotGluonFraction(const char * tag,int UEtype)
   gluon_2tev_reco->GetXaxis()->SetRangeUser(60,200);
   gluon_2tev_reco->GetXaxis()->SetTitle("p_{t}^{jet}");
   gluon_2tev_reco->GetYaxis()->SetTitle("Gluon Fraction");
-  gluon_2tev_reco->GetYaxis()->SetTitleOffset(1.5);
+  gluon_2tev_reco->GetYaxis()->SetTitleOffset(1.3);
   gluon_5tev_reco->GetXaxis()->SetTitle("p_{t}^{jet}");
   gluon_5tev_reco->GetYaxis()->SetTitle("Gluon Fraction");
-  gluon_5tev_reco->GetYaxis()->SetTitleOffset(1.5);
+  gluon_5tev_reco->GetYaxis()->SetTitleOffset(1.3);
   gluon_5tevSignal_reco->GetXaxis()->SetTitle("p_{t}^{jet}");
   gluon_5tevSignal_reco->GetYaxis()->SetTitle("Gluon Fraction");
-  gluon_5tevSignal_reco->GetYaxis()->SetTitleOffset(1.5);
+  gluon_5tevSignal_reco->GetYaxis()->SetTitleOffset(1.3);
   gluon_7tev_reco->GetXaxis()->SetTitle("p_{t}^{jet}");
   gluon_7tev_reco->GetYaxis()->SetTitle("Gluon Fraction");
-  gluon_7tev_reco->GetYaxis()->SetTitleOffset(1.5);
+  gluon_7tev_reco->GetYaxis()->SetTitleOffset(1.3);
   gluon_5tev_gen->GetXaxis()->SetTitle("p_{t}^{jet}");
   gluon_5tev_gen->GetYaxis()->SetTitle("Gluon Fraction");
-  gluon_5tev_gen->GetYaxis()->SetTitleOffset(1.5);
+  gluon_5tev_gen->GetYaxis()->SetTitleOffset(1.3);
   gluon_5tevSignal_gen->GetXaxis()->SetTitle("p_{t}^{jet}");
   gluon_5tevSignal_gen->GetYaxis()->SetTitle("Gluon Fraction");
-  gluon_5tevSignal_gen->GetYaxis()->SetTitleOffset(1.5);
+  gluon_5tevSignal_gen->GetYaxis()->SetTitleOffset(1.3);
 
+  gluon_2tev_reco->GetYaxis()->SetTitleSize(0.06);
+  gluon_2tev_reco->GetXaxis()->SetTitleSize(0.06);
+  gluon_2tev_reco->GetYaxis()->SetLabelSize(0.06);
+  gluon_2tev_reco->GetXaxis()->SetLabelSize(0.06);
+  gluon_5tev_reco->GetYaxis()->SetTitleSize(0.06);
+  gluon_5tev_reco->GetXaxis()->SetTitleSize(0.06);
+  gluon_5tev_reco->GetYaxis()->SetLabelSize(0.06);
+  gluon_5tev_reco->GetXaxis()->SetLabelSize(0.06);
+  gluon_7tev_reco->GetYaxis()->SetTitleSize(0.06);
+  gluon_7tev_reco->GetXaxis()->SetTitleSize(0.06);
+  gluon_7tev_reco->GetYaxis()->SetLabelSize(0.06);
+  gluon_7tev_reco->GetXaxis()->SetLabelSize(0.06);
 
   gluon_2tev_reco->Draw("p");
   gluon_5tev_reco->Draw("p same");
@@ -88,7 +104,7 @@ void plotGluonFraction(const char * tag,int UEtype)
   gluon_5tev_gen->Draw("h same");
   gluon_7tev_gen->Draw("h same");
 
-  TLegend * gleg = new TLegend(0.25,0.17,0.55,0.47);
+  TLegend * gleg = new TLegend(0.22,0.17,0.55,0.47);
   gleg->SetBorderSize(0);
   gleg->AddEntry((TObject*)0,"CMS Preliminary","");
   gleg->AddEntry(gluon_2tev_reco,"2.76 TeV reco PYTHIA","p");
@@ -112,10 +128,17 @@ void plotGluonFraction(const char * tag,int UEtype)
   gluon_2tev_reco->Draw("p");
   gluon_2tev_gen->Draw("h same ][");
   gleg->Clear();
-  gleg->AddEntry((TObject*)0,"CMS Preliminary","");
+  //gleg->AddEntry((TObject*)0,"CMS Preliminary","");
   gleg->AddEntry(gluon_2tev_reco,"2.76 TeV reco PYTHIA","p");
   gleg->AddEntry(gluon_2tev_gen,"2.76 TeV gen PYTHIA","l");
+  gleg->SetTextSize(0.06);
   gleg->Draw("same");
+    tlat->SetTextFont(61);
+    tlat->SetTextSize(1.0/0.76*tlat->GetTextSize());
+    tlat->DrawLatex(175,0.6,"CMS");
+    tlat->SetTextFont(52);
+    tlat->SetTextSize(0.76*tlat->GetTextSize());
+    tlat->DrawLatex(160,0.575,"Preliminary");
   cg1->SaveAs(Form("plots/pp2GluonFractionsMC_UE%d_%s.png",UEtype,tag));
   cg1->SaveAs(Form("plots/pp2GluonFractionsMC_UE%d_%s.pdf",UEtype,tag));
 
@@ -128,10 +151,16 @@ void plotGluonFraction(const char * tag,int UEtype)
   gluon_7tev_reco->Draw("");
   gluon_7tev_gen->Draw("h same ][");
   gleg->Clear();
-  gleg->AddEntry((TObject*)0,"CMS Preliminary","");
+  //gleg->AddEntry((TObject*)0,"CMS Preliminary","");
   gleg->AddEntry(gluon_7tev_reco,"7 TeV reco PYTHIA","p");
   gleg->AddEntry(gluon_7tev_gen,"7 TeV gen PYTHIA","l");
   gleg->Draw("same");
+    tlat->SetTextFont(61);
+    tlat->SetTextSize(1.0/0.76*tlat->GetTextSize());
+    tlat->DrawLatex(175,0.675,"CMS");
+    tlat->SetTextFont(52);
+    tlat->SetTextSize(0.76*tlat->GetTextSize());
+    tlat->DrawLatex(160,0.65,"Preliminary");
   cg1->SaveAs(Form("plots/pp7GluonFractionsMC_UE%d_%s.png",UEtype,tag));
   cg1->SaveAs(Form("plots/pp7GluonFractionsMC_UE%d_%s.pdf",UEtype,tag));
 
@@ -160,10 +189,16 @@ void plotGluonFraction(const char * tag,int UEtype)
   gluon_5tev_reco->Draw("");
   gluon_5tev_gen->Draw("h same ][");
   gleg->Clear();
-  gleg->AddEntry((TObject*)0,"CMS Preliminary","");
+  //gleg->AddEntry((TObject*)0,"CMS Preliminary","");
   gleg->AddEntry(gluon_5tev_reco,"5.02 TeV reco PYTHIA+HIJING","p");
   gleg->AddEntry(gluon_5tev_gen,"5.02 TeV gen PYTHIA+HIJING","l");
   gleg->Draw("same");
+    tlat->SetTextFont(61);
+    tlat->SetTextSize(1.0/0.76*tlat->GetTextSize());
+    tlat->DrawLatex(175,0.675,"CMS");
+    tlat->SetTextFont(52);
+    tlat->SetTextSize(0.76*tlat->GetTextSize());
+    tlat->DrawLatex(160,0.65,"Preliminary");
   cg1->SaveAs(Form("plots/pp5GluonFractionsMC_UE%d_%s.png",UEtype,tag));
   cg1->SaveAs(Form("plots/pp5GluonFractionsMC_UE%d_%s.pdf",UEtype,tag));
 
