@@ -267,6 +267,7 @@ void interpRatio(int UEtype, int turnOffPoints = 0)
   c->SaveAs(Form("../../plots/prettyInterp_UE%d.pdf",UEtype));
   c1->SaveAs(Form("../../plots/prettyInterpRatio_UE%d.png",UEtype));
   c1->SaveAs(Form("../../plots/prettyInterpRatio_UE%d.pdf",UEtype));
+  c1->SaveAs(Form("../../plots/prettyInterpRatio_UE%d.C",UEtype));
   
   for(int i = 10; i<15; i++)
   {
